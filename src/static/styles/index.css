@@ -1,0 +1,329 @@
+.drawer-tab {
+  width: 40px;
+  height: 80px;
+  position: absolute;
+  float: left;
+  left: -40px;
+  display: flex; }
+  .drawer-tab .drawer-tab__icon {
+    width: 100%;
+    border-radius: 90px 0 0 90px;
+    background: #00BCD4;
+    color: #FFF; }
+    .drawer-tab .drawer-tab__icon button {
+      position: relative;
+      right: -5px;
+      color: #FFF; }
+      .drawer-tab .drawer-tab__icon button svg {
+        fill: #FFF !important; }
+
+.smallIcon {
+  width: 24px;
+  height: 80px; }
+
+.small {
+  width: 24px;
+  height: 80px;
+  padding: 0px;
+  color: #FFF; }
+
+.addFieldBtn {
+  position: absolute;
+  right: 45px;
+  top: 20px; }
+
+.removeFieldBtn {
+  position: absolute;
+  right: 45px;
+  top: 0; }
+
+.form-group {
+  position: relative; }
+
+.clientSheetContainer {
+  height: 90%;
+  overflow: scroll; }
+
+.dataValue {
+  width: 50%;
+  display: inline-block;
+  text-align: center; }
+
+.balanceSheetContainer {
+  padding: 10px;
+  height: 90%;
+  overflow: scroll; }
+
+.headerText {
+  text-align: left;
+  margin-left: 10px;
+  margin-top: 10px; }
+
+.dataTitle {
+  display: inline-block;
+  width: 30%;
+  text-align: right;
+  margin-left: 20px;
+  font-size: 15px; }
+
+.headerSingleTitle {
+  text-align: left;
+  margin-left: 10px;
+  margin-top: 10px;
+  width: 40%;
+  display: inline-block; }
+
+.headerSingleValue {
+  text-align: left;
+  margin-left: 15px;
+  width: 55%;
+  margin-top: 10px;
+  display: inline-block; }
+
+.totalAmount {
+  background-color: #dbe6ff; }
+
+.amountWrap {
+  margin: 0;
+  text-decoration: underline; }
+
+.tree {
+  left: 250px; }
+
+.tree ul {
+  position: relative;
+  padding: 1em 0;
+  white-space: nowrap;
+  margin: 0 auto;
+  text-align: center; }
+  .tree ul::after {
+    content: '';
+    display: table;
+    clear: both; }
+
+.tree li {
+  display: inline-block;
+  vertical-align: top;
+  text-align: center;
+  list-style-type: none;
+  position: relative;
+  padding: 1em .5em 0 .5em; }
+  .tree li::before, .tree li::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 50%;
+    border-top: 1px solid #ccc;
+    width: 50%;
+    height: 1em; }
+  .tree li::after {
+    right: auto;
+    left: 50%;
+    border-left: 1px solid #ccc; }
+  .tree li:only-child::after, .tree li:only-child::before {
+    display: none; }
+  .tree li:only-child {
+    padding-top: 0; }
+  .tree li:first-child::before, .tree li:last-child::after {
+    border: 0 none; }
+  .tree li:last-child::before {
+    border-right: 1px solid #ccc;
+    border-radius: 0 5px 0 0; }
+  .tree li:first-child::after {
+    border-radius: 5px 0 0 0; }
+
+.tree ul ul::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  border-left: 1px solid #ccc;
+  width: 0;
+  height: 1em; }
+
+.tree li div.nodeWrapper {
+  border: 1px solid #ccc;
+  padding: .5em .75em;
+  text-decoration: none;
+  display: inline-block;
+  border-radius: 50%;
+  color: #333;
+  position: relative;
+  top: 1px; }
+
+#mainBubble {
+  background: #fff;
+  border: solid 1px #ddd;
+  box-shadow: 0 0 4px transparent;
+  font: 10px sans-serif;
+  height: 800px;
+  position: relative;
+  width: 80%; }
+
+#mainBubble svg {
+  left: 0;
+  position: absolute;
+  top: 0; }
+
+#mainBubble circle.topBubble {
+  fill: #aaa;
+  stroke: #666;
+  stroke-width: 1.5px; }
+
+.tree li div.nodeWrapper:hover,
+.tree li div.nodeWrapper:hover + ul li div.nodeWrapper {
+  background: #00bcd4;
+  color: #fff;
+  border: 1px solid #00bcd4; }
+
+.tree li div.nodeWrapper:hover + ul li::after,
+.tree li div.nodeWrapper:hover + ul li::before,
+.tree li div.nodeWrapper:hover + ul::before,
+.tree li div.nodeWrapper:hover + ul ul::before {
+  border-color: #00bcd4; }
+
+#treesvg g path {
+  opacity: 1;
+  fill: #b3b3b3;
+  fill-opacity: 1;
+  stroke: #b3b3b3;
+  stroke-width: 1.34937501;
+  stroke-miterlimit: 4;
+  stroke-dasharray: none;
+  stroke-opacity: 1; }
+
+#mainBubble {
+  background: #fff;
+  border: solid 1px #ddd;
+  box-shadow: 0 0 4px transparent;
+  font: 10px sans-serif;
+  height: 800px;
+  position: relative;
+  width: 80%; }
+
+#mainBubble svg {
+  left: 0;
+  position: absolute;
+  top: 0; }
+
+#mainBubble circle.topBubble {
+  fill: #aaa;
+  stroke: #666;
+  stroke-width: 1.5px; }
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Roboto", sans-serif; }
+
+#root {
+  width: 100%; }
+
+.nodeBase ellipse {
+  fill: #7CB342;
+  stroke: #8BC34A;
+  stroke-width: 5px; }
+
+.leafNodeBase ellipse {
+  fill: #DCE775;
+  stroke: #F0F4C3;
+  stroke-width: 5px; }
+
+text.nodeNameBase {
+  transform: translate(-75px, 0); }
+
+text.nodeAttributesBase {
+  fill: #212121;
+  stroke: transparent;
+  font-family: "Roboto", sans-serif;
+  transform: translate(-75px, 0); }
+
+.custom_button {
+  padding: 5px 10px;
+  background: #fff;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  cursor: pointer; }
+
+.nodeWrapper {
+  text-align: center; }
+  .nodeWrapper span {
+    margin-bottom: 0;
+    font-size: 12px; }
+  .nodeWrapper b {
+    margin-bottom: 0;
+    font-size: 10px; }
+
+/* Drawer css */
+.sideBar {
+  height: 1000px;
+  width: 60px;
+  background: #00BCD4;
+  float: left;
+  overflow: hidden;
+  -webkit-transition: width 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+  transition: width 0.3s cubic-bezier(0.215, 0.61, 0.355, 1); }
+
+.expandSideBar {
+  height: 1000px;
+  width: 250px;
+  background: #00BCD4;
+  float: left;
+  overflow: hidden;
+  -webkit-transition: width 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+  transition: width 0.3s cubic-bezier(0.215, 0.61, 0.355, 1); }
+
+#econcircleapp {
+  float: left;
+  height: 1000px; }
+
+#econcircleapp.sideBarRef {
+  width: 96%;
+  -webkit-transition: width 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+  transition: width 0.3s cubic-bezier(0.215, 0.61, 0.355, 1); }
+
+#econcircleapp.expandSideBarRef {
+  width: 84%;
+  -webkit-transition: width 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+  transition: width 0.3s cubic-bezier(0.215, 0.61, 0.355, 1); }
+
+.sideBar .totalContributionContainer {
+  display: none; }
+
+.expandSideBar .totalContributionContainer {
+  font-size: 20px;
+  padding: 5px; }
+
+.titleTotalContribution p,
+.valueTotalContribution p {
+  margin: 5px 0;
+  margin-left: 10px;
+  color: #FFF; }
+
+.titleTotalContribution p {
+  font-size: 10px; }
+
+.valueTotalContribution p {
+  font-size: 40px; }
+
+.totalContribution {
+  cursor: pointer; }
+
+.AppBarInner {
+  position: absolute;
+  left: 0 inherit;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  text-align: center;
+  height: 64px;
+  line-height: 64px;
+  color: #FFF;
+  font-size: 20px; }
+  .AppBarInner .contributions {
+    color: #FFF !important; }
+
+.menufilters {
+  padding: 15px; }
+  .menufilters label {
+    color: #FFF !important; }

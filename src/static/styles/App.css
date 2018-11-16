@@ -1,0 +1,61 @@
+<<<<<<< HEAD
+#bstab {
+  width: 100px;
+  height: 100px;
+  position: relative;
+  left: -55px;
+  top: 64px;
+  z-index: 1300;
+  display: flex; }
+  #bstab .tabtext {
+    width: 55%;
+    border-radius: 90px 0 0 90px;
+    background: #00bcd4;
+    color: #fff; }
+    #bstab .tabtext button {
+      position: relative;
+      top: 25px;
+      right: -5px;
+      color: #fff; }
+      #bstab .tabtext button svg {
+        fill: #fff !important; }
+  #bstab .smallIcon {
+    width: 40px;
+    height: 40px; }
+  #bstab .small {
+    width: 72px;
+    height: 72px;
+    padding: 16px 27px 16px 0;
+    color: #fff; }
+=======
+<<<<<<< HEAD
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Roboto, sans-serif; }
+>>>>>>> 8c160bfcfc80076dec35f2e53b14a0b587c30b7a
+
+#root {
+  width: 100%; }
+
+=======
+>>>>>>> 78da9a7255bb5036909fb316cffd4e434f52d854
+/* Circle tree */
+.nodeBase ellipse {
+  fill: #7CB342;
+  stroke: #8BC34A;
+  stroke-width: 8px; }
+
+.leafNodeBase ellipse {
+  fill: #DCE775;
+  stroke: #F0F4C3;
+  stroke-width: 5px; }
+
+text.nodeNameBase {
+  transform: translate(-75px, 0); }
+
+text.nodeAttributesBase {
+  fill: #212121;
+  stroke: transparent;
+  font-family: Roboto, sans-serif;
+  transform: translate(-75px, 0); }

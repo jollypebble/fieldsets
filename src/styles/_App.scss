@@ -1,0 +1,132 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: $font-family;
+}
+#root {
+	width:100%;
+}
+
+.nodeBase ellipse {
+  fill: $circle-green-fill;
+  stroke: $circle-green-stroke;
+  stroke-width: $circle-stroke-width;
+}
+
+.leafNodeBase ellipse {
+  fill: $circle-yellow-fill;
+  stroke: $circle-yellow-stroke;
+  stroke-width: $circle-stroke-width;
+}
+
+text.nodeNameBase {
+  transform: translate(-75px, 0);
+}
+
+text.nodeAttributesBase {
+  fill: $circle-fields-fill;
+  stroke: transparent;
+  font-family: $font-family;
+  transform: translate(-75px, 0)
+}
+
+.custom_button{
+  padding: 5px 10px;
+  background: #fff;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.nodeWrapper{
+  text-align: center;
+  span{
+    margin-bottom: 0;
+    font-size: 12px;
+  }
+  b{
+    margin-bottom: 0;
+    font-size: 10px;
+  }
+}
+
+/* Drawer css */
+.sideBar{
+  height: 1000px;
+  width: 60px;
+  background: $app-blue;
+  float: left;
+  overflow: hidden;
+  -webkit-transition: width .3s cubic-bezier(.215,.61,.355,1);
+  transition: width .3s cubic-bezier(.215,.61,.355,1);
+}
+.expandSideBar{
+  height: 1000px;
+  width:250px;
+  background: $app-blue;
+  float: left;
+  overflow: hidden;
+  -webkit-transition: width .3s cubic-bezier(.215,.61,.355,1);
+  transition: width .3s cubic-bezier(.215,.61,.355,1);
+}
+#econcircleapp{
+  float: left;
+  height: 1000px;
+}
+#econcircleapp.sideBarRef{
+  width: 96%;
+  -webkit-transition: width .3s cubic-bezier(.215,.61,.355,1);
+  transition: width .3s cubic-bezier(.215,.61,.355,1);
+}
+#econcircleapp.expandSideBarRef{
+  width: 84%;
+  -webkit-transition: width .3s cubic-bezier(.215,.61,.355,1);
+  transition: width .3s cubic-bezier(.215,.61,.355,1);
+}
+.sideBar .totalContributionContainer {
+  display:none;
+}
+.expandSideBar .totalContributionContainer {
+  font-size: 20px;
+  padding: 5px;
+}
+.titleTotalContribution p,
+.valueTotalContribution p{
+  margin:5px 0;
+  margin-left: 10px;
+  color:$app-white;
+}
+.titleTotalContribution p{
+  font-size: 10px;
+}
+.valueTotalContribution p{
+  font-size: 40px;
+}
+
+.totalContribution{
+  cursor: pointer;
+}
+
+// AppBar
+.AppBarInner{
+  position: absolute;
+  left: 0 inherit;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  text-align: center;
+  height: 64px;
+  line-height: 64px;
+  color: $app-white;
+  font-size: 20px;
+  .contributions {
+    color: $app-white!important;
+  }
+}
+
+.menufilters {
+  padding: 15px;
+  label{
+    color: $app-white!important;
+  }
+}

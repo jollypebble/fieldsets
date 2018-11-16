@@ -1,0 +1,98 @@
+.drawer-tab {
+    width: $tab-width;
+    height: $tab-height;
+    position: absolute;
+    float: left;
+    left: (-$tab-width);
+    display: flex;
+
+    .drawer-tab__icon {
+        width:100%;
+        border-radius: 90px 0 0 90px;
+        background: $app-blue;
+        color: $app-white;
+
+        button {
+          position: relative;
+          right: -5px;
+          color: $app-white;
+          svg {
+            fill: $app-white !important;
+          }
+        }
+    }
+}
+.smallIcon {
+  width: $small-icon-size;
+  height: $tab-height;
+}
+.small {
+  width: $small-icon-size;
+  height: $tab-height;
+  padding: 0px;
+  color: $app-white;
+}
+
+// ClientSheet css
+.addFieldBtn {
+  position: absolute;
+  right: 45px;
+  top: 20px;
+}
+.removeFieldBtn {
+  position: absolute;
+  right: 45px;
+  top: 0;
+}
+.form-group{
+  position:relative;
+}
+.clientSheetContainer{
+  height: 90%;
+  overflow: scroll;
+}
+
+// BalanceSheet css
+.dataValue{
+  width: 50%;
+  display: inline-block;
+  text-align: center;
+}
+.balanceSheetContainer{
+  padding: $paddingBalanceSheet;
+  height: 90%;
+  overflow: scroll;
+}
+.headerText {
+  text-align: left;
+  margin-left: $marginBalanceSheet;
+  margin-top: $marginBalanceSheet;
+}
+.dataTitle {
+  display: inline-block;
+  width: 30%;
+  text-align: right;
+  margin-left: 2 * $marginBalanceSheet;
+  font-size: $fontSizeBalanceSheet;
+}
+.headerSingleTitle{
+  text-align: left;
+  margin-left: $marginBalanceSheet;
+  margin-top: $marginBalanceSheet;
+  width: 40%;
+  display: inline-block;
+}
+.headerSingleValue{
+  text-align: left;
+  margin-left: $marginBalanceSheet + 5;
+  width: 55%;
+  margin-top: $marginBalanceSheet;
+  display: inline-block;
+}
+.totalAmount{
+  background-color: $totalAmountColor;
+}
+.amountWrap{
+  margin:0;
+  text-decoration: underline;
+}
