@@ -1,10 +1,6 @@
 import React from 'react';
-import TextField from 'material-ui/TextField';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-import ContentRemove from 'material-ui/svg-icons/content/remove';
-import Divider from 'material-ui/Divider';
-import RaisedButton from 'material-ui/RaisedButton';
+import { TextField, Fab, Divider, Button } from '@material-ui/core';
+import { Add, Remove } from '@material-ui/icons';
 
 const ClientData = {
   accountName: { value: 'Willg' },
@@ -119,18 +115,18 @@ export default class ClientSheet extends React.Component {
             value={ this.state.formValues.dependentName0.value }
           />
 
-          <FloatingActionButton mini className="addFieldBtn" onClick={ () => this.addNewField('dependentName') }>
-            <ContentAdd />
-          </FloatingActionButton>
+          <Fab mini className="addFieldBtn" onClick={ () => this.addNewField('dependentName') }>
+            <Add />
+          </Fab>
         </div>
 
         {
           this.state.repeaterFields.map((item, i) => (
             <div className="form-group" key={ i }>
               {item}
-              <FloatingActionButton className="removeFieldBtn" mini secondary onClick={ () => this.removeField(i) }>
-                <ContentRemove />
-              </FloatingActionButton>
+              <Fab className="removeFieldBtn" mini secondary onClick={ () => this.removeField(i) }>
+                <Remove />
+              </Fab>
             </div>
           ))
         }
@@ -174,7 +170,7 @@ export default class ClientSheet extends React.Component {
           />
         </div>
         <div className="form-group">
-          <RaisedButton label="Submit" primary onClick={ () => this.formSubmit() } />
+          <Button label="Submit" primary onClick={ () => this.formSubmit() } />
         </div>
       </div>
     );

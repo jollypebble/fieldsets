@@ -1,10 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AppBar from 'material-ui/AppBar';
-import Drawer from 'material-ui/Drawer';
-import IconButton from 'material-ui/IconButton';
-import NavigationClose from 'material-ui/svg-icons/navigation/close';
-import FlatButton from 'material-ui/FlatButton';
+import { AppBar, Drawer, IconButton, Button } from '@material-ui/core';
+import { Close } from '@material-ui/icons';
 
 class TabbedDrawer extends React.Component {
 
@@ -61,8 +58,8 @@ class TabbedDrawer extends React.Component {
         <AppBar
           title={ <span className="drawer-title">{this.props.title}</span> }
           onLeftIconButtonClick={ this.handleToggle }
-          iconElementLeft={ <IconButton><NavigationClose /></IconButton> }
-          iconElementRight={ <FlatButton label="Save" /> }
+          iconElementLeft={ <IconButton><Close /></IconButton> }
+          iconElementRight={ <Button label="Save" /> }
         />
         <div className="drawer-tab" style={ this.styles.tab }>
           <div className="drawer-tab__icon">

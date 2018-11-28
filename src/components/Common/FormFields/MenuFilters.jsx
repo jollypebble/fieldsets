@@ -1,5 +1,5 @@
 import React from 'react';
-import Toggle from 'material-ui/Toggle';
+import { Switch } from '@material-ui/core';
 
 const styles = {
   block: {
@@ -19,35 +19,35 @@ const styles = {
 
 const MenuFilters = () => (
   <div className="menufilters" style={ styles.block }>
-    <Toggle
+    <Switch
       label="Offense"
       labelPosition="right"
       defaultToggled="true"
       thumbSwitchedStyle={ styles.thumbSwitched }
       trackSwitchedStyle={ styles.trackSwitched }
     />
-    <Toggle
+    <Switch
       label="Defense"
       labelPosition="right"
       defaultToggled="true"
       thumbSwitchedStyle={ styles.thumbSwitched }
       trackSwitchedStyle={ styles.trackSwitched }
     />
-    <Toggle
+    <Switch
       label="Short Term Money"
       labelPosition="right"
       defaultToggled="true"
       thumbSwitchedStyle={ styles.thumbSwitched }
       trackSwitchedStyle={ styles.trackSwitched }
     />
-    <Toggle
+    <Switch
       label="Mid Term Money"
       labelPosition="right"
       defaultToggled="true"
       thumbSwitchedStyle={ styles.thumbSwitched }
       trackSwitchedStyle={ styles.trackSwitched }
     />
-    <Toggle
+    <Switch
       label="Long Term Money"
       labelPosition="right"
       defaultToggled="true"

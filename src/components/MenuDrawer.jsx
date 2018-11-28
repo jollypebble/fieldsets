@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { List, ListItem } from 'material-ui/List';
-import SideBarModalData from 'components/sideBarModalForm';
-import ImageGridOn from 'material-ui/svg-icons/image/grid-on';
-import Divider from 'material-ui/Divider';
-import MenuFilters from 'components/Common/FormFields/MenuFilters';
+import { List, ListItem, Divider } from '@material-ui/core';
+import { GridOn } from '@material-ui/icons';
+
+import SideBarModalData from './sideBarModalForm';
+import MenuFilters from './Common/FormFields/MenuFilters';
 
 export default class MenuDrawer extends React.Component {
   constructor(props) {
@@ -28,7 +28,7 @@ export default class MenuDrawer extends React.Component {
           <ListItem
             style={ { color: '#fff' } }
             primaryText="Google Data"
-            leftIcon={ <ImageGridOn color="#fff" /> }
+            leftIcon={ <GridOn color="#fff" /> }
           />
         </List>
       </div>

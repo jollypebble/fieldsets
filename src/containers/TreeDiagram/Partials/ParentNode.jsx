@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 import ReactDom from 'react-dom';
 import PropTypes from 'prop-types';
 import { TweenMax } from 'gsap';
-import NodeLabel from './NodeLabel';
+import TreeNode from './TreeNode';
 
-class ChildNode extends Component {
+class ParentNode extends Component {
   constructor(props) {
     super(props);
     this.dom = {};
@@ -22,23 +22,28 @@ class ChildNode extends Component {
 
   render() {
     const {
-      childrenData
+      nodeData,
+      nodeID,
+      showChildren
     } = this.props;
     return (
-      <g>
-        {childrenData.map(child => (
-          <ellipse key={ child.id } cx="150" cy="150" r="40" stroke="black" strokeWidth="3" fill="green">
-            <NodeLabel
-              nodeData={ child }
-            />
-          </circle>
-        ))}
-      </g>
+      <svg id={ nodeID } showChildren={ showChildren }>
+        { nodeData.map(data => (
+          <TreeNode
+            key={ data.id }
+            nodeData={ data.children }
+            nodeID={ data.id }
+            showChildren={ showChildren }
+          />
+        )) }
+      </svg>
     );
   }
 }
-ChildNode.propTypes = {
-  childrenData: PropTypes.array.isRequired,
+ParentNode.propTypes = {
+  nodeID: PropTypes.string.isRequired,
+  nodeData: PropTypes.array.isRequired,
+  showChildren: PropTypes.bool
 };
 
-export default ChildNode;
+export default ParentNode;

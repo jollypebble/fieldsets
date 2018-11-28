@@ -22,23 +22,26 @@ class ChildNode extends Component {
 
   render() {
     const {
-      childrenData
+      nodeID,
+      position
     } = this.props;
     return (
-      <g>
-        {childrenData.map(child => (
-          <circle key={ child.id } cx="150" cy="150" r="40" stroke="black" strokeWidth="3" fill="green">
-            <NodeLabel
-              nodeData={ child }
-            />
-          </circle>
-        ))}
+      <g
+        id={ nodeID }
+      >
+        <path id={ nodeID } d={ position } />
+        <NodeLabel
+          nodeID={ nodeID }
+          handleUpdate={ this.handleUpdate }
+          handleCollapse={ this.handleCollapse }
+        />
       </g>
     );
   }
 }
 ChildNode.propTypes = {
-  childrenData: PropTypes.array.isRequired,
+  nodeID: PropTypes.string.isRequired,
+  position: PropTypes.node.isRequired,
 };
 
 export default ChildNode;

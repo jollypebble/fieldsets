@@ -1,37 +1,25 @@
 import React, { Component } from 'react';
 import ReactGoogleSheetConnector from 'react-google-sheet-connector';
-import { TreeDiagram } from 'containers';
+import { TreeDiagram } from './containers';
 
-import { Auth } from 'config';
+import { Auth } from './config';
 
-// Theme
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+// Styles
+import CssBaseline from '@material-ui/core/CssBaseline';
 
-// For Flat App bar buttons
-import FlatButton from 'material-ui/FlatButton';
-import IconButton from 'material-ui/IconButton';
-import AutoComplete from 'material-ui/AutoComplete';
-import Dialog from 'material-ui/Dialog';
-import AppBar from 'material-ui/AppBar';
+// Core MUI Components
+import { Button, IconButton, Dialog, AppBar, TextField } from '@material-ui/core';
+// Our icons
+import { AccountBox, LibraryBooks, PeopleOutline } from '@material-ui/icons';
 
 import { Row, Col } from 'react-flexbox-grid';
-import TextField from 'material-ui/TextField';
-
-// Our icons
-import ActionAccountBox from 'material-ui/svg-icons/action/account-box';
-import AvLibraryBooks from 'material-ui/svg-icons/av/library-books';
-import PeopleOutline from 'material-ui/svg-icons/social/people-outline';
 
 // Custom Components
-import TabbedDrawer from 'components/TabbedDrawer';
-import { BalanceSheet, ClientSheet } from 'components/Sheets';
+import TabbedDrawer from './components/TabbedDrawer';
+import { BalanceSheet, ClientSheet } from './components/Sheets';
 
 // sideBar
-import MenuDrawer from 'components/MenuDrawer';
-
-// Theme
-const muiTheme = getMuiTheme();
+import MenuDrawer from './components/MenuDrawer';
 
 // Styles
 const styles = {
@@ -83,13 +71,13 @@ class App extends Component {
 
   render() {
     const actions = [
-      <FlatButton
+      <Button
         label="Cancel"
         primary
         onClick={ this.toggleVisibility }
         key="sidbarDrawerCancelButton"
       />,
-      <FlatButton
+      <Button
         label="Submit"
         primary
         keyboardFocused
@@ -103,31 +91,29 @@ class App extends Component {
       boxClass = 'sideBarRef';
     }
     return (
-      <MuiThemeProvider muiTheme={ muiTheme }>
+      <React.Fragment>
+        <CssBaseline />
         <AppBar
           title="EconCircles"
           onLeftIconButtonClick={ () => this.expandSideBar() }
           // TODO: Add in text Econ Circles for menu
           // TODO: Add A left Menu that allows you to toggle filters.
           // TODO: Add client dropdown on right side which pulls last names from Google drive folder listings and populates the client sheet upon selection.
+          // TODO: Add search user
           iconStyleLeft={ styles.appbar }
           iconElementRight={
             <div>
-              <AutoComplete
-                hintText="Type anything"
-                dataSource={ this.state.dataSource }
-                onUpdateInput={ this.handleUpdateInput }
-              /><IconButton><PeopleOutline /></IconButton>
+              <IconButton><PeopleOutline /></IconButton>
             </div>
           }
         >
           <div className="AppBarInner">
-            <FlatButton
+            <Button
               className="contributions"
               onClick={ () => this.toggleVisibility() }
               label="Monthly Contribution: $28,0000"
             />
-            <FlatButton
+            <Button
               className="contributions"
               onClick={ () => this.toggleVisibility() }
               label="Lump Sums: $28,0000"
@@ -184,7 +170,7 @@ class App extends Component {
           <div style={ styles.container }>
             <TabbedDrawer
               sheet={ <ClientSheet /> }
-              icon={ <ActionAccountBox /> }
+              icon={ <AccountBox /> }
               title="Client"
               color=""
               top="64px"
@@ -192,7 +178,7 @@ class App extends Component {
             />
             <TabbedDrawer
               sheet={ <BalanceSheet /> }
-              icon={ <AvLibraryBooks /> }
+              icon={ <LibraryBooks /> }
               title="BalanceSheet"
               color=""
               top="144px"
@@ -200,7 +186,7 @@ class App extends Component {
             />
           </div>
         </div>
-      </MuiThemeProvider>
+      </React.Fragment>
     );
   }
 }
