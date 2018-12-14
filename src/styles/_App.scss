@@ -3,6 +3,9 @@ body {
   padding: 0;
   font-family: $font-family;
 }
+header {
+  z-index: 1500
+}
 #root {
 	width:100%;
 }
@@ -71,7 +74,7 @@ text.nodeAttributesBase {
 }
 #econcircleapp{
   float: left;
-  height: 1000px;
+  height: 100vh;
 }
 #econcircleapp.sideBarRef{
   width: 96%;
@@ -79,7 +82,7 @@ text.nodeAttributesBase {
   transition: width .3s cubic-bezier(.215,.61,.355,1);
 }
 #econcircleapp.expandSideBarRef{
-  width: 84%;
+  width: 100%;
   -webkit-transition: width .3s cubic-bezier(.215,.61,.355,1);
   transition: width .3s cubic-bezier(.215,.61,.355,1);
 }

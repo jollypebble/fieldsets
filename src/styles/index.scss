@@ -1,3 +1,8 @@
+@import 'react-md/src/scss/react-md';
+
 @import './vars/index';
 @import './components/index';
+@import './containers/index';
 @import 'App';
+
+@include react-md-everything;

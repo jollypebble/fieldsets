@@ -1,5 +1,7 @@
 import React from 'react';
-import { TextField } from '@material-ui/core';
+import { MDCTextField } from '@material/textfield';
+
+const TextField = new MDCTextField(document.querySelector('.mdc-text-field'));
 
 const data = [
   {

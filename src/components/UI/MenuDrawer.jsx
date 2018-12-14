@@ -4,7 +4,7 @@ import { List, ListItem, Divider } from '@material-ui/core';
 import { GridOn } from '@material-ui/icons';
 
 import SideBarModalData from './sideBarModalForm';
-import MenuFilters from './Common/FormFields/MenuFilters';
+import MenuFilters from '../Common/FormFields/MenuFilters';
 
 export default class MenuDrawer extends React.Component {
   constructor(props) {
@@ -39,17 +39,3 @@ export default class MenuDrawer extends React.Component {
 MenuDrawer.propTypes = {
   addClass: PropTypes.bool,
 };
-
-/*
-<div>
-  <ReactGoogleSheetConnector
-    apiKey="AIzaSyAJtyvRhPD2IaZuUW5CQfeOQAtit_Sxlwc"
-    spreadsheetId="1Zhwab5TjVrTpQgoVFJfJkWdmZOedybmsP5-dBJkezK4"
-    spinner={ <div className="loading-spinner" /> }
-  >
-    <div>
-      <Sheet />
-    </div>
-  </ReactGoogleSheetConnector>
-</div>
-*/

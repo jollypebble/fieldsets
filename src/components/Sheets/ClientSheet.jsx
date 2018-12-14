@@ -1,6 +1,14 @@
 import React from 'react';
-import { TextField, Fab, Divider, Button } from '@material-ui/core';
+import { MDCTextField } from '@material/textfield';
+import { MDCRipple } from '@material/ripple';
+import { MaterialIcon } from '@material/react-material-icon';
+
 import { Add, Remove } from '@material-ui/icons';
+
+const TextField = new MDCTextField(document.querySelector('.mdc-text-field'));
+const Fab = new MDCRipple(document.querySelector('.mdc-fab'));
+const Button = new MDCRipple(document.querySelector('.mdc-button'));
+
 
 const ClientData = {
   accountName: { value: 'Willg' },
@@ -131,9 +139,6 @@ export default class ClientSheet extends React.Component {
           ))
         }
 
-        <div className="form-group">
-          <Divider />
-        </div>
         <div className="form-group">
           <TextField
             hintText="CPA Name"

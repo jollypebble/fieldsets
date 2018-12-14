@@ -1,9 +1,21 @@
+#tabs-wrapper {
+  text-align: center;
+  overflow: visible;
+  float: right;
+  position: relative;
+  display: block;
+}
+.drawer-sheet {
+  overflow: visible;
+  z-index: 1300;
+}
 .drawer-tab {
     width: $tab-width;
     height: $tab-height;
     position: absolute;
     float: left;
     left: (-$tab-width);
+    transition-duration: $md-drawer-transition-time;
     display: flex;
 
     .drawer-tab__icon {
@@ -13,8 +25,13 @@
         color: $app-white;
 
         button {
+          height: $tab-height;
+          width: calc($tab-width/2);
+          padding: '0px';
           position: relative;
-          right: -5px;
+          border-radius: 90px 0 0 90px;
+          right: 0px;
+          padding-right: 0px;
           color: $app-white;
           svg {
             fill: $app-white !important;

@@ -1,5 +1,9 @@
+$md-light-theme: true; // optional for light theme
+$md-primary-color: $md-blue-grey-500;
+$md-secondary-color: $md-orange-a-700;
+
 $app-white: #FFF !default;
-$app-blue: #00BCD4 !default;
+$app-blue: $md-primary-color;
 
 $circle-green-fill: #7CB342 !default;
 $circle-green-stroke: #8BC34A !default;

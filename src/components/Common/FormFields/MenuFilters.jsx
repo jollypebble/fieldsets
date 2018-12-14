@@ -1,5 +1,7 @@
 import React from 'react';
-import { Switch } from '@material-ui/core';
+import { MDCSwitch } from '@material/switch';
+
+const Switch = new MDCSwitch(document.querySelector('.mdc-switch'));
 
 const styles = {
   block: {
