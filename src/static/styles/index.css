@@ -260,7 +260,7 @@ caption,
     color: #FFF; }
     .drawer-tab .drawer-tab__icon button {
       height: 80px;
-      width: calc($tab-width/2);
+      width: calc(40px/2);
       padding: '0px';
       position: relative;
       border-radius: 90px 0 0 90px;
