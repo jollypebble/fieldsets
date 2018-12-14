@@ -260,7 +260,7 @@ caption,
     color: #FFF; }
     .drawer-tab .drawer-tab__icon button {
       height: 80px;
-      width: calc(40px/2);
+      width: 20px;
       padding: '0px';
       position: relative;
       border-radius: 90px 0 0 90px;
@@ -417,8 +417,7 @@ text.nodeAttributesBase {
   transition: width 0.3s cubic-bezier(0.215, 0.61, 0.355, 1); }
 
 #econcircleapp {
-  float: left;
-  height: 100vh; }
+  float: left; }
 
 #econcircleapp.sideBarRef {
   width: 96%;

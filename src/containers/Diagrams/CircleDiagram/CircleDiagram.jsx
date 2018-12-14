@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { diagramData } from 'config';
-import { ReactSVGPanZoom, TOOL_NONE, fitSelection, zoomOnViewerCenter, fitToViewer } from 'react-svg-pan-zoom';
+import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
 
-import RadialNode from './RadialNode';
+import { RadialNode } from 'components/Diagrams';
 
 export default class CircleDiagram extends Component {
   constructor(props) {
@@ -12,7 +12,10 @@ export default class CircleDiagram extends Component {
       diagramData: diagramData,
       showChildren: true,
       width: 1920,
-      height: 1080
+      height: 1080,
+      lastX: 30.5,
+      lastY: 46,
+      lastZoom: 30
     };
   }
 
@@ -23,7 +26,12 @@ export default class CircleDiagram extends Component {
   }
 
   getToCenter = () => {
-    document.documentElement.scrollLeft = (document.body.scrollWidth - document.body.clientWidth) / 2;
+    const {
+      lastX,
+      lastY,
+      lastZoom
+    } = this.state;
+    this.Viewer.setPointOnViewerCenter(lastX, lastY, lastZoom);
   }
 
   showChildren = (e) => {
@@ -63,22 +71,28 @@ export default class CircleDiagram extends Component {
           toolbarPosition='none'
           miniaturePosition='none'
           disableDoubleClickZoomWithToolAuto={true}
+          scaleFactor={2.5}
+          scaleFactorOnWheel={1.1}
           ref={Viewer => this.Viewer = Viewer}
           onClick={event => console.log(event.x, event.y, event.originalEvent)}
+          onDoubleClick={event => console.log(event.x, event.y, event.originalEvent)}
         >
           <svg
             id="circlediagram" width={width} height={height}
           >
-            { diagramData.map(data => (
-              <RadialNode
-                key={ data.id }
-                nodeData={ typeof(data.children) === undefined ? [] : data.children }
-                nodeID={ data.id }
-                startx={ data.startx }
-                starty={ data.starty }
-                radius={ radius }
-              />
-            )) }
+            <g id="diagramGroup">
+              { diagramData.map(data => (
+                <RadialNode
+                  key={ data.id }
+                  nodeData={ typeof(data.children) === undefined ? [] : data.children }
+                  nodeID={ data.id }
+                  startx={ data.startx }
+                  starty={ data.starty }
+                  radius={ radius }
+                  ref={Viewer => this.Viewer = Viewer}
+                />
+              )) }
+            </g>
           </svg>
         </ReactSVGPanZoom>
       </div>

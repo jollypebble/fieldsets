@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { MenuBar } from 'components/UI';
-import { TabbedDrawer } from 'components/Drawers';
+import { TabbedDrawer } from 'components/UI/Drawers';
 
 export default class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      
+
     };
   }
 

@@ -14,7 +14,15 @@ export default class RadialNode extends Component {
       showChildren: true,
       expand: 'down'
     }
+    this.Viewer = null;
+
     this.dom = {};
+  }
+
+  componentDidMount() {
+    setTimeout(() => {
+      this.Viewer = this.refs.Viewer;
+    }, 10);
   }
 
   componentWillEnter(callback) {
@@ -45,6 +53,7 @@ export default class RadialNode extends Component {
             startx={ startx }
             starty={ starty }
             radius={ radius }
+            ref={Viewer => this.Viewer = Viewer}
           />
           <g id={ nodeID ? `${nodeID}-children` : '' } >
             { nodeData.map(data => (
@@ -58,6 +67,7 @@ export default class RadialNode extends Component {
                     startx={ data.startx }
                     starty={ data.starty }
                     radius={ childRadius }
+                    ref={Viewer => this.Viewer = Viewer}
                   />
               </g>
             )) }
@@ -75,6 +85,7 @@ export default class RadialNode extends Component {
               startx={ startx }
               starty={ starty }
               radius={ childRadius }
+              ref={Viewer => this.Viewer = Viewer}
             />
           </g>
         </React.Fragment>
