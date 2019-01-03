@@ -3,6 +3,9 @@ import React, { Component } from 'react';
 import ReactDom from 'react-dom';
 import PropTypes from 'prop-types';
 import { TweenMax } from 'gsap';
+import { Query, Mutation } from "react-apollo";
+
+import { GET_ALLTODOS, REMOVE_TODO, UPDATE_TODO, SUBSCRIBE_NEWTODO } from '../../queries';
 
 import { CircleNode } from 'components/Diagrams'
 

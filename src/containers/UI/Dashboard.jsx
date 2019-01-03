@@ -5,9 +5,7 @@ import { TabbedDrawer } from 'components/UI/Drawers';
 export default class Dashboard extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-
-    };
+    this.state = {};
   }
 
   render() {

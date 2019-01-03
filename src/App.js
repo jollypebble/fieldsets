@@ -24,24 +24,6 @@ class App extends Component {
     };
   }
 
-  handleUpdateInput = (value) => {
-    this.setState({
-      dataSource: [
-        value,
-        value + value,
-        value + value + value,
-      ],
-    });
-  };
-
-  expandSideBar = () => {
-    this.setState({ addClass: !this.state.addClass });
-  }
-
-  toggleVisibility = () => {
-    this.setState({ open: !this.state.open });
-  }
-
   render() {
     return (
       <React.Fragment>
