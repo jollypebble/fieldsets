@@ -28,7 +28,11 @@ class App extends Component {
     return (
       <React.Fragment>
         <div id="econcircleapp">
-          <CircleDiagram />
+          <CircleDiagram
+            width={1920}
+            height={1080}
+            zoom={30}
+          />
         </div>
         <Dashboard />
       </React.Fragment>

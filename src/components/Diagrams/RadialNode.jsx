@@ -3,9 +3,6 @@ import React, { Component } from 'react';
 import ReactDom from 'react-dom';
 import PropTypes from 'prop-types';
 import { TweenMax } from 'gsap';
-import { Query, Mutation } from "react-apollo";
-
-import { GET_ALLTODOS, REMOVE_TODO, UPDATE_TODO, SUBSCRIBE_NEWTODO } from '../../queries';
 
 import { CircleNode } from 'components/Diagrams'
 
@@ -17,14 +14,12 @@ export default class RadialNode extends Component {
       showChildren: true,
       expand: 'down'
     }
-    this.Viewer = null;
 
     this.dom = {};
   }
 
   componentDidMount() {
     setTimeout(() => {
-      this.Viewer = this.refs.Viewer;
     }, 10);
   }
 
@@ -56,7 +51,6 @@ export default class RadialNode extends Component {
             startx={ startx }
             starty={ starty }
             radius={ radius }
-            ref={Viewer => this.Viewer = Viewer}
           />
           <g id={ nodeID ? `${nodeID}-children` : '' } >
             { nodeData.map(data => (
@@ -70,7 +64,6 @@ export default class RadialNode extends Component {
                     startx={ data.startx }
                     starty={ data.starty }
                     radius={ childRadius }
-                    ref={Viewer => this.Viewer = Viewer}
                   />
               </g>
             )) }
@@ -88,7 +81,6 @@ export default class RadialNode extends Component {
               startx={ startx }
               starty={ starty }
               radius={ childRadius }
-              ref={Viewer => this.Viewer = Viewer}
             />
           </g>
         </React.Fragment>

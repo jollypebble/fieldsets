@@ -1,21 +1,17 @@
 import React, { Component } from 'react';
 import { diagramData } from 'config';
+import gql from 'graphql-tag';
 import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
 
 import { RadialNode } from 'components/Diagrams';
+
 
 export default class CircleDiagram extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isVisible: true,
-      diagramData: diagramData,
-      showChildren: true,
-      width: 1920,
-      height: 1080,
-      lastX: 30.5,
-      lastY: 46,
-      lastZoom: 30
+      currentX: 30.5,
+      currentY: 46
     };
   }
 
@@ -26,35 +22,22 @@ export default class CircleDiagram extends Component {
   }
 
   getToCenter = () => {
+    // At this point the viewer has been created. Set a cached reference to the viewer for components to use to move the viewer around.
     const {
-      lastX,
-      lastY,
-      lastZoom
+      currentX,
+      currentY
     } = this.state;
-    this.Viewer.setPointOnViewerCenter(lastX, lastY, lastZoom);
-  }
-
-  showChildren = (e) => {
-    this.setState(state => ({
-      isVisible: !state.isVisible
-    }));
-    e.preventDefault();
-  }
-
-  handleCollapse = () => {
-    this.setState({
-      showChildren: !this.state.showChildren
-    }, () => {
-      this.getToCenter();
-    });
+    const {
+      zoom
+    } = this.props;
+    this.Viewer.setPointOnViewerCenter(currentX, currentY, zoom);
   }
 
   render() {
     const {
-      diagramData,
       width,
       height
-    } = this.state;
+    } = this.props;
 
     // Scale our SVG based on our desired width height based on a 100 x 75 canvas.
     const baseradius = 2;

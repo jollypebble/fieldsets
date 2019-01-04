@@ -1,17 +1,20 @@
 /* eslint-disable react/no-find-dom-node */
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Mutation } from "react-apollo";
+import gql from 'graphql-tag';
+
+const FOCUS_CIRCLE = gql`
+  mutation FocusCircle($id: String!, $centerX: Float!, $centerY: Float!) {
+    focusCircle(id: $id, centerX: $centerX, centerY: $centerY) @client
+  }
+`;
 
 export default class CircleNode extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isHidden: false,
       isMouseInside: false,
-      viewer: null,
-      lastX: null,
-      lastY: null,
-      lastZoom: null
     };
 
     this.handleMouseEnter = this.handleMouseEnter.bind(this);
@@ -20,9 +23,9 @@ export default class CircleNode extends React.Component {
 
   componentDidMount() {
     setTimeout(() => {
-      return;
     }, 10);
   }
+
 
   handleMouseEnter() {
     //this.Viewer.setPointOnViewerCenter(this.props.startx, this.props.starty, 35);
@@ -33,38 +36,37 @@ export default class CircleNode extends React.Component {
     this.setState({ isMouseInside: false});
   }
 
-  toggleChildren() {
-    //const groupname = `${this.props.nodeID}-group`;
-    //const childGroup = document.getElementById(groupname).
-    //childGroup.setState({ isHidden: !childGroup.state.isHidden });
-  }
-
   render() {
     const {
       nodeData,
       nodeID,
       startx,
       starty,
-      radius,
+      radius
     } = this.props;
 
-    const titleID = `${nodeID}-title`;
-    const circleID = `${nodeID}`;
+    const id = `${nodeID}`;
+    const centerX = startx;
+    const centerY = starty;
 
     return (
-        <circle
-          id={circleID}
-          className='circlenode'
-          cx={startx}
-          cy={starty}
-          r={radius}
-          fill="grey"
-          stroke="grey"
-          strokeWidth={this.state.isMouseInside ? radius*2 : radius}
-          onMouseEnter={this.handleMouseEnter}
-          onMouseLeave={this.handleMouseLeave}
-          onClick={this.toggleChildren.bind(this)}
-        />
+      <Mutation mutation={FOCUS_CIRCLE} variables={{ id, centerX, centerY }}>
+        {focusCircle => (
+          <circle
+            id={id}
+            className='circlenode'
+            cx={centerX}
+            cy={centerY}
+            r={radius}
+            fill="grey"
+            stroke="grey"
+            strokeWidth={this.state.isMouseInside ? radius*2 : radius}
+            onMouseEnter={this.handleMouseEnter}
+            onMouseLeave={this.handleMouseLeave}
+            onClick={focusCircle}
+          />
+        )}
+      </Mutation>
     );
   }
 }
