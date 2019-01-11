@@ -1,17 +1,18 @@
-/* eslint-disable react/no-find-dom-node */
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Mutation, withApollo } from 'react-apollo';
+import { CircleText} from 'components/Diagrams';
+import { focusCircleQuery } from '../../graphql';
 
-export default class CircleNode extends React.Component {
+/**
+ * Circular nodes are the visually rendered components. We use their state for tracking the mouse pointer.
+ * Clicking on a circular node mutates the current focus cache item.
+ */
+class CircleNode extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isHidden: false,
       isMouseInside: false,
-      viewer: null,
-      lastX: null,
-      lastY: null,
-      lastZoom: null
     };
 
     this.handleMouseEnter = this.handleMouseEnter.bind(this);
@@ -20,57 +21,54 @@ export default class CircleNode extends React.Component {
 
   componentDidMount() {
     setTimeout(() => {
-      return;
     }, 10);
   }
 
   handleMouseEnter() {
-    //this.Viewer.setPointOnViewerCenter(this.props.startx, this.props.starty, 35);
     this.setState({ isMouseInside: true});
   }
   handleMouseLeave() {
-    //this.Viewer.setPointOnViewerCenter(this.props.startx, this.props.starty, 35);
     this.setState({ isMouseInside: false});
-  }
-
-  toggleChildren() {
-    //const groupname = `${this.props.nodeID}-group`;
-    //const childGroup = document.getElementById(groupname).
-    //childGroup.setState({ isHidden: !childGroup.state.isHidden });
   }
 
   render() {
     const {
-      nodeData,
       nodeID,
-      startx,
-      starty,
-      radius,
+      centerX,
+      centerY,
+      radius
     } = this.props;
 
-    const titleID = `${nodeID}-title`;
-    const circleID = `${nodeID}`;
+    const id = `${nodeID}`;
 
     return (
-        <circle
-          id={circleID}
-          className='circlenode'
-          cx={startx}
-          cy={starty}
-          r={radius}
-          fill="grey"
-          stroke="grey"
-          strokeWidth={this.state.isMouseInside ? radius*2 : radius}
-          onMouseEnter={this.handleMouseEnter}
-          onMouseLeave={this.handleMouseLeave}
-          onClick={this.toggleChildren.bind(this)}
-        />
+      <Mutation mutation={focusCircleQuery} variables={{ id, centerX, centerY }}>
+        {focusCircle => (
+          <React.Fragment>
+            <circle
+              id={id}
+              className='circlenode'
+              cx={centerX}
+              cy={centerY}
+              r={radius}
+              fill="grey"
+              stroke="grey"
+              strokeWidth={this.state.isMouseInside ? radius*2 : radius}
+              onMouseEnter={this.handleMouseEnter}
+              onMouseLeave={this.handleMouseLeave}
+              onClick={focusCircle}
+            />
+          </React.Fragment>
+        )}
+      </Mutation>
     );
   }
 }
 
 CircleNode.propTypes = {
   nodeID: PropTypes.string.isRequired,
-  startx: PropTypes.node,
-  starty: PropTypes.node
+  centerX: PropTypes.node,
+  centerY: PropTypes.node
 };
+
+export default withApollo(CircleNode);

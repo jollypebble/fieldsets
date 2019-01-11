@@ -1,18 +1,24 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { createStore, applyMiddleware } from 'redux';
-import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
-import rootReducer from 'redux-base/reducers';
+import { ApolloClient } from 'apollo-client';
+import { withClientState } from 'apollo-link-state';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { ApolloProvider } from 'react-apollo';
 
 import 'static/styles/index.css';
 import App from './App';
+import { resolvers, defaults, typeDefs } from './graphql';
 
-const store = createStore(rootReducer, applyMiddleware(thunk));
+const cache = new InMemoryCache();
+
+const client = new ApolloClient({
+  cache,
+  link: withClientState({ resolvers, defaults, cache, typeDefs }),
+});
 
 render(
-  <Provider store={ store }>
+  <ApolloProvider client={client}>
     <App />
-  </Provider>,
-  document.getElementById('root')
+  </ApolloProvider>,
+  document.getElementById('root'),
 );

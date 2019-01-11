@@ -24,29 +24,17 @@ class App extends Component {
     };
   }
 
-  handleUpdateInput = (value) => {
-    this.setState({
-      dataSource: [
-        value,
-        value + value,
-        value + value + value,
-      ],
-    });
-  };
-
-  expandSideBar = () => {
-    this.setState({ addClass: !this.state.addClass });
-  }
-
-  toggleVisibility = () => {
-    this.setState({ open: !this.state.open });
-  }
-
   render() {
     return (
       <React.Fragment>
         <div id="econcircleapp">
-          <CircleDiagram />
+          <CircleDiagram
+            width={1920}
+            height={1080}
+            zoom={30}
+            startX={30.5}
+            startY={46}
+          />
         </div>
         <Dashboard />
       </React.Fragment>

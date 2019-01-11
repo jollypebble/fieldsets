@@ -4,16 +4,16 @@ export default [
     id: 'defense_allocation',
     parentID: '',
     fields: [],
-    startx: 30.5,
-    starty: 38.5,
+    centerX: 30.5,
+    centerY: 38.5,
     children: [
       {
         name: 'Will',
         id: 'will',
         parentID: 'defense_allocation',
         fields: [],
-        startx: 25,
-        starty: 38,
+        centerX: 25,
+        centerY: 38,
         children: []
       },
       {
@@ -21,8 +21,8 @@ export default [
         id: 'disability_insurance',
         parentID: 'defense_allocation',
         fields: [],
-        startx: 28,
-        starty: 34,
+        centerX: 28,
+        centerY: 34,
         children: []
       },
       {
@@ -30,8 +30,8 @@ export default [
         id: 'long_term_care',
         parentID: 'defense_allocation',
         fields: [],
-        startx: 33,
-        starty: 34,
+        centerX: 33,
+        centerY: 34,
         children: []
       },
       {
@@ -39,8 +39,8 @@ export default [
         id: 'term_insurance',
         parentID: 'defense_allocation',
         fields: [],
-        startx: 36,
-        starty: 38,
+        centerX: 36,
+        centerY: 38,
         children: []
       },
     ]
@@ -50,23 +50,23 @@ export default [
     id: 'offense_allocation',
     parentID: '',
     fields: [],
-    startx: 30.5,
-    starty: 46,
+    centerX: 30.5,
+    centerY: 46,
     children: [
       {
         name: 'Short Term Money',
         id: 'short_term_money',
         fields: [],
-        startx: 23,
-        starty: 49,
+        centerX: 23,
+        centerY: 49,
         children: [
           {
             name: 'Cash Equivalents',
             id: 'cash_equivalents',
             parentID: 'short_term_money',
             fields: [],
-            startx: 20,
-            starty: 49,
+            centerX: 20,
+            centerY: 49,
             children: []
           },
           {
@@ -74,8 +74,8 @@ export default [
             id: 'mortgage',
             parentID: 'short_term_money',
             fields: [],
-            startx: 21,
-            starty: 51,
+            centerX: 21,
+            centerY: 51,
             children: []
           },
           {
@@ -83,8 +83,8 @@ export default [
             id: 'liabilities_debt',
             parentID: 'short_term_money',
             fields: [],
-            startx: 23,
-            starty: 52,
+            centerX: 23,
+            centerY: 52,
             children: []
           },
         ]
@@ -94,16 +94,16 @@ export default [
         id: 'mid_term_money',
         parentID: 'offense_allocation',
         fields: [],
-        startx: 30.5,
-        starty: 52,
+        centerX: 30.5,
+        centerY: 52,
         children: [
           {
             name: 'UTMA\'s',
             id: 'utmas',
             parentID: 'mid_term_money',
             fields: [],
-            startx: 28.5,
-            starty: 54,
+            centerX: 28.5,
+            centerY: 54,
             children: []
           },
           {
@@ -111,8 +111,8 @@ export default [
             id: 'plan_529',
             parentID: 'mid_term_money',
             fields: [],
-            startx: 30.5,
-            starty: 55,
+            centerX: 30.5,
+            centerY: 55,
             children: []
           },
           {
@@ -120,8 +120,8 @@ export default [
             id: 'investment_account',
             parentID: 'mid_term_money',
             fields: [],
-            startx: 32.5,
-            starty: 54,
+            centerX: 32.5,
+            centerY: 54,
             children: []
           },
         ]
@@ -131,16 +131,16 @@ export default [
         id: 'long_term_money',
         parentID: 'offense_allocation',
         fields: [],
-        startx: 38,
-        starty: 48.75,
+        centerX: 38,
+        centerY: 48.75,
         children: [
           {
             name: 'IRA ROTH',
             id: 'ira_roth',
             parentID: 'long_term_money',
             fields: [],
-            startx: 36.5,
-            starty: 51.75,
+            centerX: 36.5,
+            centerY: 51.75,
             children: []
           },
           {
@@ -148,8 +148,8 @@ export default [
             id: 'cash_value_life',
             parentID: 'long_term_money',
             fields: [],
-            startx: 39,
-            starty: 51.5,
+            centerX: 39,
+            centerY: 51.5,
             children: []
           },
           {
@@ -157,8 +157,8 @@ export default [
             id: 'k_401',
             parentID: 'long_term_money',
             fields: [],
-            startx: 40.75,
-            starty: 49.5,
+            centerX: 40.75,
+            centerY: 49.5,
             children: []
           },
           {
@@ -166,8 +166,8 @@ export default [
             id: 'annuity',
             parentID: 'long_term_money',
             fields: [],
-            startx: 40.75,
-            starty: 47,
+            centerX: 40.75,
+            centerY: 47,
             children: []
           },
           {
@@ -175,8 +175,8 @@ export default [
             id: 'stock_option',
             parentID: 'long_term_money',
             fields: [],
-            startx: 38,
-            starty: 53.5,
+            centerX: 38,
+            centerY: 53.5,
             children: []
           },
           {
@@ -184,8 +184,8 @@ export default [
             id: 'investment_real_estate',
             parentID: 'long_term_money',
             fields: [],
-            startx: 41.25,
-            starty: 51.75,
+            centerX: 41.25,
+            centerY: 51.75,
             children: []
           },
           {
@@ -193,8 +193,8 @@ export default [
             id: 'deffered_comp',
             parentID: 'long_term_money',
             fields: [],
-            startx: 42.75,
-            starty: 48.25,
+            centerX: 42.75,
+            centerY: 48.25,
             children: []
           }
         ]
