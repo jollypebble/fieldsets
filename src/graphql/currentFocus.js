@@ -1,16 +1,11 @@
 import gql from 'graphql-tag';
 
-export const getCurrentFocus = gql`
+export const getCurrentFocusQuery = gql`
   query GetCurrentFocus {
-    currentFocus @client {
-      currentX
-      currentY
+    getCurrentFocus @client {
+      id
+      centerX
+      centerY
     }
   }
 `;
-
-export const getCurrentFocus = ({
-  props: ({ data: { currentFocus } }) => ({
-    currentFocus
-  })
-});

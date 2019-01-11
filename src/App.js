@@ -32,6 +32,8 @@ class App extends Component {
             width={1920}
             height={1080}
             zoom={30}
+            startX={30.5}
+            startY={46}
           />
         </div>
         <Dashboard />
