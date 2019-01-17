@@ -12,14 +12,14 @@ Econ Circles is built using react and material design as the primary framework f
 # Getting Started
 
 From the local top level directory of this codebase run:
-```npm install```
+``npm install``
 
 For local development and to run a server locally run:
-```npm run start```
+``npm run start``
 
 For a final production build:
 
-```npm run build```
+``npm run build``
 
 # Code Structure
 
