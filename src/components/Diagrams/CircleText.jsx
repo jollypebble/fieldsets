@@ -28,14 +28,8 @@ class CircleText extends React.Component {
     const id = `${nodeID}`;
 
     return (
-      <svg>
-        <g id="textarea-1" className="selectable list contextmenu circletext" transform="translate(18,18)">
-          <rect x={0} y={0} width={1} height={1} className="background"></rect>
-          <text x={0} y={7}>
-            <tspan dy={9} x={0} dx={20}>Apples</tspan>
-          </text><circle cx={14} cy={13.6} r={1.2000000000000002}></circle>
-        </g>
-      </svg>
+      <React.Fragment>
+      </React.Fragment>
     );
   }
 }
