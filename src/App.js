@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withApollo } from "react-apollo";
 import ReactGoogleSheetConnector from 'react-google-sheet-connector';
 
 import { Auth } from 'config';
@@ -42,4 +43,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withApollo(App);

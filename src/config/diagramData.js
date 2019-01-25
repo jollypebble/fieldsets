@@ -56,6 +56,7 @@ export default [
       {
         name: 'Short Term Money',
         id: 'short_term_money',
+        parentID: 'offense_allocation',
         fields: [],
         centerX: 23,
         centerY: 49,
@@ -189,7 +190,7 @@ export default [
             children: []
           },
           {
-            name: 'Deffered comp',
+            name: 'Deffered Comp',
             id: 'deffered_comp',
             parentID: 'long_term_money',
             fields: [],

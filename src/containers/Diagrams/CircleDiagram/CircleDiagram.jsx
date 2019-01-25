@@ -5,7 +5,8 @@ import gql from 'graphql-tag';
 import {AutoSizer} from 'react-virtualized';
 import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
 
-import { RadialNode } from 'components/Diagrams';
+//import { Diagram, DiagramCache } from 'containers/Diagrams/Diagram';
+import { RadialNode, RadialDialog } from 'components/Diagrams';
 //import { getCurrentFocusQuery } from '../../../graphql';
 
 /**
@@ -15,24 +16,27 @@ class CircleDiagram extends Component {
   constructor(props) {
     super(props);
 
-    // Our custom event handling structure
-    this.addEvents = this.addEvents.bind(this);
-    this.removeEvents = this.removeEvents.bind(this);
-
     // Component State
     this.state = {
       currentID: null,
       currentX: this.props.startX,
       currentY: this.props.startY,
       currentZoom: this.props.zoom,
-      isZoomed: false
+      nodes: {},
+      isZoomed: false,
+      isDblClick: false,
+      mouseInCircle: false
     };
 
     // Component Specific Methods
     this.setFocus = this.setFocus.bind(this);
-    this.updateFocus = this.updateFocus.bind(this);
     this.resetFocus = this.resetFocus.bind(this);
     this.updateZoom = this.updateZoom.bind(this);
+    this.updateFocus = this.updateFocus.bind(this);
+    this.cacheIsSet = this.cacheIsSet.bind(this);
+    this.handleDoubleClick = this.handleDoubleClick.bind(this);
+
+    this.Viewer = React.createRef();
   }
 
   /**
@@ -48,32 +52,19 @@ class CircleDiagram extends Component {
    * Here we add all of our component specific event listeners and interact with our component.
    */
   componentDidMount() {
-    this.addEvents();
-
-    setTimeout(() => {
-      this.resetFocus();
-    }, 10);
+    this.resetFocus();
   }
 
-  /**
-   * Undo what has been done in WillMount
-   */
-  componentWillUnmount() {
-    this.removeEvents();
+  handleClick = (event) => {
+    //console.log(event.x, event.y, event.originalEvent);
   }
 
-  // Any events you add in here should make sure they have a corresponding removal in the removeEvents method
-  addEvents = () => {
-    // TODO: These events are frowned upon by the react community. But bubbling all the way from the apollo cache is going to be hairy. Fix this at some point.
-    document.addEventListener('focusCircleSet', this.updateFocus);
+  handleDoubleClick = (event) => {
+    //console.log(event.x, event.y, event.originalEvent);
   }
 
-  // Any events you remove in here should make sure they have a corresponding add in the addEvents method
-  removeEvents = () => {
-    document.removeEventListener('focusCircleSet', this.updateFocus);
-  }
 
-  resetState = () => {
+  resetState() {
     const {
       startX,
       startY,
@@ -101,7 +92,8 @@ class CircleDiagram extends Component {
     this.setState(state);
   }
 
-  resetFocus = () => {
+  resetFocus() {
+    console.log( 'Diagram Reset' );
     const {
       startX,
       startY,
@@ -113,6 +105,7 @@ class CircleDiagram extends Component {
   }
 
   setFocus = () => {
+    //console.log( 'Diagram Moving Viewer Focus' );
     const {
       currentID,
       currentX,
@@ -139,26 +132,40 @@ class CircleDiagram extends Component {
       const currentZoom = this.state.currentZoom;
       const newZoom = (currentZoom - (currentZoom/2.5)) > 200 ? 200 : currentZoom - (1.5 * (currentZoom/2.5)); // 2.5 is the scale factor we pass below. Let's not zoom in above 200. There is no need.
       this.Viewer.setPointOnViewerCenter(currentX, currentY, newZoom);
+    } else {
+      this.resetFocus();
     }
   }
 
-  updateFocus = (event) => {
-    console.log('Diagram Update Focus');
-    const focus = this.props.client.readQuery({
-      query: gql`
-        {
-          currentFocus @client {
-            id
-            centerX
-            centerY
+  cacheIsSet = (vars) => {
+    const p = new Promise( (resolve) => {
+      const focus = this.props.client.readQuery({
+        query: gql`
+          {
+            currentFocus @client {
+              id
+              centerX
+              centerY
+            }
           }
-        }
-      `
+        `
+      });
+      if ( focus.currentFocus.id === vars.id && focus.currentFocus.centerX === vars.centerX && focus.currentFocus.centerY === vars.centerY ) {
+        resolve(vars);  // fulfilled successfully
+      }
     });
-    console.log(focus);
-    this.setState({ currentID: focus.currentFocus.id });
-    this.setState({ currentX: focus.currentFocus.centerX });
-    this.setState({ currentY: focus.currentFocus.centerY });
+    return p;
+  }
+
+  updateFocus = async (id, focusX, focusY) => {
+    console.log('Diagram Update Focus State');
+    console.log('Checking cache.....');
+    await this.cacheIsSet({id: id, centerX: focusX, centerY: focusY});
+    console.log('Cache is set');
+
+    this.setState({ currentID: id });
+    this.setState({ currentX: focusX });
+    this.setState({ currentY: focusY });
     this.setFocus();
   }
 
@@ -167,12 +174,23 @@ class CircleDiagram extends Component {
     this.setState({ isZoomed: true });
   }
 
+  openDialog = () => {
+
+
+  }
+
+  setNodeState = (nodes) => {
+    // Do something to update a node state.
+    this.setState({nodes: nodes})
+  }
+
   render() {
     const {
       width,
       height,
       startX,
-      startY
+      startY,
+      viewer
     } = this.props;
 
     const {
@@ -185,42 +203,60 @@ class CircleDiagram extends Component {
 
     // const circleData = this.calculateNodeCenters(diagramData);
     return (
-      <div className="diagramviewer">
-        <ReactSVGPanZoom
-          width={width}
-          height={height}
-          background='transparent'
-          tool='auto'
-          toolbarPosition='none'
-          miniaturePosition='none'
-          disableDoubleClickZoomWithToolAuto={true}
-          scaleFactor={2.5}
-          scaleFactorOnWheel={1.1}
-          scaleFactorMin={10}
-          ref={Viewer => this.Viewer = Viewer}
-          onClick={this.resetFocus}
-          onZoom={this.updateZoom}
-          onDoubleClick={event => console.log(event.x, event.y, event.originalEvent)}
-        >
-          <svg
-            id="circlediagram" width={width} height={height}
+      //<DiagramCache value={this.state}>
+        <div className="diagramviewer">
+          <ReactSVGPanZoom
+            width={width}
+            height={height}
+            background='transparent'
+            tool='auto'
+            toolbarPosition='none'
+            miniaturePosition='none'
+            disableDoubleClickZoomWithToolAuto={true}
+            scaleFactor={2.5}
+            scaleFactorOnWheel={1.1}
+            scaleFactorMin={10}
+            ref={Viewer => this.Viewer = Viewer}
+            onClick={this.handleClick}
+            onZoom={this.updateZoom}
+            onDoubleClick={this.handleDoubleClick}
           >
-            <g id="diagramGroup">
-              { diagramData.map(diagram => (
-                <RadialNode
-                  key={ diagram.id }
-                  nodeData={ typeof(diagram.children) === undefined ? [] : diagram.children }
-                  nodeID={ diagram.id }
-                  centerX={ diagram.centerX }
-                  centerY={ diagram.centerY }
-                  radius={ radius }
-                  ref={(ref) => this.group = ref}
-                />
-              )) }
-            </g>
-          </svg>
-        </ReactSVGPanZoom>
-      </div>
+            <svg
+              id="circlediagram" width={width} height={height}
+            >
+              <g id="diagramGroup">
+                { diagramData.map(diagram => (
+                  <RadialNode
+                    key={ diagram.id }
+                    nodeData={ typeof(diagram.children) === undefined ? [] : diagram.children }
+                    nodeID={ diagram.id }
+                    centerX={ diagram.centerX }
+                    centerY={ diagram.centerY }
+                    radius={ radius }
+                    name={ diagram.name }
+                    parent={ diagram.parentID }
+                    fields={ diagram.fields }
+                    updateFocus={ this.updateFocus }
+                    resetFocus={ this.resetFocus }
+                    openDialog={ this.openDialog }
+                    setNodeState={ this.setNodeState }
+                    nodes={this.state.nodes}
+                  />
+                )) }
+              </g>
+            </svg>
+          </ReactSVGPanZoom>
+          <div className="diagramDialogs">
+            { diagramData.map(diagram => (
+              <RadialDialog
+                key={ diagram.id }
+                nodeData={ typeof(diagram.children) === undefined ? [] : diagram.children }
+                nodeID={ diagram.id }
+              />
+            )) }
+          </div>
+        </div>
+      //</DiagramCache>
     );
   }
 }

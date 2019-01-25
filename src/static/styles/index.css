@@ -234,13 +234,10 @@ caption,
   top: 0;
   width: 100%; }
 
-.circletext text {
-  font-family: Georgia;
-  font-size: 6pt;
-  font-style: italic;
-  line-height: 9pt;
-  fill: #515359;
-  text-rendering: geometricprecision; }
+.circletext tspan {
+  font-size: .5pt;
+  line-height: .75pt;
+  fill: #515359; }
 
 #tabs-wrapper {
   text-align: center;
