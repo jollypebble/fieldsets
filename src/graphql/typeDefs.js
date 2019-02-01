@@ -1,8 +1,21 @@
 export const typeDefs = `
-  type Circle {
+  interface Entity {
     id: String!
-    isFocused: Boolean
-    isActive: Boolean
+    name: String!
+  }
+
+  type Field implements Entity {
+    id: String!
+    parent: Circle!
+    name: String!
+    value: String!
+    primary: Boolean!
+  }
+
+  type Circle implements Entity {
+    id: String!
+    name: String!
+    fields: [Field]!
     centerX: Float!
     centerY: Float!
   }
@@ -12,6 +25,8 @@ export const typeDefs = `
   }
 
   type Query {
-    getCurrentFocus: Circle
+    getCurrentFocus: Circle!
+    getFieldData: Field!
+    getCircleFields: [Field!]!
   }
 `;

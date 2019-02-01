@@ -1,7 +1,6 @@
 export { defaults } from './defaults';
 export { typeDefs } from './typeDefs';
 
-export { getCurrentFocusQuery } from './currentFocus';
-export { focusCircleQuery } from './circles';
+export { focusCircleQuery, getCurrentFocusQuery } from './components/Diagrams';
 
 export { resolvers } from './resolvers';

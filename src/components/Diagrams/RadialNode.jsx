@@ -1,8 +1,15 @@
 import React from 'react';
+import {
+  Button,
+  DialogContainer,
+  TextField,
+  SelectionControl,
+  SelectionControlGroup,
+} from 'react-md';
 import PropTypes from 'prop-types';
-import { Query, withApollo } from "react-apollo";
+import { Query, Mutation, graphql } from 'react-apollo';
+import { focusCircleQuery } from '../../graphql';
 
-import { CircleNode } from 'components/Diagrams';
 /**
  * Radial Nodes are functional components that represent parent circle nodes.
  * They simply check the node data and will iteratively call itself if there are children.
@@ -11,90 +18,220 @@ import { CircleNode } from 'components/Diagrams';
    constructor(props) {
      super(props);
      this.state = {
-       boundingBox: null,
+       isMouseInside: false,
+       visible: false,
+       focusOnMount: true,
+       containFocus: true,
+       initialFocus: undefined
      };
-     this.group = React.createRef();
-     this.getBoundingBox = this.getBoundingBox.bind(this);
+
+     this.handleMouseEnter = this.handleMouseEnter.bind(this);
+     this.handleMouseLeave = this.handleMouseLeave.bind(this);
+     this.handleClick = this.handleClick.bind(this);
+
+     this.handleTargetChange = this.handleTargetChange.bind(this);
+     this.handleMountChange = this.handleMountChange.bind(this);
+     this.handleFocusChange = this.handleFocusChange.bind(this);
    }
 
-   /**
-    * After render get group bounding box in SVG.
-    */
    componentDidMount() {
-     setTimeout(() => {
-       this.getBoundingBox();
-     }, 10);
+     this.updateNodeData();
    }
 
-   getBoundingBox = () => {
-     /**
-     const boundingBox = this.group.current.getBBox();
-     this.setState({ boundingBox: boundingBox });
-     */
+   componentDidUpdate() {
+   }
+
+   handleMouseEnter() {
+     this.setState({ isMouseInside: true});
+   }
+   handleMouseLeave() {
+     this.setState({ isMouseInside: false});
+   }
+
+   handleClick() {
+     const {
+       nodeID,
+       centerX,
+       centerY
+     } = this.props;
+     this.props.updateFocus(nodeID, centerX, centerY);
+   }
+
+   handleDoubleClick = () => {
+     const {
+       nodeID,
+       centerX,
+       centerY
+     } = this.props;
+     console.log(this.props);
+     // TODO: OPEN DIALOG AND SET FIELDS TO DISPLAY
+     this.props.openDialog(nodeID);
+   }
+
+   handleTargetChange = (value) => {
+     this.setState({ initialFocus: value ? `#${value}` : undefined });
+   };
+
+   handleMountChange = (checked) => {
+     this.setState({ focusOnMount: checked });
+   };
+
+   handleFocusChange = (checked) => {
+     this.setState({ containFocus: checked });
+   };
+
+   updateNodeData() {
+     const {
+       nodeData,
+       nodeID,
+       name,
+       fields,
+       parent,
+       centerX,
+       centerY,
+       setNodeState,
+       nodes
+     } = this.props;
+
+     // TODO GET BOUNDING BOX HERE:
+
+     // Emulate Circle Appollo Data Type in `graphql/typeDefs.js`
+     const nodedata = {
+       id: nodeID,
+       name: name,
+       fields: fields,
+       parent: parent,
+       centerX: centerX,
+       centerY: centerY
+     };
+
+     let updatedNodeList = nodes;
+     updatedNodeList[nodeID] = nodedata;
+
+     setNodeState(updatedNodeList); // Sets the top level Diagram node array.
+     return this.state.nodes;
    }
 
    render() {
-      const {
-        nodeData,
-        nodeID,
-        centerX,
-        centerY,
-        radius
-      } = this.props;
-      // Scale factor might be able to be a prop.
-      const childRadius = radius * 0.5;
-      // Child Node
-      if (typeof(nodeData) !== undefined && nodeData.length > 0) {
-        return (
-          <React.Fragment>
-            <g
-              id={ nodeID ? `${nodeID}-group` : '' }
-              ref={(ref) => this.group = ref}
-            >
-              <CircleNode
-                nodeID={ nodeID }
-                centerX={ centerX }
-                centerY={ centerY }
-                radius={ radius }
-              />
-              <g id={ nodeID ? `${nodeID}-children` : '' } >
-                { nodeData.map(data => (
-                      <RadialNode
-                        nodeData={ typeof(data.children) === undefined ? [] : data.children }
-                        nodeID={ data.id }
-                        centerX={ data.centerX }
-                        centerY={ data.centerY }
-                        radius={ childRadius }
-                        key={ data.id }
-                      />
-                )) }
-              </g>
-            </g>
-          </React.Fragment>
-        );
-      } else {
-        return (
-          <React.Fragment>
-            <g
-              id={ nodeID ? `${nodeID}-group` : '' }
-            >
-              <CircleNode
-                nodeID={ nodeID }
-                centerX={ centerX }
-                centerY={ centerY }
-                radius={ radius }
-              />
-            </g>
-          </React.Fragment>
-        );
-      }
+    const {
+      nodeData,
+      nodeID,
+      name,
+      fields,
+      parent,
+      centerX,
+      centerY,
+      radius,
+      updateFocus,
+      resetFocus
+    } = this.props;
+
+    // Scale factor might be able to be a prop.
+    const childRadius = radius * 0.5;
+
+    const id = `${nodeID}`;
+
+    const controls = [{
+      label: 'Auto',
+      value: '',
+    }, {
+      label: 'Field 1',
+      value: 'field-1',
+    }, {
+      label: 'Field 2',
+      value: 'field-2',
+    }, {
+      label: 'Cancel Button',
+      value: 'dialog-cancel',
+    }, {
+      label: 'Ok Button',
+      value: 'dialog-ok',
+    }];
+
+    let parentNode = '';
+    if (typeof(nodeData) !== undefined && nodeData.length > 0) {
+      parentNode = <g id={ nodeID ? `${nodeID}-children` : '' } >
+        { nodeData.map(data => (
+          <RadialNode
+            key={ data.id }
+            nodeData={ typeof(data.children) === undefined ? [] : data.children }
+            nodeID={ data.id }
+            centerX={ data.centerX }
+            centerY={ data.centerY }
+            radius={ childRadius }
+            name={ data.name }
+            parent={ data.parentID }
+            fields={ data.fields }
+            updateFocus={updateFocus}
+            resetFocus={ this.props.resetFocus }
+            openDialog={ this.props.openDialog }
+            setNodeState={ this.props.setNodeState }
+            nodes={this.props.nodes}
+          />
+        )) }
+      </g>;
     }
+
+
+    const { visible, initialFocus, focusOnMount, containFocus } = this.state;
+
+    // Child Node
+    return (
+      <React.Fragment>
+        <g
+          id={ nodeID ? `${nodeID}-group` : '' }
+          className='radial-group'
+        >
+          <Mutation mutation={focusCircleQuery} variables={{ id, centerX, centerY }} onCompleted={this.handleClick} awaitRefetchQueries={true}>
+            {focusCircle => (
+              <g
+                id={`${nodeID}-circle`}
+                className='circle-group'
+                onDoubleClick={this.handleDoubleClick}
+              >
+                <circle
+                  id={id}
+                  className='circlenode'
+                  cx={centerX}
+                  cy={centerY}
+                  r={radius}
+                  fill="grey"
+                  stroke="grey"
+                  strokeWidth={this.state.isMouseInside ? radius*2 : radius}
+                  onMouseEnter={this.handleMouseEnter}
+                  onMouseLeave={this.handleMouseLeave}
+                  onClick={focusCircle}
+                />
+                <text
+                  x={centerX}
+                  y={centerY}
+                  textAnchor="middle"
+                  className='circletext'
+                  onMouseEnter={this.handleMouseEnter}
+                  onMouseLeave={this.handleMouseLeave}
+                  onClick={focusCircle}
+                >
+                  <tspan x={centerX} dy=".6em">{name}</tspan>
+                  <tspan x={centerX} dy="1.2em">Data: Value</tspan>
+                </text>
+              </g>
+            )}
+          </Mutation>
+          {parentNode}
+        </g>
+      </React.Fragment>
+    );
+  }
 }
 RadialNode.propTypes = {
   nodeID: PropTypes.string.isRequired,
   nodeData: PropTypes.array.isRequired,
-  centerX: PropTypes.node,
-  centerY: PropTypes.node,
-  move: PropTypes.node
+  name: PropTypes.string.isRequired,
+  centerX: PropTypes.node.isRequired,
+  centerY: PropTypes.node.isRequired,
+  fields: PropTypes.array.isRequired
 };
-export default withApollo(RadialNode);
+
+//export default withApollo(RadialNode);
+//export default React.forwardRef((props, ref) => <RadialNode updateFocus={ref} {...props}/>);
+export default RadialNode;
