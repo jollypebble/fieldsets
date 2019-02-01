@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 const Diagram = React.createContext();
 
+
+// Non function but this should probably be in place for abstraction purposes.
 class DiagramCache extends Component {
   constructor(props) {
     super(props);

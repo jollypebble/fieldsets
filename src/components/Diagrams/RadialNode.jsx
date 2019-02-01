@@ -22,8 +22,7 @@ import { focusCircleQuery } from '../../graphql';
        visible: false,
        focusOnMount: true,
        containFocus: true,
-       initialFocus: undefined,
-       nodes: {}
+       initialFocus: undefined
      };
 
      this.handleMouseEnter = this.handleMouseEnter.bind(this);
@@ -66,6 +65,7 @@ import { focusCircleQuery } from '../../graphql';
      } = this.props;
      console.log(this.props);
      // TODO: OPEN DIALOG AND SET FIELDS TO DISPLAY
+     this.props.openDialog(nodeID);
    }
 
    handleTargetChange = (value) => {
@@ -108,9 +108,7 @@ import { focusCircleQuery } from '../../graphql';
      let updatedNodeList = nodes;
      updatedNodeList[nodeID] = nodedata;
 
-     // Set a node data point it the parent diagram so the diagram can know when to re-render
-     this.setState({ nodes: updatedNodeList });
-     setNodeState(updatedNodeList);
+     setNodeState(updatedNodeList); // Sets the top level Diagram node array.
      return this.state.nodes;
    }
 

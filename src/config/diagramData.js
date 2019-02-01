@@ -4,9 +4,9 @@ export default [
     id: 'defense_allocation',
     parentID: '',
     fields: [],
-    centerX: 30.5,
+    centerX: 30.5, // X,Y represent points on a plane to map the current data to. If we wanted to get fancy we could rework this to include Z coordinates, but I don't see that showing a need for any time soon. If it does tracking down how these guys are used is a good place to start.
     centerY: 38.5,
-    children: [
+    children: [ // Should `children` be thought of as `data`. The `chldren` field name is used to imply this can be eith a series of liner data points or a series of relationally nested data objects.
       {
         name: 'Will',
         id: 'will',

@@ -25,6 +25,22 @@ import { focusCircleQuery } from '../../graphql';
      this.hide = this.hide.bind(this);
    }
 
+   componentDidMount() {
+     //this.updateVisibility();
+   }
+
+   componentDidUpdate(prevProps, prevState) {
+     console.log(this.props);
+     console.log(prevProps);
+     console.log('Updating dialog visibility');
+     if ( prevProps.nodeID !== this.props.nodeID ) {
+       console.log('Open Seasme.');
+       this.show();
+     }
+
+     return true;
+   }
+
    show = () => {
      this.setState({ visible: true });
    };
@@ -36,7 +52,9 @@ import { focusCircleQuery } from '../../graphql';
    render() {
      const {
        nodeData,
-       nodeID
+       nodeID,
+       name,
+       current
      } = this.props;
 
      const { visible, initialFocus, focusOnMount, containFocus } = this.state;
@@ -65,11 +83,13 @@ import { focusCircleQuery } from '../../graphql';
      }
      */
      const divID = `${nodeID}-dialog`;
+     const dialogID = `${nodeID}-control-dialog`;
+
      return (
        <div id={divID}>
          <DialogContainer
-           id="focus-control-dialog"
-           title="Focus Control Example"
+           id={dialogID}
+           title={name}
            visible={visible}
            actions={actions}
            onHide={this.hide}
@@ -78,16 +98,15 @@ import { focusCircleQuery } from '../../graphql';
            containFocus={containFocus}
            contentClassName="md-grid"
          >
-           <TextField id="field-1" label="Field 1" placeholder="Lorem ipsum" className="md-cell md-cell--12" />
-           <TextField id="field-2" label="Field 2" placeholder="Multiline text here" rows={2} className="md-cell md-cell--12" />
+           <TextField id="field-1" label="Field 1" placeholder={`Current Node Open: ${nodeID}`} className="md-cell md-cell--12" />
+           <TextField id="field-2" label="Field 2" placeholder="Value: " rows={2} className="md-cell md-cell--12" />
          </DialogContainer>
        </div>
      );
   }
 }
 RadialDialog.propTypes = {
-  nodeID: PropTypes.string.isRequired,
-  nodeData: PropTypes.array.isRequired
+  nodeID: PropTypes.string.isRequired
 };
 //export default withApollo(RadialDialog);
 //export default React.forwardRef((props, ref) => <RadialDialog updateFocus={ref} {...props}/>);

@@ -23,6 +23,7 @@ class CircleDiagram extends Component {
       currentY: this.props.startY,
       currentZoom: this.props.zoom,
       nodes: {},
+      currentDialog: '',
       isZoomed: false,
       isDblClick: false,
       mouseInCircle: false
@@ -157,6 +158,28 @@ class CircleDiagram extends Component {
     return p;
   }
 
+  // TODO: Non-functional. Make top level cache key get that returns all of a cache key.
+  cacheGet = (vars) => {
+    const p = new Promise( (resolve) => {
+      const focus = this.props.client.readQuery({
+        query: gql`
+          {
+            currentFocus @client {
+              id
+              centerX
+              centerY
+            }
+          }
+        `
+      });
+      if ( focus.currentFocus.id === vars.id && focus.currentFocus.centerX === vars.centerX && focus.currentFocus.centerY === vars.centerY ) {
+        resolve(vars);  // fulfilled successfully
+      }
+    });
+    return p;
+  }
+
+
   updateFocus = async (id, focusX, focusY) => {
     console.log('Diagram Update Focus State');
     console.log('Checking cache.....');
@@ -174,9 +197,14 @@ class CircleDiagram extends Component {
     this.setState({ isZoomed: true });
   }
 
-  openDialog = () => {
+  openDialog = (nodeID) => {
+    console.log('Hi are we friends? I hope so.');
+    this.setState({ currentDialog: nodeID });
 
+  }
 
+  closeDialog = () => {
+    this.setState({ currentDialog: '' });
   }
 
   setNodeState = (nodes) => {
@@ -194,7 +222,8 @@ class CircleDiagram extends Component {
     } = this.props;
 
     const {
-      currentZoom
+      currentZoom,
+      currentDialog
     } = this.state;
 
     // Scale our SVG based on our desired width height based on a 100 x 75 canvas.
@@ -205,55 +234,55 @@ class CircleDiagram extends Component {
     return (
       //<DiagramCache value={this.state}>
         <div className="diagramviewer">
-          <ReactSVGPanZoom
-            width={width}
-            height={height}
-            background='transparent'
-            tool='auto'
-            toolbarPosition='none'
-            miniaturePosition='none'
-            disableDoubleClickZoomWithToolAuto={true}
-            scaleFactor={2.5}
-            scaleFactorOnWheel={1.1}
-            scaleFactorMin={10}
-            ref={Viewer => this.Viewer = Viewer}
-            onClick={this.handleClick}
-            onZoom={this.updateZoom}
-            onDoubleClick={this.handleDoubleClick}
-          >
-            <svg
-              id="circlediagram" width={width} height={height}
+          <div className="viewer">
+            <ReactSVGPanZoom
+              width={width}
+              height={height}
+              background='transparent'
+              tool='auto'
+              toolbarPosition='none'
+              miniaturePosition='none'
+              disableDoubleClickZoomWithToolAuto={true}
+              scaleFactor={2.5}
+              scaleFactorOnWheel={1.1}
+              scaleFactorMin={10}
+              ref={Viewer => this.Viewer = Viewer}
+              onClick={this.handleClick}
+              onZoom={this.updateZoom}
+              onDoubleClick={this.handleDoubleClick}
             >
-              <g id="diagramGroup">
-                { diagramData.map(diagram => (
-                  <RadialNode
-                    key={ diagram.id }
-                    nodeData={ typeof(diagram.children) === undefined ? [] : diagram.children }
-                    nodeID={ diagram.id }
-                    centerX={ diagram.centerX }
-                    centerY={ diagram.centerY }
-                    radius={ radius }
-                    name={ diagram.name }
-                    parent={ diagram.parentID }
-                    fields={ diagram.fields }
-                    updateFocus={ this.updateFocus }
-                    resetFocus={ this.resetFocus }
-                    openDialog={ this.openDialog }
-                    setNodeState={ this.setNodeState }
-                    nodes={this.state.nodes}
-                  />
-                )) }
-              </g>
-            </svg>
-          </ReactSVGPanZoom>
+              <svg
+                id="circlediagram" width={width} height={height}
+              >
+                <g id="diagramGroup">
+                  { diagramData.map(diagram => (
+                    <RadialNode
+                      key={ diagram.id }
+                      nodeData={ typeof(diagram.children) === undefined ? [] : diagram.children }
+                      nodeID={ diagram.id }
+                      centerX={ diagram.centerX }
+                      centerY={ diagram.centerY }
+                      radius={ radius }
+                      name={ diagram.name }
+                      parent={ diagram.parentID }
+                      fields={ diagram.fields }
+                      updateFocus={ this.updateFocus }
+                      resetFocus={ this.resetFocus }
+                      openDialog={ this.openDialog }
+                      closeDialog={ this.closeDialog }
+                      setNodeState={ this.setNodeState }
+                      nodes={this.state.nodes}
+                    />
+                  )) }
+                </g>
+              </svg>
+            </ReactSVGPanZoom>
+          </div>
           <div className="diagramDialogs">
-            { diagramData.map(diagram => (
-              <RadialDialog
-                key={ diagram.id }
-                nodeData={ typeof(diagram.children) === undefined ? [] : diagram.children }
-                nodeID={ diagram.id }
-              />
-            )) }
+            <RadialDialog
+              name={ 'Dialog Box' }
+              nodeID={ currentDialog }
+            />
           </div>
         </div>
       //</DiagramCache>
