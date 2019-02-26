@@ -17,14 +17,3 @@ export const setCurrentFocus = gql`
     setCurrentFocus(id: $id) @client
   }
 `;
-
-export const getCurrentField = gql`
-  query getCurrentField @client {
-    currentField {
-      id
-      name
-      value
-      parent
-    }
-  }
-`;
