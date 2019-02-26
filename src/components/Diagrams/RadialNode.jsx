@@ -8,7 +8,7 @@ import {
 } from 'react-md';
 import PropTypes from 'prop-types';
 import { Query, Mutation, graphql } from 'react-apollo';
-import { focusCircleQuery } from '../../graphql';
+import { setCurrentFocus } from '../../graphql';
 
 /**
  * Radial Nodes are functional components that represent parent circle nodes.
@@ -63,7 +63,6 @@ import { focusCircleQuery } from '../../graphql';
        centerX,
        centerY
      } = this.props;
-     console.log(this.props);
      // TODO: OPEN DIALOG AND SET FIELDS TO DISPLAY
      this.props.openDialog(nodeID);
    }
@@ -131,26 +130,9 @@ import { focusCircleQuery } from '../../graphql';
 
     const id = `${nodeID}`;
 
-    const controls = [{
-      label: 'Auto',
-      value: '',
-    }, {
-      label: 'Field 1',
-      value: 'field-1',
-    }, {
-      label: 'Field 2',
-      value: 'field-2',
-    }, {
-      label: 'Cancel Button',
-      value: 'dialog-cancel',
-    }, {
-      label: 'Ok Button',
-      value: 'dialog-ok',
-    }];
-
     let parentNode = '';
     if (typeof(nodeData) !== undefined && nodeData.length > 0) {
-      parentNode = <g id={ nodeID ? `${nodeID}-children` : '' } >
+      parentNode = <g id={ nodeID ? `${nodeID}-children` : '' }  >
         { nodeData.map(data => (
           <RadialNode
             key={ data.id }
@@ -160,7 +142,7 @@ import { focusCircleQuery } from '../../graphql';
             centerY={ data.centerY }
             radius={ childRadius }
             name={ data.name }
-            parent={ data.parentID }
+            parent={ data.parent }
             fields={ data.fields }
             updateFocus={updateFocus}
             resetFocus={ this.props.resetFocus }
@@ -177,49 +159,49 @@ import { focusCircleQuery } from '../../graphql';
 
     // Child Node
     return (
-      <React.Fragment>
         <g
           id={ nodeID ? `${nodeID}-group` : '' }
           className='radial-group'
         >
-          <Mutation mutation={focusCircleQuery} variables={{ id, centerX, centerY }} onCompleted={this.handleClick} awaitRefetchQueries={true}>
-            {focusCircle => (
-              <g
-                id={`${nodeID}-circle`}
-                className='circle-group'
-                onDoubleClick={this.handleDoubleClick}
-              >
-                <circle
-                  id={id}
-                  className='circlenode'
-                  cx={centerX}
-                  cy={centerY}
-                  r={radius}
-                  fill="grey"
-                  stroke="grey"
-                  strokeWidth={this.state.isMouseInside ? radius*2 : radius}
-                  onMouseEnter={this.handleMouseEnter}
-                  onMouseLeave={this.handleMouseLeave}
-                  onClick={focusCircle}
-                />
-                <text
-                  x={centerX}
-                  y={centerY}
-                  textAnchor="middle"
-                  className='circletext'
-                  onMouseEnter={this.handleMouseEnter}
-                  onMouseLeave={this.handleMouseLeave}
-                  onClick={focusCircle}
-                >
-                  <tspan x={centerX} dy=".6em">{name}</tspan>
-                  <tspan x={centerX} dy="1.2em">Data: Value</tspan>
-                </text>
-              </g>
-            )}
-          </Mutation>
+          <g
+            id={`${nodeID}-circle`}
+            className='circle-group'
+            onDoubleClick={this.handleDoubleClick}
+          >
+            <Mutation mutation={setCurrentFocus} variables={{ id, centerX, centerY }} onCompleted={this.handleClick} awaitRefetchQueries={true}>
+              {focusCircle => (
+                <React.Fragment>
+                  <circle
+                    id={id}
+                    className='circlenode'
+                    cx={centerX}
+                    cy={centerY}
+                    r={radius}
+                    fill="grey"
+                    stroke="grey"
+                    strokeWidth={this.state.isMouseInside ? radius*2 : radius}
+                    onMouseEnter={this.handleMouseEnter}
+                    onMouseLeave={this.handleMouseLeave}
+                    onClick={focusCircle}
+                  />
+                  <text
+                    x={centerX}
+                    y={centerY}
+                    textAnchor="middle"
+                    className='circletext'
+                    onMouseEnter={this.handleMouseEnter}
+                    onMouseLeave={this.handleMouseLeave}
+                    onClick={focusCircle}
+                  >
+                    <tspan x={centerX} dy=".6em">{name}</tspan>
+                    <tspan x={centerX} dy="1.2em">Data: Value</tspan>
+                  </text>
+                </React.Fragment>
+              )}
+            </Mutation>
+          </g>
           {parentNode}
         </g>
-      </React.Fragment>
     );
   }
 }

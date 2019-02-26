@@ -1,32 +1,53 @@
 export const typeDefs = `
   interface Entity {
-    id: String!
+    id: ID!
     name: String!
+  }
+
+  type DataType implements Entity {
+    id: ID!
+    name: String!
+    format: String!
+    options: [String]!
+  }
+
+  type Owner implements Entity {
+    id: ID!
+    name: String!
+    firstname: String!
+    lastname: [String]!
+    dob: String!
   }
 
   type Field implements Entity {
-    id: String!
-    parent: Circle!
+    id: ID!
     name: String!
+    parent: Circle!
     value: String!
-    primary: Boolean!
+    alwaysDisplay: Boolean!
+    datatype: DataType!,
+    callback: String!,
+    notes:[String!]!,
+    owners:[Owner!]!,
+    order: Int!,
   }
 
   type Circle implements Entity {
-    id: String!
+    id: ID!
     name: String!
-    fields: [Field]!
+    fields: [Field!]!
     centerX: Float!
     centerY: Float!
   }
 
   type Mutation {
-    focusCircle(id: String!, centerX: Float!, centerY: Float!): Circle
+    setCurrentFocus(id: ID!): Circle
   }
 
   type Query {
-    getCurrentFocus: Circle!
-    getFieldData: Field!
-    getCircleFields: [Field!]!
+    currentFocus: Circle!
+    fields: [Field!]
+    nodefields(parent: String): [Field!]
+    nodes: [Circle!]
   }
 `;

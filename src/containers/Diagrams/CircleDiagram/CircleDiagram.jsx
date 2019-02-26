@@ -1,13 +1,15 @@
 import React, { Component, useState } from 'react';
-import { Query, withApollo } from "react-apollo";
-import { diagramData } from 'config';
+import { Query, Mutation, withApollo } from "react-apollo";
+import { DiagramData, FieldData } from 'config';
 import gql from 'graphql-tag';
 import {AutoSizer} from 'react-virtualized';
 import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
 
 //import { Diagram, DiagramCache } from 'containers/Diagrams/Diagram';
 import { RadialNode, RadialDialog } from 'components/Diagrams';
-//import { getCurrentFocusQuery } from '../../../graphql';
+import { setDiagramData, getDiagramData, getFields, getNodeFields, getCurrentFocus, setCurrentFocus, getNodes, getNodeData, defaults } from '../../../graphql';
+
+const deepEqual = require('deep-equal');
 
 /**
  * This is the container for our main diagram. It has direct access to the apollo cache so it can track foucs of it's child nodes.
@@ -18,11 +20,13 @@ class CircleDiagram extends Component {
 
     // Component State
     this.state = {
-      currentID: null,
+      currentID: 'default',
       currentX: this.props.startX,
       currentY: this.props.startY,
       currentZoom: this.props.zoom,
       nodes: {},
+      sheets: {},
+      fields: {},
       currentDialog: '',
       isZoomed: false,
       isDblClick: false,
@@ -31,10 +35,16 @@ class CircleDiagram extends Component {
 
     // Component Specific Methods
     this.setFocus = this.setFocus.bind(this);
+    this.getFocus = this.getFocus.bind(this);
     this.resetFocus = this.resetFocus.bind(this);
     this.updateZoom = this.updateZoom.bind(this);
     this.updateFocus = this.updateFocus.bind(this);
-    this.cacheIsSet = this.cacheIsSet.bind(this);
+    this.primeCache = this.primeCache.bind(this);
+    this.setFieldCache = this.setFieldCache.bind(this);
+    this.setDataCache = this.setDataCache.bind(this);
+    this.setNodeState = this.setNodeState.bind(this);
+    this.setFieldState = this.setFieldState.bind(this);
+    this.getFields = this.getFields.bind(this);
     this.handleDoubleClick = this.handleDoubleClick.bind(this);
 
     this.Viewer = React.createRef();
@@ -45,7 +55,9 @@ class CircleDiagram extends Component {
    * We use this to prime our cache for this component.
    */
   componentWillMount() {
-    // This also primes our cache.
+    // This primes our cache.
+    this.primeCache();
+    console.log('cache primed');
     this.resetState();
   }
 
@@ -64,7 +76,6 @@ class CircleDiagram extends Component {
     //console.log(event.x, event.y, event.originalEvent);
   }
 
-
   resetState() {
     const {
       startX,
@@ -74,17 +85,13 @@ class CircleDiagram extends Component {
 
     // Write our cache with a non circle starting point
     // This is the data structure that currentFocus is stored as in the apollo cache ad deined in ./graphql/defaults.js.
-    const initialFocus = {
-      id: null,
-      centerX: startX,
-      centerY: startY,
-      __typename: 'Circle'
-    };
-    this.props.client.cache.writeData({ data: { currentFocus: initialFocus } });
+    console.log(defaults);
+    const currentFocus = defaults.currentFocus;
+    this.props.client.writeData({ data: { currentFocus } });
 
     // Reset our state
     const state = {
-      currentID: null,
+      currentID: 'default',
       currentX: startX,
       currentY: startY,
       currentZoom: zoom,
@@ -106,89 +113,64 @@ class CircleDiagram extends Component {
   }
 
   setFocus = () => {
-    //console.log( 'Diagram Moving Viewer Focus' );
-    const {
-      currentID,
-      currentX,
-      currentY
-    } = this.state;
-    console.log(`Moving Focus to ${currentX}, ${currentY}`);
+    const current = this.getFocus();
+    console.log(current);
+    console.log(`Moving Focus to ${current.centerX}, ${current.centerY}`);
 
-    // If we clicked on a circle, Zoom in on it.
-    if ( currentID !== null ) {
-      // Get the bounding box of the SVG group and zoom in on it.
-      // TODO: Passs the groups up from the SVG properly.
-      const group = document.querySelector(`#${currentID}-group`);
-      const bbox = group.getBBox();
+    // Get the bounding box of the SVG group and zoom in on it.
+    /**
+     * @TODO: $DREAMING_BIG
+     * Passs the groups up from the SVG properly.
+     * We shouldn't need document.querySelector but not sure the besf way to do this here, as this is hella slow.
+     * We should probably write our own bounding box function based off the current radius of the RadialNode and parent size when we prime the cache.
+     */
+    const group = document.querySelector(`#${current.id}-group`);
+    const bbox = group.getBBox();
 
-      const bboxX = bbox.x;
-      const bboxY = bbox.y;
-      const bboxW = bbox.width;
-      const bboxH = bbox.height;
+    const bboxX = bbox.x;
+    const bboxY = bbox.y;
+    const bboxW = bbox.width;
+    const bboxH = bbox.height;
 
-      // fitSelection updates zoom state.
-      this.Viewer.fitSelection(bboxX, bboxY, bboxW, bboxH);
+    // fitSelection updates zoom state.
+    this.Viewer.fitSelection(bboxX, bboxY, bboxW, bboxH);
 
-      // The fitSelection is a little too snug for our tastes, lets scale it back a notch more.
-      const currentZoom = this.state.currentZoom;
-      const newZoom = (currentZoom - (currentZoom/2.5)) > 200 ? 200 : currentZoom - (1.5 * (currentZoom/2.5)); // 2.5 is the scale factor we pass below. Let's not zoom in above 200. There is no need.
-      this.Viewer.setPointOnViewerCenter(currentX, currentY, newZoom);
-    } else {
-      this.resetFocus();
-    }
+    // The fitSelection is a little too snug for our tastes, lets scale it back a notch more.
+    const currentZoom = this.state.currentZoom;
+    const newZoom = (currentZoom - (currentZoom/2.5)) > 200 ? 200 : currentZoom - (1.5 * (currentZoom/2.5)); // 2.5 is the scale factor we pass below. Let's not zoom in above 200. There is no need.
+    this.Viewer.setPointOnViewerCenter(current.centerX, current.centerY, newZoom);
   }
 
-  cacheIsSet = (vars) => {
-    const p = new Promise( (resolve) => {
-      const focus = this.props.client.readQuery({
-        query: gql`
-          {
-            currentFocus @client {
-              id
-              centerX
-              centerY
-            }
-          }
-        `
-      });
-      if ( focus.currentFocus.id === vars.id && focus.currentFocus.centerX === vars.centerX && focus.currentFocus.centerY === vars.centerY ) {
-        resolve(vars);  // fulfilled successfully
-      }
-    });
-    return p;
+  getFocus = () => {
+    return this.props.client.readQuery({ query: getCurrentFocus });
   }
 
-  // TODO: Non-functional. Make top level cache key get that returns all of a cache key.
-  cacheGet = (vars) => {
-    const p = new Promise( (resolve) => {
-      const focus = this.props.client.readQuery({
-        query: gql`
-          {
-            currentFocus @client {
-              id
-              centerX
-              centerY
-            }
-          }
-        `
-      });
-      if ( focus.currentFocus.id === vars.id && focus.currentFocus.centerX === vars.centerX && focus.currentFocus.centerY === vars.centerY ) {
-        resolve(vars);  // fulfilled successfully
-      }
-    });
-    return p;
+  getFields = (variables) => {
+    console.log('Getting cached fields');
+    console.log(variables);
+    //if (variables.parent) {
+    //  console.log('Getting partial set of fields');
+    //  return this.props.client.readQuery({ query: getNodeFields, variables: variables });
+    //} else {
+    //  console.log('Getting all fields');
+      return this.props.client.readQuery({ query: getFields });
+    //}
   }
 
+  getNodes = (variables) => {
+    console.log('Getting cached Nodes');
+    return this.props.client.readQuery({ query: getNodes, variables: variables });
+  }
 
-  updateFocus = async (id, focusX, focusY) => {
-    console.log('Diagram Update Focus State');
-    console.log('Checking cache.....');
-    await this.cacheIsSet({id: id, centerX: focusX, centerY: focusY});
-    console.log('Cache is set');
+  updateFocus = (id,focusX, focusY) => {
+    console.log('Updating Focus.....');
+    // const current = this.state.nodes[id];
+    const current = this.getFocus();
+    console.log(current);
 
-    this.setState({ currentID: id });
-    this.setState({ currentX: focusX });
-    this.setState({ currentY: focusY });
+    this.setState({ currentID: current.id });
+    this.setState({ currentX: current.centerX });
+    this.setState({ currentY: current.centerY });
     this.setFocus();
   }
 
@@ -198,9 +180,7 @@ class CircleDiagram extends Component {
   }
 
   openDialog = (nodeID) => {
-    console.log('Hi are we friends? I hope so.');
     this.setState({ currentDialog: nodeID });
-
   }
 
   closeDialog = () => {
@@ -208,8 +188,85 @@ class CircleDiagram extends Component {
   }
 
   setNodeState = (nodes) => {
+    console.log('Setting Node state.');
     // Do something to update a node state.
-    this.setState({nodes: nodes})
+    this.setState({nodes: nodes});
+  }
+
+  setFieldState = (fields) => {
+    console.log('Setting Field state.');
+    // Do something to update a node state.
+    this.setState({fields: fields});
+  }
+
+  primeCache = () => {
+    console.log('Priming');
+    // @TODO: REMOTE GRAPHQL CALLS GO HERE. FOR NOW WE PULL IN CONFIG BASED DATA.
+    this.setFieldCache(FieldData);
+    this.setDataCache(DiagramData);
+  }
+
+  setFieldCache = (data=[]) => {
+    console.log('Updating Field cache');
+    let previous = this.getFields({});
+    if (! data.length) {
+      return false;
+    }
+
+    // Get your fields here. This is defined as a static json, but could be modified here to get remote field type definitions.
+    data.map(currentField => {
+      console.log(currentField);
+      currentField.__typename = 'Field';
+      previous.fields.push(currentField);
+      return true;
+    });
+    const fields = previous.fields;
+    this.props.client.writeData({
+      data: {fields}
+    });
+
+    console.log('Field cache updated');
+    this.setFieldState(fields);
+
+    return true;
+  }
+
+  setDataCache = (data=[]) => {
+    console.log('Caching nodes: ');
+
+    let previous = this.getNodes({});
+    let nodes = previous.nodes;
+
+    if (! data.length) {
+      return false;
+    }
+
+    data.map(node => {
+      console.log(node);
+      const children = typeof(node.children) === undefined ? [] : node.children;
+      if (children.length) {
+        console.log('Caching child nodes....');
+        this.setDataCache(children);
+      }
+
+      const previous = this.getFields({parent: node.id});
+      console.log(previous.fields);
+      const fields = previous.fields.map(field => {
+        field.__typename = 'Field';
+        return field;
+      });
+
+      node.__typename = 'Circle';
+      nodes.push(node);
+      this.props.client.writeData({
+        data: {nodes, fields}
+      });
+      return true;
+    });
+    console.log('Cache Updated');
+    this.setNodeState(nodes);
+
+    return true;
   }
 
   render() {
@@ -223,16 +280,15 @@ class CircleDiagram extends Component {
 
     const {
       currentZoom,
-      currentDialog
+      currentDialog,
+      nodes
     } = this.state;
 
     // Scale our SVG based on our desired width height based on a 100 x 75 canvas.
     const baseradius = 2;
     const radius = (baseradius*75)/100;
 
-    // const circleData = this.calculateNodeCenters(diagramData);
     return (
-      //<DiagramCache value={this.state}>
         <div className="diagramviewer">
           <div className="viewer">
             <ReactSVGPanZoom
@@ -255,7 +311,7 @@ class CircleDiagram extends Component {
                 id="circlediagram" width={width} height={height}
               >
                 <g id="diagramGroup">
-                  { diagramData.map(diagram => (
+                  { DiagramData.map(diagram => (
                     <RadialNode
                       key={ diagram.id }
                       nodeData={ typeof(diagram.children) === undefined ? [] : diagram.children }
@@ -264,7 +320,7 @@ class CircleDiagram extends Component {
                       centerY={ diagram.centerY }
                       radius={ radius }
                       name={ diagram.name }
-                      parent={ diagram.parentID }
+                      parent={ diagram.parent }
                       fields={ diagram.fields }
                       updateFocus={ this.updateFocus }
                       resetFocus={ this.resetFocus }
@@ -278,6 +334,8 @@ class CircleDiagram extends Component {
               </svg>
             </ReactSVGPanZoom>
           </div>
+          <div className="diagramSheet">
+          </div>
           <div className="diagramDialogs">
             <RadialDialog
               name={ 'Dialog Box' }
@@ -285,7 +343,6 @@ class CircleDiagram extends Component {
             />
           </div>
         </div>
-      //</DiagramCache>
     );
   }
 }

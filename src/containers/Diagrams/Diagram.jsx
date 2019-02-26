@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
+import { DiagramData, FieldData } from 'config';
 const Diagram = React.createContext();
-
 
 // Non function but this should probably be in place for abstraction purposes.
 class DiagramCache extends Component {
@@ -19,10 +19,13 @@ class DiagramCache extends Component {
     };
   }
   render() {
+    // Prime our apollo cache with our data.
     return (
-      <Diagram.Provider value={this.state}>
-        {this.props.children}
-      </Diagram.Provider>
+      <Query>
+        <Diagram.Provider value={this.state}>
+          {this.props.children}
+        </Diagram.Provider>
+      </Query>
     );
   }
 }
