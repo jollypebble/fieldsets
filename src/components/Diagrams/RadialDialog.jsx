@@ -5,7 +5,7 @@ import {
 } from 'react-md';
 import PropTypes from 'prop-types';
 import { Query, Mutation, graphql } from 'react-apollo';
-import { focusCircleQuery } from '../../graphql';
+import { setCurrentFocus } from '../../graphql';
 
 /**
  * Radial Nodes are functional components that represent parent circle nodes.
@@ -30,11 +30,8 @@ import { focusCircleQuery } from '../../graphql';
    }
 
    componentDidUpdate(prevProps, prevState) {
-     console.log(this.props);
-     console.log(prevProps);
      console.log('Updating dialog visibility');
      if ( prevProps.nodeID !== this.props.nodeID ) {
-       console.log('Open Seasme.');
        this.show();
      }
 

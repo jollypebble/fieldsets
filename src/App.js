@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { withApollo } from "react-apollo";
-import ReactGoogleSheetConnector from 'react-google-sheet-connector';
+import ReactGoogleSheets from 'react-google-sheets';
 
-import { Auth } from 'config';
+import { Auth, Config } from 'config';
 
 // Custom Components
 import { Dashboard } from 'containers/UI'
@@ -22,12 +22,27 @@ class App extends Component {
       open: false,
       totalcontributionsAmount: 500000,
       dataSource: [],
+      sheetLoaded: false,
     };
   }
 
   render() {
+    const sheetName = Config.sheetName
     return (
       <React.Fragment>
+        <ReactGoogleSheets
+          clientId={Auth.google.web.client_id}
+          apiKey={Auth.google.web.client_secret}
+          spreadsheetId={Config.sheetID}
+          afterLoading={() => this.setState({sheetLoaded: true})}
+         >
+         { this.state.sheetLoaded ?
+            <div>
+              { console.log(this.props.getSheetsData({sheetName})) }
+            </div>
+          : 'loading...'
+         }
+        </ReactGoogleSheets>
         <div id="econcircleapp">
           <CircleDiagram
             width={1920}
