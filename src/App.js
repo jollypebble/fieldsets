@@ -32,7 +32,7 @@ class App extends Component {
       <React.Fragment>
         <ReactGoogleSheets
           clientId={Auth.google.web.client_id}
-          apiKey={Auth.google.web.client_secret}
+          apiKey={Config.apiKey}
           spreadsheetId={Config.sheetID}
           afterLoading={() => this.setState({sheetLoaded: true})}
          >
