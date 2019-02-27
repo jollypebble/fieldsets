@@ -31,7 +31,7 @@
     "react-flexbox-grid": "2.0.0",
     "react-google-sheets": "^0.4.0",
     "react-md": "^1.8.0",
-    "react-scripts": "^2.1.2",
+    "react-scripts": "^2.1.5",
     "react-svg-pan-zoom": "^2.18.0",
     "react-virtualized": "^9.21.0",
     "typeface-roboto": "0.0.54",
