@@ -1,13 +1,6 @@
 import React from 'react';
-import {
-  Button,
-  DialogContainer,
-  TextField,
-  SelectionControl,
-  SelectionControlGroup,
-} from 'react-md';
 import PropTypes from 'prop-types';
-import { Query, Mutation, graphql } from 'react-apollo';
+import { Mutation } from 'react-apollo';
 import { setCurrentFocus } from '../../graphql';
 
 /**
@@ -59,9 +52,7 @@ import { setCurrentFocus } from '../../graphql';
 
    handleDoubleClick = () => {
      const {
-       nodeID,
-       centerX,
-       centerY
+       nodeID
      } = this.props;
      // TODO: OPEN DIALOG AND SET FIELDS TO DISPLAY
      this.props.openDialog(nodeID);
@@ -81,7 +72,6 @@ import { setCurrentFocus } from '../../graphql';
 
    updateNodeData() {
      const {
-       nodeData,
        nodeID,
        name,
        fields,
@@ -116,8 +106,6 @@ import { setCurrentFocus } from '../../graphql';
       nodeData,
       nodeID,
       name,
-      fields,
-      parent,
       centerX,
       centerY,
       radius,
@@ -144,8 +132,8 @@ import { setCurrentFocus } from '../../graphql';
             name={ data.name }
             parent={ data.parent }
             fields={ data.fields }
-            updateFocus={updateFocus}
-            resetFocus={ this.props.resetFocus }
+            updateFocus={ updateFocus }
+            resetFocus={ resetFocus }
             openDialog={ this.props.openDialog }
             setNodeState={ this.props.setNodeState }
             nodes={this.props.nodes}
@@ -153,9 +141,6 @@ import { setCurrentFocus } from '../../graphql';
         )) }
       </g>;
     }
-
-
-    const { visible, initialFocus, focusOnMount, containFocus } = this.state;
 
     // Child Node
     return (

@@ -1,15 +1,11 @@
-import React, { Component, useState } from 'react';
-import { Query, Mutation, withApollo } from "react-apollo";
+import React, { Component } from 'react';
+import { withApollo } from "react-apollo";
 import { DiagramData, FieldData } from 'config';
-import gql from 'graphql-tag';
-import {AutoSizer} from 'react-virtualized';
 import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
 
 //import { Diagram, DiagramCache } from 'containers/Diagrams/Diagram';
 import { RadialNode, RadialDialog } from 'components/Diagrams';
-import { setDiagramData, getDiagramData, getFields, getNodeFields, getCurrentFocus, setCurrentFocus, getNodes, getNodeData, defaults } from '../../../graphql';
-
-const deepEqual = require('deep-equal');
+import { getFields, getCurrentFocus, getNodes, defaults } from '../../../graphql';
 
 /**
  * This is the container for our main diagram. It has direct access to the apollo cache so it can track foucs of it's child nodes.
@@ -113,8 +109,8 @@ class CircleDiagram extends Component {
   }
 
   setFocus = () => {
-    const current = this.getFocus();
-    console.log(current);
+    const focus = this.getFocus();
+    const current = focus.currentFocus;
     console.log(`Moving Focus to ${current.centerX}, ${current.centerY}`);
 
     // Get the bounding box of the SVG group and zoom in on it.
@@ -272,16 +268,11 @@ class CircleDiagram extends Component {
   render() {
     const {
       width,
-      height,
-      startX,
-      startY,
-      viewer
+      height
     } = this.props;
 
     const {
-      currentZoom,
       currentDialog,
-      nodes
     } = this.state;
 
     // Scale our SVG based on our desired width height based on a 100 x 75 canvas.

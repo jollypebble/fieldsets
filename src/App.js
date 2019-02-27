@@ -27,7 +27,6 @@ class App extends Component {
   }
 
   render() {
-    const sheetName = Config.sheetName
     return (
       <React.Fragment>
         <ReactGoogleSheets
@@ -35,14 +34,7 @@ class App extends Component {
           apiKey={Config.apiKey}
           spreadsheetId={Config.sheetID}
           afterLoading={() => this.setState({sheetLoaded: true})}
-         >
-         { this.state.sheetLoaded ?
-            <div>
-              { console.log(this.props.getSheetsData({sheetName})) }
-            </div>
-          : 'loading...'
-         }
-        </ReactGoogleSheets>
+        />
         <div id="econcircleapp">
           <CircleDiagram
             width={1920}

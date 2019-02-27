@@ -38,6 +38,7 @@ export const typeDefs = `
     fields: [Field!]!
     centerX: Float!
     centerY: Float!
+    parent: Circle
   }
 
   type Mutation {

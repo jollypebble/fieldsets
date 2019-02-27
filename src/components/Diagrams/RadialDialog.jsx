@@ -4,8 +4,6 @@ import {
   TextField
 } from 'react-md';
 import PropTypes from 'prop-types';
-import { Query, Mutation, graphql } from 'react-apollo';
-import { setCurrentFocus } from '../../graphql';
 
 /**
  * Radial Nodes are functional components that represent parent circle nodes.
@@ -48,10 +46,8 @@ import { setCurrentFocus } from '../../graphql';
 
    render() {
      const {
-       nodeData,
        nodeID,
-       name,
-       current
+       name
      } = this.props;
 
      const { visible, initialFocus, focusOnMount, containFocus } = this.state;

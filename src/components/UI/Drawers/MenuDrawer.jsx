@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Toolbar, Drawer, Button } from 'react-md';
-import { Row, Col } from 'react-flexbox-grid';
 
 export default class MenuDrawer extends PureComponent {
   constructor(props) {
