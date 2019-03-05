@@ -19,7 +19,8 @@ export default class Modal extends React.Component {
    * This toggles the visibility of the drawer
    */
   handleToggle = () => {
-    this.props.handleToggle();
+    const { handleToggle } = this.props;
+    handleToggle();
     // this.setState({open: !this.state.open});
   };
 
