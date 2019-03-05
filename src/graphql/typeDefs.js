@@ -52,3 +52,5 @@ export const typeDefs = `
     nodes: [Circle!]
   }
 `;
+
+export default typeDefs;

@@ -20,27 +20,27 @@ export default class MenuBar extends React.Component {
         <Toolbar
           colored
           className="AppBarInner"
-          nav={<Button icon onClick={leftIconCallback}>menu</Button>}
-          actions={<Button icon onClick={rightIconCallback}>sync</Button>}
+          nav={ <Button icon onClick={ leftIconCallback }>menu</Button> }
+          actions={ <Button icon onClick={ rightIconCallback }>sync</Button> }
         >
           <Button
             flat
             primary
             className="contributions"
           >
-            Monthly Contribution: $28,0000
+            <span>Monthly Contribution: $28,0000</span>
           </Button>
           <Button
             flat
             primary
             className="lumpsum"
           >
-            Lump Sums: $28,0000
+            <span>Lump Sums: $28,0000</span>
           </Button>
         </Toolbar>
         <MenuDrawer
-          id='contributions-menu'
-          position='left'
+          id="contributions-menu"
+          position="left"
         />
       </React.Fragment>
     );

@@ -9,3 +9,5 @@ export const getDiagramData = gql`
       centerY
   }
 `;
+
+export default getDiagramData;

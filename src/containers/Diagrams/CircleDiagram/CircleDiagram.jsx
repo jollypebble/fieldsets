@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
-import { withApollo } from "react-apollo";
+import { withApollo } from 'react-apollo';
 import { DiagramData, FieldData } from 'config';
 import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
 
-//import { Diagram, DiagramCache } from 'containers/Diagrams/Diagram';
+// import { Diagram, DiagramCache } from 'containers/Diagrams/Diagram';
 import { RadialNode, RadialDialog } from 'components/Diagrams';
-import { getFields, getCurrentFocus, getNodes, defaults } from '../../../graphql';
+import {
+  getFields,
+  getCurrentFocus,
+  getNodes,
+  defaults
+} from '../../../graphql';
 
 /**
  * This is the container for our main diagram. It has direct access to the apollo cache so it can track foucs of it's child nodes.
@@ -24,7 +29,7 @@ class CircleDiagram extends Component {
       sheets: {},
       fields: {},
       currentDialog: '',
-      isZoomed: false,
+      isZoomed: true,
       isDblClick: false,
       mouseInCircle: false
     };
@@ -64,12 +69,53 @@ class CircleDiagram extends Component {
     this.resetFocus();
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.width !== this.props.width || prevProps.height !== this.props.height) {
+      this.resetFocus();
+    }
+  }
+
   handleClick = (event) => {
-    //console.log(event.x, event.y, event.originalEvent);
+    console.log(event.x, event.y, event.originalEvent);
   }
 
   handleDoubleClick = (event) => {
-    //console.log(event.x, event.y, event.originalEvent);
+    console.log(event.x, event.y, event.originalEvent);
+  }
+
+  setDataCache = (data = []) => {
+    console.log('Caching nodes: ');
+
+    let previous = this.getNodes({});
+    const nodes = previous.nodes;
+
+    if (!data.length) {
+      return false;
+    }
+
+    data.map((node) => {
+      console.log(node);
+      const children = typeof(node.children) === 'undefined' ? [] : node.children;
+      if (children.length) {
+        console.log('Caching child nodes....');
+        this.setDataCache(children);
+      }
+
+      previous = this.getFields({ parent: node.id });
+      console.log(previous.fields);
+      const fields = previous.fields.map((field) => {
+        return { ...field, __typename: 'Field' };
+      });
+      nodes.push({ ...node, __typename: 'Circle' });
+      this.props.client.writeData({
+        data: { nodes, fields }
+      });
+      return true;
+    });
+    console.log('Cache Updated');
+    this.setNodeState(nodes);
+
+    return true;
   }
 
   resetState() {
@@ -92,12 +138,12 @@ class CircleDiagram extends Component {
       currentY: startY,
       currentZoom: zoom,
       isZoomed: false
-    }
+    };
     this.setState(state);
   }
 
   resetFocus() {
-    console.log( 'Diagram Reset' );
+    console.log('Diagram Reset');
     const {
       startX,
       startY,
@@ -133,7 +179,7 @@ class CircleDiagram extends Component {
 
     // The fitSelection is a little too snug for our tastes, lets scale it back a notch more.
     const currentZoom = this.state.currentZoom;
-    const newZoom = (currentZoom - (currentZoom/2.5)) > 200 ? 200 : currentZoom - (1.5 * (currentZoom/2.5)); // 2.5 is the scale factor we pass below. Let's not zoom in above 200. There is no need.
+    const newZoom = (currentZoom - (currentZoom / 2.5)) > 200 ? 200 : currentZoom - (1.5 * (currentZoom / 2.5)); // 2.5 is the scale factor we pass below. Let's not zoom in above 200. There is no need.
     this.Viewer.setPointOnViewerCenter(current.centerX, current.centerY, newZoom);
   }
 
@@ -144,22 +190,22 @@ class CircleDiagram extends Component {
   getFields = (variables) => {
     console.log('Getting cached fields');
     console.log(variables);
-    //if (variables.parent) {
+    // if (variables.parent) {
     //  console.log('Getting partial set of fields');
     //  return this.props.client.readQuery({ query: getNodeFields, variables: variables });
-    //} else {
+    // } else {
     //  console.log('Getting all fields');
-      return this.props.client.readQuery({ query: getFields });
-    //}
+    return this.props.client.readQuery({ query: getFields });
+    // }
   }
 
   getNodes = (variables) => {
     console.log('Getting cached Nodes');
-    return this.props.client.readQuery({ query: getNodes, variables: variables });
+    return this.props.client.readQuery({ query: getNodes, variables });
   }
 
-  updateFocus = (id,focusX, focusY) => {
-    console.log('Updating Focus.....');
+  updateFocus = (id, focusX, focusY) => {
+    console.log('Updating Focus.....', id, focusX, focusY);
     // const current = this.state.nodes[id];
     const current = this.getFocus();
     console.log(current);
@@ -186,13 +232,13 @@ class CircleDiagram extends Component {
   setNodeState = (nodes) => {
     console.log('Setting Node state.');
     // Do something to update a node state.
-    this.setState({nodes: nodes});
+    this.setState({ nodes });
   }
 
   setFieldState = (fields) => {
     console.log('Setting Field state.');
     // Do something to update a node state.
-    this.setState({fields: fields});
+    this.setState({ fields });
   }
 
   primeCache = () => {
@@ -202,65 +248,26 @@ class CircleDiagram extends Component {
     this.setDataCache(DiagramData);
   }
 
-  setFieldCache = (data=[]) => {
+  setFieldCache = (data = []) => {
     console.log('Updating Field cache');
-    let previous = this.getFields({});
+    const previous = this.getFields({});
     if (! data.length) {
       return false;
     }
 
     // Get your fields here. This is defined as a static json, but could be modified here to get remote field type definitions.
-    data.map(currentField => {
+    data.map((currentField) => {
       console.log(currentField);
-      currentField.__typename = 'Field';
-      previous.fields.push(currentField);
+      previous.fields.push({ ...currentField, __typename: 'Field' });
       return true;
     });
     const fields = previous.fields;
     this.props.client.writeData({
-      data: {fields}
+      data: { fields }
     });
 
     console.log('Field cache updated');
     this.setFieldState(fields);
-
-    return true;
-  }
-
-  setDataCache = (data=[]) => {
-    console.log('Caching nodes: ');
-
-    let previous = this.getNodes({});
-    let nodes = previous.nodes;
-
-    if (! data.length) {
-      return false;
-    }
-
-    data.map(node => {
-      console.log(node);
-      const children = typeof(node.children) === undefined ? [] : node.children;
-      if (children.length) {
-        console.log('Caching child nodes....');
-        this.setDataCache(children);
-      }
-
-      const previous = this.getFields({parent: node.id});
-      console.log(previous.fields);
-      const fields = previous.fields.map(field => {
-        field.__typename = 'Field';
-        return field;
-      });
-
-      node.__typename = 'Circle';
-      nodes.push(node);
-      this.props.client.writeData({
-        data: {nodes, fields}
-      });
-      return true;
-    });
-    console.log('Cache Updated');
-    this.setNodeState(nodes);
 
     return true;
   }
@@ -277,35 +284,37 @@ class CircleDiagram extends Component {
 
     // Scale our SVG based on our desired width height based on a 100 x 75 canvas.
     const baseradius = 2;
-    const radius = (baseradius*75)/100;
+    const radius = (baseradius * 75) / 100;
 
     return (
         <div className="diagramviewer">
           <div className="viewer">
             <ReactSVGPanZoom
-              width={width}
-              height={height}
-              background='transparent'
-              tool='auto'
-              toolbarPosition='none'
-              miniaturePosition='none'
-              disableDoubleClickZoomWithToolAuto={true}
-              scaleFactor={2.5}
-              scaleFactorOnWheel={1.1}
-              scaleFactorMin={10}
-              ref={Viewer => this.Viewer = Viewer}
-              onClick={this.handleClick}
-              onZoom={this.updateZoom}
-              onDoubleClick={this.handleDoubleClick}
+              width={ width }
+              height={ height }
+              background="transparent"
+              tool="auto"
+              toolbarPosition="none"
+              miniaturePosition="none"
+              disableDoubleClickZoomWithToolAuto
+              scaleFactor={ 2.5 }
+              scaleFactorOnWheel={ 1.1 }
+              scaleFactorMin={ 10 }
+              ref={ Viewer => this.Viewer = Viewer }
+              onClick={ this.handleClick }
+              onZoom={ this.updateZoom }
+              onDoubleClick={ this.handleDoubleClick }
             >
               <svg
-                id="circlediagram" width={width} height={height}
+                id="circlediagram"
+                width={ width }
+                height={ height }
               >
                 <g id="diagramGroup">
                   { DiagramData.map(diagram => (
                     <RadialNode
                       key={ diagram.id }
-                      nodeData={ typeof(diagram.children) === undefined ? [] : diagram.children }
+                      nodeData={ typeof(diagram.children) === 'undefined' ? [] : diagram.children }
                       nodeID={ diagram.id }
                       centerX={ diagram.centerX }
                       centerY={ diagram.centerY }
@@ -318,15 +327,14 @@ class CircleDiagram extends Component {
                       openDialog={ this.openDialog }
                       closeDialog={ this.closeDialog }
                       setNodeState={ this.setNodeState }
-                      nodes={this.state.nodes}
+                      nodes={ this.state.nodes }
                     />
                   )) }
                 </g>
               </svg>
             </ReactSVGPanZoom>
           </div>
-          <div className="diagramSheet">
-          </div>
+          <div className="diagramSheet" />
           <div className="diagramDialogs">
             <RadialDialog
               name={ 'Dialog Box' }
