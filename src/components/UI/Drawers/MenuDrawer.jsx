@@ -6,26 +6,25 @@ export default class MenuDrawer extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      visible: false,
+      isVisible: false,
     };
   }
 
   static defaultProps = {
     type: Drawer.DrawerTypes.TEMPORARY,
-    saveCallback: null,
-    position: 'left'
+    saveCallback: null
   }
 
   openDrawer = () => {
-    this.setState({ visible: true });
+    this.setState({ isVisible: true });
   };
 
   closeDrawer = () => {
-    this.setState({ visible: false });
+    this.setState({ isVisible: false });
   };
 
-  handleVisibility = (visible) => {
-    this.setState({ visible });
+  handleVisibility = (isVisible) => {
+    this.setState({ isVisible });
   };
 
   render() {
@@ -37,32 +36,32 @@ export default class MenuDrawer extends PureComponent {
       saveCallback
     } = this.props;
 
-    const { visible } = this.state;
+    const { isVisible } = this.state;
     const isLeft = position === 'left';
     const hasSave = saveCallback !== null;
 
-    const closeBtn = <Button icon onClick={this.closeDrawer}>close</Button>;
-    const saveBtn = hasSave ? <Button icon onClick={saveCallback}>save</Button> : null;
+    const closeBtn = <Button icon onClick={ this.closeDrawer }>close</Button>;
+    const saveBtn = hasSave ? <Button icon onClick={ saveCallback }>save</Button> : null;
     return (
       <Drawer
-        id={id}
-        type={type}
-        visible={visible}
-        position={position}
-        onVisibilityChange={this.handleVisibility}
-        openDrawer={this.openDrawer}
-        closeDrawer={this.closeDrawer}
-        handleVisibility={this.handleVisibility}
-        className='md-drawer-relative'
-        header={(
+        id={ id }
+        type={ type }
+        visible={ isVisible }
+        position={ position }
+        onVisibilityChange={ this.handleVisibility }
+        openDrawer={ this.openDrawer }
+        closeDrawer={ this.closeDrawer }
+        handleVisibility={ this.handleVisibility }
+        className="md-drawer-relative"
+        header={ (
           <Toolbar
-            nav={isLeft ? saveBtn : closeBtn}
-            actions={isLeft ? closeBtn : saveBtn}
+            nav={ isLeft ? saveBtn : closeBtn }
+            actions={ isLeft ? closeBtn : saveBtn }
             className="md-divider-border md-divider-border--bottom"
           >
             {title}
           </Toolbar>
-        )}
+        ) }
       />
     );
   }

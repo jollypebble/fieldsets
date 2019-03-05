@@ -13,11 +13,13 @@ const cache = new InMemoryCache();
 
 const client = new ApolloClient({
   cache,
-  link: withClientState({ resolvers, defaults, cache, typeDefs }),
+  link: withClientState({
+    resolvers, defaults, cache, typeDefs
+  }),
 });
 
 render(
-  <ApolloProvider client={client}>
+  <ApolloProvider client={ client }>
     <App />
   </ApolloProvider>,
   document.getElementById('root'),
