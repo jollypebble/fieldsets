@@ -12,7 +12,7 @@ class RadialNode extends React.Component {
     super(props);
     this.state = {
       isMouseInside: false,
-      visible: false,
+      visible: true,
       focusOnMount: true,
       containFocus: true,
       initialFocus: undefined
