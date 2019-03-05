@@ -6,6 +6,7 @@ export default [
     fields: [],
     centerX: 30.5, // X,Y represent points on a plane to map the current data to. If we wanted to get fancy we could rework this to include Z coordinates, but I don't see that showing a need for any time soon. If it does tracking down how these guys are used is a good place to start.
     centerY: 38.5,
+    visible: true,
     children: [ // Should `children` be thought of as `data`. The `chldren` field name is used to imply this can be eith a series of liner data points or a series of relationally nested data objects.
       {
         name: 'Will',
@@ -14,6 +15,7 @@ export default [
         fields: [],
         centerX: 25,
         centerY: 38,
+        visible: false,
         children: []
       },
       {
@@ -23,6 +25,7 @@ export default [
         fields: [],
         centerX: 28,
         centerY: 34,
+        visible: false,
         children: []
       },
       {
@@ -32,6 +35,7 @@ export default [
         fields: [],
         centerX: 33,
         centerY: 34,
+        visible: false,
         children: []
       },
       {
@@ -41,6 +45,7 @@ export default [
         fields: [],
         centerX: 36,
         centerY: 38,
+        visible: false,
         children: []
       },
     ]
@@ -52,6 +57,7 @@ export default [
     fields: [],
     centerX: 30.5,
     centerY: 46,
+    visible: true,
     children: [
       {
         name: 'Short Term Money',
@@ -60,6 +66,7 @@ export default [
         fields: [],
         centerX: 23,
         centerY: 49,
+        visible: false,
         children: [
           {
             name: 'Cash Equivalents',
@@ -68,6 +75,7 @@ export default [
             fields: [],
             centerX: 20,
             centerY: 49,
+            visible: false,
             children: []
           },
           {
@@ -77,6 +85,7 @@ export default [
             fields: [],
             centerX: 21,
             centerY: 51,
+            visible: false,
             children: []
           },
           {
@@ -86,6 +95,7 @@ export default [
             fields: [],
             centerX: 23,
             centerY: 52,
+            visible: false,
             children: []
           },
         ]
@@ -97,6 +107,7 @@ export default [
         fields: [],
         centerX: 30.5,
         centerY: 52,
+        visible: false,
         children: [
           {
             name: 'UTMA\'s',
@@ -105,6 +116,7 @@ export default [
             fields: [],
             centerX: 28.5,
             centerY: 54,
+            visible: false,
             children: []
           },
           {
@@ -114,6 +126,7 @@ export default [
             fields: [],
             centerX: 30.5,
             centerY: 55,
+            visible: false,
             children: []
           },
           {
@@ -123,6 +136,7 @@ export default [
             fields: [],
             centerX: 32.5,
             centerY: 54,
+            visible: false,
             children: []
           },
         ]
@@ -134,6 +148,7 @@ export default [
         fields: [],
         centerX: 38,
         centerY: 48.75,
+        visible: false,
         children: [
           {
             name: 'IRA ROTH',
@@ -142,6 +157,7 @@ export default [
             fields: [],
             centerX: 36.5,
             centerY: 51.75,
+            visible: false,
             children: []
           },
           {
@@ -151,6 +167,7 @@ export default [
             fields: [],
             centerX: 39,
             centerY: 51.5,
+            visible: false,
             children: []
           },
           {
@@ -160,6 +177,7 @@ export default [
             fields: [],
             centerX: 40.75,
             centerY: 49.5,
+            visible: false,
             children: []
           },
           {
@@ -169,6 +187,7 @@ export default [
             fields: [],
             centerX: 40.75,
             centerY: 47,
+            visible: false,
             children: []
           },
           {
@@ -178,6 +197,7 @@ export default [
             fields: [],
             centerX: 38,
             centerY: 53.5,
+            visible: false,
             children: []
           },
           {
@@ -187,6 +207,7 @@ export default [
             fields: [],
             centerX: 41.25,
             centerY: 51.75,
+            visible: false,
             children: []
           },
           {
@@ -196,6 +217,7 @@ export default [
             fields: [],
             centerX: 42.75,
             centerY: 48.25,
+            visible: false,
             children: []
           }
         ]

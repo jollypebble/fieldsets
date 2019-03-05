@@ -1,6 +1,7 @@
 // Callbacks are set when the value is being handled by our react app.
 // At some point we will move the hacky excel functions to react callbacks and push this json data to an official data store/relational db
 export default [
+  // defense_allocation
   {
     id: 'I8',
     name: 'L6',
@@ -51,7 +52,7 @@ export default [
   },
   {
     id: 'F15',
-    name: 'G15:H15',
+    name: 'A5',
     value: '',
     type: 'currency',
     callback: false,
@@ -63,7 +64,7 @@ export default [
   },
   {
     id: 'F16',
-    name: 'G16:H16',
+    name: 'A6',
     value: '',
     type: 'currency',
     callback: false,
@@ -121,11 +122,6 @@ export default [
     order: 3,
     alwaysDisplay: false,
   },
-  /**
-   * Q For Aaron:
-   * Inconsistencies between Summation of Term life vs LTC, Disbility Insurance. Do we want to sum 2 values or just take a single value?.
-   * Currently can take a single value but workflow would need to change to incorporate sheets O7:P8 location
-   */
   {
     id: 'N11:O11',
     name: '"Benefit:"',
@@ -174,7 +170,44 @@ export default [
     order: 3,
     alwaysDisplay: false,
   },
-  // TODO: offense_allocation
+  // offense_allocation
+  {
+    id: 'H20:J20',
+    name: '"(Monthly Total)"',
+    value: '(E3-I8)',
+    type: 'currency',
+    callback: false,
+    notes: [],
+    owners: [],
+    parent: 'offense_allocation',
+    order: 0,
+    alwaysDisplay: true,
+  },
+  {
+    id: 'H21:J22',
+    name: '"(Monthly Unallocated)"',
+    value: '(E3-I8)-B14-C29-F34-J34-M34-O27-P14',
+    type: 'currency',
+    callback: false,
+    notes: [],
+    owners: [],
+    parent: 'offense_allocation',
+    order: 1,
+    alwaysDisplay: true,
+  },
+  {
+    id: 'H23:J23',
+    name: '"(Lump Unallocated)"',
+    value: 'K3-(B17+C34+P17+B24+M37+J37+F40)',
+    type: 'currency',
+    callback: false,
+    notes: [],
+    owners: [],
+    parent: 'offense_allocation',
+    order: 2,
+    alwaysDisplay: true,
+  },
+
 
   // TODO: people
 
