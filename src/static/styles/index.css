@@ -243,18 +243,21 @@ caption,
   text-align: center;
   overflow: visible;
   float: right;
-  position: absolute;
-  right: 0;
-  top: 64px;
-  display: flex;
-  flex-direction: column }
+  position: relative;
+  display: block; }
 
 .drawer-sheet {
   overflow: visible;
   z-index: 1300; }
 
 .drawer-tab {
-  width: 40px; }
+  width: 40px;
+  height: 80px;
+  position: absolute;
+  float: left;
+  left: -40px;
+  transition-duration: 300;
+  display: flex; }
   .drawer-tab .drawer-tab__icon {
     width: 100%;
     border-radius: 90px 0 0 90px;
@@ -1965,24 +1968,6 @@ tbody .md-table-row {
   .md-toolbar ~ .md-list--drawer {
     height: calc(100% - 64px); } }
 
-@media screen and (max-width: 768px) {
-  #tabs-wrapper {
-    top: 56px;
-  }
-  #tabbed-drawer-menu--account_box, #tabbed-drawer-menu--library_books {
-    top: 56px!important;
-    width: 80%!important;
-    left: unset!important;
-  }
-}
-
-@media screen and (max-width: 1024px) {
-  #tabbed-drawer-menu--account_box, #tabbed-drawer-menu--library_books {
-    width: 60%!important;
-    left: unset!important;
-  }
-}
-
 .md-drawer {
   transition-duration: 300;
   transition-property: transform; }
@@ -2113,19 +2098,6 @@ tbody .md-table-row {
   transition-duration: 0.15s;
   transition-property: color;
   user-select: none; }
-
-.md-toolbar.AppBarInner .md-cell--right .md-btn .md-icon:active {
-  animation: rotate 0.5s linear;
-}
-  
-@keyframes rotate {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
 
 svg.md-icon {
   fill: currentColor;
