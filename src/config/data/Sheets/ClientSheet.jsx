@@ -1,7 +1,7 @@
 import React from 'react';
 import { MDCTextField } from '@material/textfield';
 import { MDCRipple } from '@material/ripple';
-import { MaterialIcon } from '@material/react-material-icon';
+// import { MaterialIcon } from '@material/react-material-icon';
 
 import { Add, Remove } from '@material-ui/icons';
 
@@ -72,7 +72,7 @@ export default class ClientSheet extends React.Component {
   }
 
   formSubmit() {
-    alert(JSON.stringify(this.state.formValues));
+    console.log(JSON.stringify(this.state.formValues));
   }
 
   render() {

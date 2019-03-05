@@ -30,7 +30,7 @@
   "rules": {
     // JS overrides
     "quotes": [ 2, "single" ],
-    "no-console": 1,
+    "no-console": 0,
     "max-len": [2, 300, 4],
     "linebreak-style": "off",
     "padded-blocks": 0,
@@ -40,6 +40,11 @@
     "array-bracket-spacing": 1,
     "no-await-in-loop": 1,
     "object-shorthand": 1,
+    "prefer-destructuring": 0,
+    "space-unary-ops": 0,
+    "no-underscore-dangle": 0,
+    "arrow-body-style": 0,
+    "no-return-assign": 0,
 
     //babel
     "babel/new-cap": 1,
@@ -59,13 +64,20 @@
     "react/jsx-filename-extension": 0,
     "react/no-array-index-key": 0,
     "react/jsx-wrap-multilines": 0,
+    "react/sort-comp": 0,
+    "react/no-unused-state": 0,
+    "react/jsx-curly-brace-presence": 0,
+    "react/jsx-indent": 0,
+    "react/prop-types": 0,
+    "react/destructuring-assignment": 0,
+    "react/no-access-state-in-setstate": 0,
 
     //import
-    "import/no-unresolved": 1,
+    "import/no-unresolved": 0,
     "import/no-extraneous-dependencies": 1,
     "import/extensions": 1,
     "import/newline-after-import": 0,
-    "import/prefer-default-export": 1,
+    "import/prefer-default-export": 0,
 
     //jsx
     "jsx-a11y/label-has-for": 0,
