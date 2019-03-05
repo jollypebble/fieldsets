@@ -153,7 +153,7 @@ import { setCurrentFocus } from '../../graphql';
             className='circle-group'
             onDoubleClick={this.handleDoubleClick}
           >
-            <Mutation mutation={setCurrentFocus} variables={{ id, centerX, centerY }} onCompleted={this.handleClick} awaitRefetchQueries={true}>
+            <Mutation mutation={setCurrentFocus} variables={{ id }} onCompleted={this.handleClick} awaitRefetchQueries={true}>
               {focusCircle => (
                 <React.Fragment>
                   <circle
