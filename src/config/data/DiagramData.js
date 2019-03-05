@@ -15,7 +15,7 @@ export default [
         fields: [],
         centerX: 25,
         centerY: 38,
-        visible: false,
+        visible: true,
         children: []
       },
       {
@@ -25,7 +25,7 @@ export default [
         fields: [],
         centerX: 28,
         centerY: 34,
-        visible: false,
+        visible: true,
         children: []
       },
       {
@@ -35,7 +35,7 @@ export default [
         fields: [],
         centerX: 33,
         centerY: 34,
-        visible: false,
+        visible: true,
         children: []
       },
       {
@@ -45,7 +45,7 @@ export default [
         fields: [],
         centerX: 36,
         centerY: 38,
-        visible: false,
+        visible: true,
         children: []
       },
     ]
@@ -66,7 +66,7 @@ export default [
         fields: [],
         centerX: 23,
         centerY: 49,
-        visible: false,
+        visible: true,
         children: [
           {
             name: 'Cash Equivalents',
@@ -75,7 +75,7 @@ export default [
             fields: [],
             centerX: 20,
             centerY: 49,
-            visible: false,
+            visible: true,
             children: []
           },
           {
@@ -85,7 +85,7 @@ export default [
             fields: [],
             centerX: 21,
             centerY: 51,
-            visible: false,
+            visible: true,
             children: []
           },
           {
@@ -95,7 +95,7 @@ export default [
             fields: [],
             centerX: 23,
             centerY: 52,
-            visible: false,
+            visible: true,
             children: []
           },
         ]
@@ -107,7 +107,7 @@ export default [
         fields: [],
         centerX: 30.5,
         centerY: 52,
-        visible: false,
+        visible: true,
         children: [
           {
             name: 'UTMA\'s',
@@ -116,7 +116,7 @@ export default [
             fields: [],
             centerX: 28.5,
             centerY: 54,
-            visible: false,
+            visible: true,
             children: []
           },
           {
@@ -126,7 +126,7 @@ export default [
             fields: [],
             centerX: 30.5,
             centerY: 55,
-            visible: false,
+            visible: true,
             children: []
           },
           {
@@ -136,7 +136,7 @@ export default [
             fields: [],
             centerX: 32.5,
             centerY: 54,
-            visible: false,
+            visible: true,
             children: []
           },
         ]
@@ -148,7 +148,7 @@ export default [
         fields: [],
         centerX: 38,
         centerY: 48.75,
-        visible: false,
+        visible: true,
         children: [
           {
             name: 'IRA ROTH',
@@ -157,7 +157,7 @@ export default [
             fields: [],
             centerX: 36.5,
             centerY: 51.75,
-            visible: false,
+            visible: true,
             children: []
           },
           {
@@ -167,7 +167,7 @@ export default [
             fields: [],
             centerX: 39,
             centerY: 51.5,
-            visible: false,
+            visible: true,
             children: []
           },
           {
@@ -177,7 +177,7 @@ export default [
             fields: [],
             centerX: 40.75,
             centerY: 49.5,
-            visible: false,
+            visible: true,
             children: []
           },
           {
@@ -187,7 +187,7 @@ export default [
             fields: [],
             centerX: 40.75,
             centerY: 47,
-            visible: false,
+            visible: true,
             children: []
           },
           {
@@ -197,7 +197,7 @@ export default [
             fields: [],
             centerX: 38,
             centerY: 53.5,
-            visible: false,
+            visible: true,
             children: []
           },
           {
@@ -207,7 +207,7 @@ export default [
             fields: [],
             centerX: 41.25,
             centerY: 51.75,
-            visible: false,
+            visible: true,
             children: []
           },
           {
@@ -217,7 +217,7 @@ export default [
             fields: [],
             centerX: 42.75,
             centerY: 48.25,
-            visible: false,
+            visible: true,
             children: []
           }
         ]
