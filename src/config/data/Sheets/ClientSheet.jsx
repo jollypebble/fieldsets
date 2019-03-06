@@ -1,14 +1,9 @@
 import React from 'react';
-import { MDCTextField } from '@material/textfield';
-import { MDCRipple } from '@material/ripple';
-// import { MaterialIcon } from '@material/react-material-icon';
+import TextField from '@material-ui/core/TextField';
+import TouchRipple from '@material-ui/core/ButtonBase/TouchRipple';
+import Fab from '@material-ui/core/Fab';
 
 import { Add, Remove } from '@material-ui/icons';
-
-const TextField = new MDCTextField(document.querySelector('.mdc-text-field'));
-const Fab = new MDCRipple(document.querySelector('.mdc-fab'));
-const Button = new MDCRipple(document.querySelector('.mdc-button'));
-
 
 const ClientData = {
   accountName: { value: 'Willg' },
@@ -174,9 +169,9 @@ export default class ClientSheet extends React.Component {
             value={ this.state.formValues.ip.value }
           />
         </div>
-        <div className="form-group">
-          <Button label="Submit" primary onClick={ () => this.formSubmit() } />
-        </div>
+        {/* <div className="form-group">
+          <TouchRipple label="Submit" primary onClick={ () => this.formSubmit() } />
+        </div> */}
       </div>
     );
   }
