@@ -234,10 +234,26 @@ caption,
   top: 0;
   width: 100%; }
 
+.circlenode {
+  transition: stroke-width 0.15s; }
+  .circlenode.parent-node {
+    animation: showUp 1s;
+    animation-play-state: 1; }
+  .circlenode.child-node {
+    opacity: 0; }
+
 .circletext tspan {
   font-size: .5pt;
   line-height: .75pt;
   fill: #515359; }
+
+@keyframes showUp {
+  0% {
+    opacity: 0; }
+  25% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
 
 #tabs-wrapper {
   text-align: center;

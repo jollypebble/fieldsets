@@ -1,7 +1,31 @@
+.circlenode {
+  transition: stroke-width 0.15s;
+
+  &.parent-node {
+    animation: showUp 1s;
+    animation-play-state: 1;
+  }
+  &.child-node {
+    opacity: 0;
+  }
+}
+
 .circletext {
   tspan {
     font-size: .5pt;
     line-height: .75pt;
     fill: rgb(81, 83, 89);
+  }
+}
+
+@keyframes showUp {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }

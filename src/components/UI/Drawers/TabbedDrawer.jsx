@@ -6,25 +6,38 @@ export default class TabbedDrawer extends PureComponent {
 
   constructor(props) {
     super(props);
-
+    this.openposition = '-130px';
+    this.closedposition = '-40px';
     this.state = {
-      isVisible: false,
+      visible: false,
       tabposition: this.closedposition
     };
   }
 
   static defaultProps = {
     type: Drawer.DrawerTypes.TEMPORARY,
-    saveCallback: false,
+    saveCallback: null,
     position: 'right'
   }
 
+  openDrawer = () => {
+    this.setState({ visible: true, tabposition: this.openposition });
+  };
+
+  closeDrawer = () => {
+    this.setState({ visible: false, tabposition: this.closedposition });
+  };
+
   toggleDrawer = () => {
-    this.setState({ isVisible: !this.state.isVisible });
+    if ( this.state.visible ) {
+      this.closeDrawer();
+    } else {
+      this.openDrawer();
+    }
   }
 
-  handleVisibility = (isVisible) => {
-    this.setState({ isVisible });
+  handleVisibility = (visible) => {
+    this.setState({ visible });
   };
 
   render() {
@@ -36,18 +49,19 @@ export default class TabbedDrawer extends PureComponent {
       saveCallback
     } = this.props;
 
-    const drawerid = `tabbed-drawer-menu--${icon}`;
-    const { isVisible } = this.state;
+    const drawerid=`tabbed-drawer-menu--${icon}`
+    const { visible } = this.state;
     const isLeft = position === 'left';
     const hasSave = saveCallback !== null;
 
-    const closeBtn = <Button icon onClick={ this.toggleDrawer }>close</Button>;
-    const saveBtn = hasSave ? <Button icon onClick={ saveCallback }>save</Button> : null;
+    const closeBtn = <Button icon onClick={this.closeDrawer}>close</Button>;
+    const saveBtn = hasSave ? <Button icon onClick={saveCallback}>save</Button> : null;
 
     return (
       <React.Fragment>
         <div
           className="drawer-tab"
+          style={ { top: this.props.top, left: this.state.tabposition } }
         >
           <div className="drawer-tab__icon">
             <Button
@@ -58,26 +72,26 @@ export default class TabbedDrawer extends PureComponent {
             </Button>
           </div>
           <Drawer
-            id={ drawerid }
-            className="tabbed-drawer"
-            type={ type }
-            visible={ isVisible }
-            position={ position }
-            onVisibilityChange={ this.handleVisibility }
-            openDrawer={ this.toggleDrawer }
-            closeDrawer={ this.toggleDrawer }
-            handleVisibility={ this.handleVisibility }
+            id={drawerid}
+            className='tabbed-drawer'
+            type={type}
+            visible={visible}
+            position={position}
+            onVisibilityChange={this.handleVisibility}
+            openDrawer={this.openDrawer}
+            closeDrawer={this.closeDrawer}
+            handleVisibility={this.handleVisibility}
             style={ { top: '64px', width: '33%' } }
-            header={ (
+            header={(
               <Toolbar
                 colored
-                nav={ isLeft ? saveBtn : closeBtn }
-                actions={ isLeft ? closeBtn : saveBtn }
+                nav={isLeft ? saveBtn : closeBtn}
+                actions={isLeft ? closeBtn : saveBtn}
                 className="md-divider-border md-divider-border--bottom"
               >
                 {title}
               </Toolbar>
-            ) }
+            )}
           />
         </div>
       </React.Fragment>
@@ -89,6 +103,5 @@ TabbedDrawer.propTypes = {
   icon: PropTypes.string.isRequired,
   position: PropTypes.string,
   title: PropTypes.string,
-  type: PropTypes.string,
-  saveCallback: PropTypes.bool
+  top: PropTypes.string
 };

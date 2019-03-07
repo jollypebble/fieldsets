@@ -15,7 +15,7 @@ export const typeDefs = `
     id: ID!
     name: String!
     firstname: String!
-    lastname: String!
+    lastname: [String]!
     dob: String!
   }
 
@@ -52,5 +52,3 @@ export const typeDefs = `
     nodes: [Circle!]
   }
 `;
-
-export default typeDefs;

@@ -23,28 +23,20 @@ class CircleModal extends React.Component {
   }
 
   handleToggle = () => {
-    const { reset, handleToggle } = this.props;
-
-    reset();
-    handleToggle();
+    this.props.reset();
+    this.props.handleToggle();
   };
 
   handleAddExtraField = (value) => {
-    const { handleAddExtraField } = this.props;
-
-    handleAddExtraField(value);
+    this.props.handleAddExtraField(value);
   }
 
   handleRemoveExtraField = (e) => {
-    const { handleRemoveExtraField } = this.props;
-
-    handleRemoveExtraField(e.target.id);
+    this.props.handleRemoveExtraField(e.target.id);
   }
 
   handleSave = (data) => {
-    const { handleSave } = this.props;
-
-    handleSave(data);
+    this.props.handleSave(data);
     this.handleToggle();
   }
 
@@ -88,8 +80,8 @@ class CircleModal extends React.Component {
             <form>
               {circleData.map(item => (
                 <div key={ item.key }>
-                  {!item.hasExtraFields
-                    && <Field
+                  {!item.hasExtraFields &&
+                    <Field
                       name={ item.key }
                       label={ item.label }
                       component={ Input }
@@ -114,8 +106,8 @@ class CircleModal extends React.Component {
                     </Row>
                   ))
                   }
-                  {item.hasExtraFields
-                    && <AddExtraField
+                  {item.hasExtraFields &&
+                    <AddExtraField
                       handleAddExtraField={ this.handleAddExtraField }
                     />
                   }
