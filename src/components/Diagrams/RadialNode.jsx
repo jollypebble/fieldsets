@@ -12,8 +12,7 @@ class RadialNode extends React.Component {
     super(props);
     this.state = {
       isMouseInside: false,
-      visible: false,
-      focusOnMount: true,
+      visible: this.props.visible,
       containFocus: true,
       initialFocus: undefined
     };
@@ -23,7 +22,6 @@ class RadialNode extends React.Component {
     this.handleClick = this.handleClick.bind(this);
 
     this.handleTargetChange = this.handleTargetChange.bind(this);
-    this.handleMountChange = this.handleMountChange.bind(this);
     this.handleFocusChange = this.handleFocusChange.bind(this);
   }
 
@@ -54,10 +52,6 @@ class RadialNode extends React.Component {
 
   handleTargetChange = (value) => {
     this.setState({ initialFocus: value ? `#${value}` : undefined });
-  };
-
-  handleMountChange = (checked) => {
-    this.setState({ focusOnMount: checked });
   };
 
   handleFocusChange = (checked) => {
@@ -124,6 +118,7 @@ class RadialNode extends React.Component {
               centerX={ data.centerX }
               centerY={ data.centerY }
               radius={ childRadius }
+              visible={ typeof(data.visible) === 'undefined' ? true : data.visible }
               name={ data.name }
               parent={ data.parent }
               fields={ data.fields }

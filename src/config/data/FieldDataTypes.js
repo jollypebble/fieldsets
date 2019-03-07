@@ -15,4 +15,25 @@ export default [
     callback: '', // Callback used to validate a value.
     options: [{id: 'none', name: 'None'},{id: 'done', name: 'Done'},{id: 'update', name: 'Requires Update'},{id: 'incomplete', name: 'Incomplete'}], // If not empty represents valid options.
   },
+  {
+    id: 'lastname',
+    name: 'Last Name',
+    label: '',
+    callback: '', // Callback used to validate a value.
+    options: [], // If not empty represents valid options.
+  },
+  {
+    id: 'firstname',
+    name: 'First Name',
+    label: '',
+    callback: '', // Callback used to validate a value.
+    options: [], // If not empty represents valid options.
+  },
+  {
+    id: 'dob',
+    name: 'DOB',
+    label: '',
+    callback: '', // Callback used to validate a value.
+    options: [], // If not empty represents valid options.
+  },
 ];

@@ -1,6 +1,5 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
-import TouchRipple from '@material-ui/core/ButtonBase/TouchRipple';
 import Fab from '@material-ui/core/Fab';
 
 import { Add, Remove } from '@material-ui/icons';
@@ -169,9 +168,6 @@ export default class ClientSheet extends React.Component {
             value={ this.state.formValues.ip.value }
           />
         </div>
-        {/* <div className="form-group">
-          <TouchRipple label="Submit" primary onClick={ () => this.formSubmit() } />
-        </div> */}
       </div>
     );
   }
