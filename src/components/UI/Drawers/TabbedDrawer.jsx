@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Toolbar, Drawer, Button } from 'react-md';
 
 export default class TabbedDrawer extends PureComponent {
-
   constructor(props) {
     super(props);
 
@@ -33,7 +32,8 @@ export default class TabbedDrawer extends PureComponent {
       position,
       type,
       title,
-      saveCallback
+      saveCallback,
+      renderContent
     } = this.props;
 
     const drawerid = `tabbed-drawer-menu--${icon}`;
@@ -67,18 +67,20 @@ export default class TabbedDrawer extends PureComponent {
             openDrawer={ this.toggleDrawer }
             closeDrawer={ this.toggleDrawer }
             handleVisibility={ this.handleVisibility }
-            style={ { top: '64px', width: '33%' } }
+            style={ { top: '64px', width: '40%' } }
             header={ (
               <Toolbar
                 colored
                 nav={ isLeft ? saveBtn : closeBtn }
                 actions={ isLeft ? closeBtn : saveBtn }
-                className="md-divider-border md-divider-border--bottom"
+                className="md-divider-border md-divider-border--bottom tapHeader"
               >
                 {title}
               </Toolbar>
             ) }
-          />
+          >
+            { renderContent() }
+          </Drawer>
         </div>
       </React.Fragment>
     );
@@ -90,5 +92,6 @@ TabbedDrawer.propTypes = {
   position: PropTypes.string,
   title: PropTypes.string,
   type: PropTypes.string,
-  saveCallback: PropTypes.bool
+  saveCallback: PropTypes.bool,
+  renderContent: PropTypes.func
 };

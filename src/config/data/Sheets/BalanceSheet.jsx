@@ -1,7 +1,6 @@
 import React from 'react';
-import { MDCTextField } from '@material/textfield';
 
-const TextField = new MDCTextField(document.querySelector('.mdc-text-field'));
+import TextField from '@material-ui/core/TextField';
 
 const data = [
   {
@@ -10,7 +9,8 @@ const data = [
       { key: 'Cash & Equivalents', value: '500000' },
       { key: 'NMIS/GE/UBS/Merrill', value: '1013926' },
       { key: 'CPAF accounts', value: '17072057' }
-    ]
+    ],
+    total: '18585983'
   },
   {
     title: 'Qualified',
@@ -18,6 +18,7 @@ const data = [
       { key: 'IRAs', value: '500000' },
       { key: 'Roth(s)', value: '1013926' }
     ],
+    total: '1513926'
   },
   {
     title: 'Annuities',
@@ -45,15 +46,16 @@ const data = [
       { key: 'Liability #2', value: '0' },
       { key: 'Total Liabilities', value: '265636' }
     ],
+    total: '310880'
   },
 ];
 
-export default class BalanceSheet extends React.Component {
+export class BalanceSheet extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       dataValues: data,
-      AllTotalAmount: 0,
+      totalAmount: 0,
     };
   }
 
@@ -61,124 +63,123 @@ export default class BalanceSheet extends React.Component {
     this.updateTotalAmount();
   }
 
-  /**
-   * Handle form elements's values change
-   * @param {*} event
-   */
   handleValueChange = (event, index, parentIndex) => {
-    if (event.target.value !== '' && event.target.value >= 0) {
+    const { name, value } = event.target;
+
+    if (value !== '' && value >= 0) {
       const { dataValues } = this.state;
-      dataValues[parentIndex][event.target.name][index].value = event.target.value;
+      const parentItem = dataValues[parentIndex];
+      dataValues[parentIndex] = {
+        ...dataValues[parentIndex],
+        total: parentItem.total - parseInt(parentItem[name][index].value) + parseInt(value),
+      }
+      dataValues[parentIndex][name][index].value = value;
       this.setState({ dataValues });
       this.updateTotalAmount();
     }
   }
 
   updateTotalAmount = () => {
-    let TotalAmount = 0;
+    let amount = 0;
     data.map((item) => {
       const iterateTitle = item.title;
       return (
         item[iterateTitle].forEach((subItem) => {
-          TotalAmount += parseInt(subItem.value, 10);
+          amount += parseInt(subItem.value, 10);
         }));
     });
-    this.setState({ AllTotalAmount: TotalAmount });
+    this.setState({ totalAmount: amount });
   }
 
+  renderMultiItems = (data, index) => {
+    const itemTitle = data.title;
+
+    return (
+      <div key={ index }>
+        <div className="mainHeadContainer">
+          <div className="mainHeadTitle headerText">{ itemTitle }</div>
+          {data[itemTitle].map((item, i) => (
+            <div className="dataFields" key={ i }>
+              <div className="dataTitle">
+                {item.key}
+              </div>
+              <div className="dataValue">
+                $<TextField
+                  type="number"
+                  hintText={ itemTitle }
+                  name={ itemTitle }
+                  value={ item.value }
+                  onChange={ e => this.handleValueChange(e, i, index) }
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="dataFields totalAmount">
+          <div className="dataTitle">
+            Total Amount:
+          </div>
+          <div className="dataValue">
+            $<TextField
+              hintText="Total Amount"
+              name="Total Amount"
+              value={ data.total }
+            />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  renderSingleItem = (data, index) => {
+    return (
+      <div className="mainHeadContainer" key={ index }>
+        <div className="mainHeadTitle headerText headerSingleTitle">
+          {data.title}:
+        </div>
+        <div className="mainHeadValue headerSingleValue">
+          $<TextField
+            hintText={ data.title }
+            name={ data.title }
+            onChange={ e => this.handleValueChange(e, 0, index) }
+            value={ data[data.title][0].value }
+          />
+        </div>
+      </div>
+    );
+  };
+
+  renderBalanceSheet = () => {
+    const { dataValues } = this.state;
+
+    return dataValues.map((data, index) => {
+      return data[data.title].length > 1 ? this.renderMultiItems(data, index) : this.renderSingleItem(data, index);
+    });
+  };
+
   render() {
+    const { totalAmount } = this.state;
+
     return (
       <div className="drawer-sheet balanceSheetContainer">
-        {
-          this.state.dataValues.map((item, i) => {
-            const iterateTitle = item.title;
-            let totalAmount = 0;
-            return (
-              item[iterateTitle].length > 1 ?
-                <div key={ i }>
-                  <div className="mainHeadContainer">
-                    <div className="mainHeadTitle headerText">
-                      <h4 className="amountWrap">
-                        {iterateTitle}:
-                      </h4>
-                    </div>
-                  </div>
-                  {item[iterateTitle].map((subItem, i1) => {
-                    totalAmount += parseInt(subItem.value, 10);
-                    return (
-                      <div className="dataFields" key={ i1 }>
-                        <div className="dataTitle">
-                          {subItem.key}
-                        </div>
-                        <div className="dataValue">
-                          <h4 className="amountWrap">
-                            $<TextField
-                              type="number"
-                              hintText={ iterateTitle }
-                              name={ iterateTitle }
-                              onChange={ e => this.handleValueChange(e, i1, i) }
-                              value={ subItem.value }
-                            />
-                          </h4>
-                        </div>
-                      </div>
-                    );
-                  })
-                  }
-                  <div className="dataFields">
-                    <div className="dataTitle">
-                      Total Amount:
-                    </div>
-                    <div className="dataValue totalAmount">
-                      <h4 className="amountWrap">
-                        $<TextField
-                          hintText="Total Amount"
-                          name="Total Amount"
-                          value={ totalAmount }
-                        />
-                      </h4>
-                    </div>
-                  </div>
-                </div>
-                :
-                <div className="mainHeadContainer" key={ i }>
-                  <div className="mainHeadTitle headerText headerSingleTitle">
-                    <h4 className="amountWrap">
-                      {item.title}:
-                    </h4>
-                  </div>
-                  <div className="mainHeadValue headerText headerSingleValue">
-                    <h4 className="amountWrap">
-                      $<TextField
-                        hintText={ iterateTitle }
-                        name={ iterateTitle }
-                        onChange={ e => this.handleValueChange(e, 0, i) }
-                        value={ item[iterateTitle][0].value }
-                      />
-                    </h4>
-                  </div>
-                </div>
-            );
-          })
-        }
+        { this.renderBalanceSheet() }
 
-        <div className="dataFields">
+        <div className="dataFields totalAmount">
           <div className="dataTitle">
-            <h4 className="amountWrap">
-              TOTAL NET WORTH:
-            </h4>
+            TOTAL NET WORTH:
           </div>
-          <div className="dataValue totalAmount">
-            <h4 className="amountWrap">
-              $<TextField
-                hintText="Total Amount"
-                name="Total Amount"
-                value={ this.state.AllTotalAmount }
-              />
-            </h4>
+          <div className="dataValue">
+            $<TextField
+              hintText="Total Amount"
+              name="Total Amount"
+              value={ totalAmount }
+            />
           </div>
         </div>
       </div>
     );
   }
 }
+
+export default BalanceSheet;

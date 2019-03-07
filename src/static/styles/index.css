@@ -241,23 +241,19 @@ caption,
 
 #tabs-wrapper {
   text-align: center;
-  overflow: visible;
   float: right;
-  position: relative;
-  display: block; }
+  position: absolute;
+  right: 0;
+  top: 64px;
+  display: flex;
+  flex-direction: column; }
 
 .drawer-sheet {
-  overflow: visible;
+  overflow-y: auto;
   z-index: 1300; }
 
 .drawer-tab {
-  width: 40px;
-  height: 80px;
-  position: absolute;
-  float: left;
-  left: -40px;
-  transition-duration: 300;
-  display: flex; }
+  width: 40px; }
   .drawer-tab .drawer-tab__icon {
     width: 100%;
     border-radius: 90px 0 0 90px;
@@ -274,6 +270,8 @@ caption,
       color: #FFF; }
       .drawer-tab .drawer-tab__icon button svg {
         fill: #FFF !important; }
+  .drawer-tab .tabbed-drawer {
+    min-width: 450px; }
 
 .smallIcon {
   width: 24px;
@@ -300,50 +298,92 @@ caption,
 
 .clientSheetContainer {
   height: 90%;
-  overflow: scroll; }
+  overflow-y: scroll; }
 
 .dataValue {
   width: 50%;
-  display: inline-block;
-  text-align: center; }
+  display: flex;
+  justify-content: center;
+  align-items: center; }
 
 .balanceSheetContainer {
   padding: 10px;
   height: 90%;
-  overflow: scroll; }
+  overflow-y: auto; }
 
 .headerText {
-  text-align: left;
   margin-left: 10px;
-  margin-top: 10px; }
+  margin-top: 10px;
+  font-size: 15px; }
+
+.dataFields {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 3px; }
 
 .dataTitle {
   display: inline-block;
   width: 30%;
   text-align: right;
-  margin-left: 20px;
-  font-size: 15px; }
+  margin-left: 20px; }
+
+.totalAmount .dataTitle {
+  font-weight: 600;
+  font-style: italic;
+  color: #444; }
+
+.mainHeadContainer {
+  text-align: left;
+  padding: 0 10px;
+  margin-top: 3px; }
 
 .headerSingleTitle {
-  text-align: left;
   margin-left: 10px;
   margin-top: 10px;
   width: 40%;
   display: inline-block; }
 
 .headerSingleValue {
-  text-align: left;
-  margin-left: 15px;
-  width: 55%;
+  text-align: center;
+  margin-left: 4px;
+  width: 50%;
   margin-top: 10px;
-  display: inline-block; }
-
-.totalAmount {
-  background-color: #dbe6ff; }
+  display: inline-flex;
+  justify-content: center;
+  align-items: center; }
 
 .amountWrap {
-  margin: 0;
-  text-decoration: underline; }
+  margin: 0; }
+
+.tapHeader {
+  align-items: center;
+  font-size: 28px;
+  border-top: 1px solid grey; }
+
+@media screen and (max-width: 1024px) {
+  .md-drawer.tabbed-drawer {
+    width: 60% !important;
+    left: unset !important; } }
+
+@media screen and (max-width: 768px) {
+  #tabs-wrapper {
+    top: 56px; }
+  .AppBarInner.md-paper {
+    height: 56px; }
+  .md-drawer.tabbed-drawer {
+    width: 80% !important;
+    top: 56px !important;
+    left: unset !important; } }
+
+.sync-icon i:active {
+  animation: rotate 0.5s linear; }
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg); }
+  100% {
+    transform: rotate(360deg); } }
 
 .diagramviewer {
   float: right;
