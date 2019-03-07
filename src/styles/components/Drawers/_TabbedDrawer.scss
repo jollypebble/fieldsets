@@ -1,42 +1,42 @@
 #tabs-wrapper {
   text-align: center;
-  overflow: visible;
   float: right;
-  position: relative;
-  display: block;
+  position: absolute;
+  right: 0;
+  top: 64px;
+  display: flex;
+  flex-direction: column;
 }
 .drawer-sheet {
-  overflow: visible;
+  overflow-y: auto;
   z-index: 1300;
 }
 .drawer-tab {
     width: $tab-width;
-    height: $tab-height;
-    position: absolute;
-    float: left;
-    left: (-$tab-width);
-    transition-duration: $md-drawer-transition-time;
-    display: flex;
 
     .drawer-tab__icon {
-        width:100%;
-        border-radius: 90px 0 0 90px;
-        background: $app-blue;
-        color: $app-white;
+      width:100%;
+      border-radius: 90px 0 0 90px;
+      background: $app-blue;
+      color: $app-white;
 
-        button {
-          height: $tab-height;
-          width: 20px;
-          padding: '0px';
-          position: relative;
-          border-radius: 90px 0 0 90px;
-          right: 0px;
-          padding-right: 0px;
-          color: $app-white;
-          svg {
-            fill: $app-white !important;
-          }
+      button {
+        height: $tab-height;
+        width: 20px;
+        padding: '0px';
+        position: relative;
+        border-radius: 90px 0 0 90px;
+        right: 0px;
+        padding-right: 0px;
+        color: $app-white;
+        svg {
+          fill: $app-white !important;
         }
+      }
+    }
+
+    .tabbed-drawer {
+      min-width: 450px;
     }
 }
 .smallIcon {
@@ -66,50 +66,87 @@
 }
 .clientSheetContainer{
   height: 90%;
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 // BalanceSheet css
 .dataValue{
   width: 50%;
-  display: inline-block;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .balanceSheetContainer{
   padding: $paddingBalanceSheet;
   height: 90%;
-  overflow: scroll;
+  overflow-y: auto;
 }
 .headerText {
-  text-align: left;
   margin-left: $marginBalanceSheet;
   margin-top: $marginBalanceSheet;
+  font-size: $fontSizeBalanceSheet;
+}
+.dataFields {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 3px;
 }
 .dataTitle {
   display: inline-block;
   width: 30%;
   text-align: right;
   margin-left: 2 * $marginBalanceSheet;
-  font-size: $fontSizeBalanceSheet;
+}
+.totalAmount .dataTitle {
+  font-weight: 600;
+  font-style: italic;
+  color: #444;
+}
+.mainHeadContainer {
+  text-align: left;
+  padding: 0 10px;
+  margin-top: 3px;
 }
 .headerSingleTitle{
-  text-align: left;
   margin-left: $marginBalanceSheet;
   margin-top: $marginBalanceSheet;
   width: 40%;
   display: inline-block;
 }
 .headerSingleValue{
-  text-align: left;
-  margin-left: $marginBalanceSheet + 5;
-  width: 55%;
+  text-align: center;
+  margin-left: 4px;
+  width: 50%;
   margin-top: $marginBalanceSheet;
-  display: inline-block;
-}
-.totalAmount{
-  background-color: $totalAmountColor;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
 }
 .amountWrap{
   margin:0;
-  text-decoration: underline;
+}
+.tapHeader {
+  align-items: center;
+  font-size: 28px;
+  border-top: 1px solid grey;
+}
+@media screen and (max-width: 1024px) {
+  .md-drawer.tabbed-drawer {
+    width: 60%!important;
+    left: unset!important;
+  }
+}
+@media screen and (max-width: 768px) {
+  #tabs-wrapper {
+    top: 56px;
+  }
+  .AppBarInner.md-paper {
+    height: 56px;
+  }
+  .md-drawer.tabbed-drawer {
+    width: 80%!important;
+    top: 56px!important;
+    left: unset!important;
+  }
 }
