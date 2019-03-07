@@ -6,6 +6,7 @@ export const getFields = gql`
       ...field
     }
   }
+
   fragment field on Field @client {
       id
       name

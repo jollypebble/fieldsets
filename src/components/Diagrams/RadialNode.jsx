@@ -148,7 +148,7 @@ class RadialNode extends React.Component {
         >
           <Mutation
             mutation={ setCurrentFocus }
-            variables={ { id, centerX, centerY } }
+            variables={ { id } }
             onCompleted={ this.handleClick }
             awaitRefetchQueries
           >
