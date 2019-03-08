@@ -1,11 +1,6 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
-import {
-  Dialog,
-  // Drawer,
-  Button,
-  TextField
-} from 'react-md';
+import PropTypes from 'prop-types';
+import { Dialog, Drawer, Button, TextField } from 'react-md';
 import { Row, Col } from 'react-flexbox-grid';
 
 export default class ContributionsMenu extends DrawerMenu {

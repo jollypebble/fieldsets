@@ -6,7 +6,6 @@ const Button = ({
   onClick
 }) => (
   <button
-    type="button"
     className="custom_button"
     onClick={ onClick }
   >
