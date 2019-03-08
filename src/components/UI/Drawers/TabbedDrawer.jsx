@@ -14,7 +14,6 @@ export default class TabbedDrawer extends PureComponent {
 
   static defaultProps = {
     type: Drawer.DrawerTypes.TEMPORARY,
-    saveCallback: false,
     position: 'right'
   }
 
@@ -92,6 +91,6 @@ TabbedDrawer.propTypes = {
   position: PropTypes.string,
   title: PropTypes.string,
   type: PropTypes.string,
-  saveCallback: PropTypes.bool,
+  saveCallback: PropTypes.func,
   renderContent: PropTypes.func
 };
