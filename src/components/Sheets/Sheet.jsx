@@ -6,11 +6,10 @@ class Sheet extends Component {
     super(props);
     this.state = { };
   }
-
   render() {
     return (
       <div className="sheet">
-        <span>Sheet Data Placeholder</span>
+        Sheet Data Placeholder
       </div>
     );
   }

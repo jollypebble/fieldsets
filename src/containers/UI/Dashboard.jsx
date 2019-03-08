@@ -63,13 +63,13 @@ export default class Dashboard extends Component {
     return (
       <React.Fragment>
         <MenuBar
-          leftIconCallback={ this.openDrawer }
+          leftIconCallback={this.openDrawer}
         />
         <div id="tabs-wrapper">
           <TabbedDrawer
-            menuItems={ [] }
-            position="right"
-            icon="account_box"
+            menuItems={[]}
+            position ='right'
+            icon='account_box'
             title="Client"
             renderContent={ this.renderClientSheet }
             saveCallback={ this.handleClientSave }

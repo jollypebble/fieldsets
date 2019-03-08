@@ -16,8 +16,8 @@ export const defaults = {
     alwaysDisplay: false,
     datatype: 'currency',
     callback: '',
-    notes: [],
-    owners: [],
+    notes:[],
+    owners:[],
     order: 0,
     __typename: 'Field'
   }],
@@ -30,5 +30,3 @@ export const defaults = {
     __typename: 'Circle'
   }]
 };
-
-export default defaults;
