@@ -74,7 +74,7 @@ export default class TabbedDrawer extends PureComponent {
             id={ drawerid }
             className="tabbed-drawer"
             type={ type }
-            visible={ isVisible }
+            visible={ visible }
             position={ position }
             onVisibilityChange={ this.handleVisibility }
             openDrawer={ this.toggleDrawer }
