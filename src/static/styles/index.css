@@ -236,10 +236,17 @@ caption,
 
 .circlenode {
   transition: stroke-width 0.15s; }
-  .circlenode.parent-node {
-    animation: showUp 1s;
-    animation-play-state: 1; }
-  .circlenode.child-node {
+
+.circle-group.parent-node {
+  animation: initShowUp 1s; }
+
+.circle-group.child-node {
+  opacity: 0; }
+  .circle-group.child-node.shown {
+    animation: showUp 0.5s;
+    opacity: 1; }
+  .circle-group.child-node.hidden {
+    animation: hideAway 0.5s;
     opacity: 0; }
 
 .circletext tspan {
@@ -247,7 +254,22 @@ caption,
   line-height: .75pt;
   fill: #515359; }
 
+/** Showing up an element */
 @keyframes showUp {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+
+/** Hiding an element */
+@keyframes hideAway {
+  0% {
+    opacity: 1; }
+  100% {
+    opacity: 0; } }
+
+/** Showing up an element with a little delay at the beginning */
+@keyframes initShowUp {
   0% {
     opacity: 0; }
   25% {

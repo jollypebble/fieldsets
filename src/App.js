@@ -10,6 +10,8 @@ import { CircleDiagram } from './containers/Diagrams/CircleDiagram';
 
 // import { BalanceSheet, ClientSheet } from '/components/Sheets';
 
+import Definder from './utils/Definder'
+
 /**
  * The basic UI components and all visualization areas are added here
  */
@@ -24,6 +26,11 @@ class App extends Component {
       dataSource: [],
       sheetLoaded: false,
     };
+  }
+
+  componentDidMount() {
+    console.log('App did mount')
+    Definder.init()
   }
 
   render() {

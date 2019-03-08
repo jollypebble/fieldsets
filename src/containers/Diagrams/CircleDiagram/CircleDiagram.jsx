@@ -319,6 +319,7 @@ class CircleDiagram extends Component {
                       closeDialog={ this.closeDialog }
                       setNodeState={ this.setNodeState }
                       nodes={this.state.nodes}
+                      isShown={true /* The prop means whether the node is being rendered right now by its parent */}
                     />
                   )) }
                 </g>

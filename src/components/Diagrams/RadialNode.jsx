@@ -13,7 +13,8 @@ import { setCurrentFocus } from '../../graphql';
      this.state = {
        isMouseInside: false,
        visible: false,
-       isShown: !this.hasParent(), // if the node doesn't have a parent then it's visible from the very beginning
+       isRevealed: false, // the prop means whether the node is rendering its chilren nodes right now. All sub-nodes are hidden from the very beginning
+       wasClickedAtLeastOnce: false, // whether the node was clicked at least once (is used for initial animations)
        focusOnMount: true,
        containFocus: true,
        initialFocus: undefined
@@ -33,6 +34,8 @@ import { setCurrentFocus } from '../../graphql';
    }
 
    componentDidUpdate() {
+     // here we want to hide all nodes down the tree if their parent is hidden
+     if (!this.props.isShown && this.state.isRevealed) this.setState({ isRevealed: false })
    }
 
    hasParent() {
@@ -59,7 +62,10 @@ import { setCurrentFocus } from '../../graphql';
      // } = this.props;
      // this.props.updateFocus(nodeID, centerX, centerY);
 
-     console.log('anvoevodin: children', this.props)
+     this.setState({
+      wasClickedAtLeastOnce: true,
+      isRevealed: !this.state.isRevealed
+     })
    }
 
    /** Is called when we doubleclick on the radial node */
@@ -132,7 +138,9 @@ import { setCurrentFocus } from '../../graphql';
 
     let parentNode = '';
     if (typeof(nodeData) !== undefined && nodeData.length > 0) {
-      parentNode = <g id={ nodeID ? `${nodeID}-children` : '' }  >
+      parentNode = <g
+        id={ nodeID ? `${nodeID}-children` : '' }
+      >
         { nodeData.map(data => (
           <RadialNode
             key={ data.id }
@@ -149,13 +157,15 @@ import { setCurrentFocus } from '../../graphql';
             openDialog={ this.props.openDialog }
             setNodeState={ this.props.setNodeState }
             nodes={this.props.nodes}
+            isShown={this.state.isRevealed /* The prop means whether the node is being rendered right now by its parent */}
+            wasParentClickedAtLeastOnce={this.state.wasClickedAtLeastOnce /* Whether the parent of the node was clicked at least once (is used for initial animations) */}
           />
         )) }
       </g>;
     }
 
     const immersionClass = this.hasParent() ? 'child-node ' : 'parent-node '
-    const shownClass = this.hasParent() && this.state.isShown ? 'shown ' : '' // 'shown'-class we need only for those nodes that are able to show up and hide
+    const shownClass = this.hasParent() && this.props.wasParentClickedAtLeastOnce ? (this.props.isShown ? 'shown ' : 'hidden ') : '' // 'shown'-class we need only for those nodes that are able to show up and hide
 
     // Child Node
     return (
@@ -165,7 +175,7 @@ import { setCurrentFocus } from '../../graphql';
         >
           <g
             id={`${nodeID}-circle`}
-            className='circle-group'
+            className={'circle-group ' + immersionClass + shownClass}
             onDoubleClick={this.handleDoubleClick}
           >
             <Mutation mutation={setCurrentFocus} variables={{ id, centerX, centerY }} onCompleted={this.handleClick} awaitRefetchQueries={true}>
@@ -173,7 +183,7 @@ import { setCurrentFocus } from '../../graphql';
                 <React.Fragment>
                   <circle
                     id={id}
-                    className={'circlenode ' + immersionClass + shownClass}
+                    className="circlenode"
                     cx={centerX}
                     cy={centerY}
                     r={radius}
