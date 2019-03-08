@@ -104,11 +104,8 @@ TabbedDrawer.propTypes = {
   icon: PropTypes.string.isRequired,
   position: PropTypes.string,
   title: PropTypes.string,
-<<<<<<< HEAD
   type: PropTypes.string,
   saveCallback: PropTypes.func,
-  renderContent: PropTypes.func
-=======
+  renderContent: PropTypes.func,
   top: PropTypes.string
->>>>>>> 10df091e19157884d78ffc77dbfe25a44f4d87e1
 };
