@@ -5,9 +5,10 @@ import { Toolbar, Drawer, Button } from 'react-md';
 export default class TabbedDrawer extends PureComponent {
   constructor(props) {
     super(props);
-
+    this.openposition = '-130px';
+    this.closedposition = '-40px';
     this.state = {
-      isVisible: false,
+      visible: false,
       tabposition: this.closedposition
     };
   }
@@ -17,12 +18,24 @@ export default class TabbedDrawer extends PureComponent {
     position: 'right'
   }
 
+  openDrawer = () => {
+    this.setState({ visible: true, tabposition: this.openposition });
+  };
+
+  closeDrawer = () => {
+    this.setState({ visible: false, tabposition: this.closedposition });
+  };
+
   toggleDrawer = () => {
-    this.setState({ isVisible: !this.state.isVisible });
+    if ( this.state.visible ) {
+      this.closeDrawer();
+    } else {
+      this.openDrawer();
+    }
   }
 
-  handleVisibility = (isVisible) => {
-    this.setState({ isVisible });
+  handleVisibility = (visible) => {
+    this.setState({ visible });
   };
 
   render() {
@@ -35,18 +48,19 @@ export default class TabbedDrawer extends PureComponent {
       renderContent
     } = this.props;
 
-    const drawerid = `tabbed-drawer-menu--${icon}`;
-    const { isVisible } = this.state;
+    const drawerid=`tabbed-drawer-menu--${icon}`
+    const { visible } = this.state;
     const isLeft = position === 'left';
     const hasSave = saveCallback !== null;
 
-    const closeBtn = <Button icon onClick={ this.toggleDrawer }>close</Button>;
-    const saveBtn = hasSave ? <Button icon onClick={ saveCallback }>save</Button> : null;
+    const closeBtn = <Button icon onClick={this.closeDrawer}>close</Button>;
+    const saveBtn = hasSave ? <Button icon onClick={saveCallback}>save</Button> : null;
 
     return (
       <React.Fragment>
         <div
           className="drawer-tab"
+          style={ { top: this.props.top, left: this.state.tabposition } }
         >
           <div className="drawer-tab__icon">
             <Button
@@ -90,7 +104,11 @@ TabbedDrawer.propTypes = {
   icon: PropTypes.string.isRequired,
   position: PropTypes.string,
   title: PropTypes.string,
+<<<<<<< HEAD
   type: PropTypes.string,
   saveCallback: PropTypes.func,
   renderContent: PropTypes.func
+=======
+  top: PropTypes.string
+>>>>>>> 10df091e19157884d78ffc77dbfe25a44f4d87e1
 };

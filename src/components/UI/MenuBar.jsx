@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Toolbar, Button } from 'react-md';
-import { MenuDrawer } from 'components/UI/Drawers';
+import { MenuDrawer } from '../../components/UI/Drawers';
 
 export default class MenuBar extends React.Component {
   constructor(props) {
@@ -28,19 +28,19 @@ export default class MenuBar extends React.Component {
             primary
             className="contributions"
           >
-            <span>Monthly Contribution: $28,0000</span>
+            Monthly Contribution: $28,0000
           </Button>
           <Button
             flat
             primary
             className="lumpsum"
           >
-            <span>Lump Sums: $28,0000</span>
+            Lump Sums: $28,0000
           </Button>
         </Toolbar>
         <MenuDrawer
-          id="contributions-menu"
-          position="left"
+          id='contributions-menu'
+          position='left'
         />
       </React.Fragment>
     );

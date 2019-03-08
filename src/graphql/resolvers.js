@@ -2,18 +2,18 @@ import { getNodeData, getCurrentFocus } from './components/Diagrams';
 
 export const resolvers = {
   Mutation: {
-    setCurrentFocus: (object, variables, { cache, getCacheKey }) => {
+    setCurrentFocus: ( object, variables, { cache, getCacheKey } ) => {
       console.log('Focus Circle');
 
-      const id = getCacheKey({ __typename: 'Circle', id: variables.id });
+      const id = getCacheKey({__typename: 'Circle', id: variables.id});
       console.log(id);
 
-      const currentFocus = cache.readFragment({ id, fragment: getNodeData });
+      const currentFocus = cache.readFragment({ id: id, fragment: getNodeData });
       console.log(currentFocus);
 
       cache.writeData({
         query: getCurrentFocus,
-        data: { currentFocus }
+        data: {currentFocus}
       });
 
       console.log('Focus Cache Updated');
@@ -21,5 +21,3 @@ export const resolvers = {
     },
   },
 };
-
-export default resolvers;

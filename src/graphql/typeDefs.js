@@ -15,7 +15,7 @@ export const typeDefs = `
     id: ID!
     name: String!
     firstname: String!
-    lastname: String!
+    lastname: [String]!
     dob: String!
   }
 
@@ -60,5 +60,3 @@ export const typeDefs = `
     lastname
   }
 `;
-
-export default typeDefs;
