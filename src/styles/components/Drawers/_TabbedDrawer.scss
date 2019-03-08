@@ -51,22 +51,64 @@
 }
 
 // ClientSheet css
-.addFieldBtn {
-  position: absolute;
-  right: 45px;
-  top: 20px;
-}
-.removeFieldBtn {
-  position: absolute;
-  right: 45px;
-  top: 0;
-}
-.form-group{
-  position:relative;
-}
-.clientSheetContainer{
+.clientSheetContainer {
   height: 90%;
-  overflow-y: scroll;
+  overflow-y: auto;
+
+  .form-group {
+    width: 90%;
+    margin: 0 auto;
+    margin-top: $largeMarginSize;
+
+    .form-control > div {
+      width: 100%;
+    }
+  }
+
+  .dependency-panel {
+    .dependency-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: -15px;
+      margin-top: $largeMarginSize;
+    }
+
+    .form-control {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .md-icon {
+        margin-top: $mediumMarginSize;
+        margin-left: $mediumMarginSize;
+      }
+    }
+
+    .md-icon {
+      cursor: pointer!important;
+    }
+
+    > hr {
+      width: 80%;
+      height: $largeMarginSize / 5;
+      background: darkgray;
+      margin: 0 auto;
+      margin-top: 3 * $mediumMarginSize;
+    }
+  }
+
+  .client-table {
+    margin-top: $largeMarginSize;
+
+    table {
+      display: block;
+
+      p {
+        margin-top: $mediumMarginSize;
+      }
+    }
+  }
 }
 
 // BalanceSheet css

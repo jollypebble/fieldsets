@@ -283,22 +283,42 @@ caption,
   padding: 0px;
   color: #FFF; }
 
-.addFieldBtn {
-  position: absolute;
-  right: 45px;
-  top: 20px; }
-
-.removeFieldBtn {
-  position: absolute;
-  right: 45px;
-  top: 0; }
-
-.form-group {
-  position: relative; }
-
 .clientSheetContainer {
   height: 90%;
-  overflow-y: scroll; }
+  overflow-y: auto; }
+  .clientSheetContainer .form-group {
+    width: 90%;
+    margin: 0 auto;
+    margin-top: 20px; }
+    .clientSheetContainer .form-group .form-control > div {
+      width: 100%; }
+  .clientSheetContainer .dependency-panel .dependency-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: -15px;
+    margin-top: 20px; }
+  .clientSheetContainer .dependency-panel .form-control {
+    display: flex;
+    flex-direction: row;
+    align-items: center; }
+    .clientSheetContainer .dependency-panel .form-control .md-icon {
+      margin-top: 10px;
+      margin-left: 10px; }
+  .clientSheetContainer .dependency-panel .md-icon {
+    cursor: pointer !important; }
+  .clientSheetContainer .dependency-panel > hr {
+    width: 80%;
+    height: 4px;
+    background: darkgray;
+    margin: 0 auto;
+    margin-top: 30px; }
+  .clientSheetContainer .client-table {
+    margin-top: 20px; }
+    .clientSheetContainer .client-table table {
+      display: block; }
+      .clientSheetContainer .client-table table p {
+        margin-top: 10px; }
 
 .dataValue {
   width: 50%;
