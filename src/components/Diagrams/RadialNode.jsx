@@ -12,9 +12,10 @@ import { setCurrentFocus } from '../../graphql';
      super(props);
      this.state = {
        isMouseInside: false,
-       visible: this.props.visible,
+       visible: false,
        isRevealed: false, // the prop means whether the node is rendering its chilren nodes right now. All sub-nodes are hidden from the very beginning
        wasClickedAtLeastOnce: false, // whether the node was clicked at least once (is used for initial animations)
+       focusOnMount: true,
        containFocus: true,
        initialFocus: undefined
      };
@@ -24,11 +25,21 @@ import { setCurrentFocus } from '../../graphql';
      this.handleClick = this.handleClick.bind(this);
 
      this.handleTargetChange = this.handleTargetChange.bind(this);
+     this.handleMountChange = this.handleMountChange.bind(this);
      this.handleFocusChange = this.handleFocusChange.bind(this);
+
+     this.handleTransitionEnd = this.handleTransitionEnd.bind(this);
+
+     this.elCirclenode = React.createRef();
+     this.elCircleGroup = React.createRef();
    }
 
    componentDidMount() {
      this.updateNodeData();
+     if (this.elCirclenode && this.elCirclenode.current) {
+      this.elCirclenode.current.removeEventListener('transitionend', this.handleTransitionEnd)
+      this.elCirclenode.current.addEventListener('transitionend', this.handleTransitionEnd)
+     }
    }
 
    componentDidUpdate() {
@@ -36,8 +47,21 @@ import { setCurrentFocus } from '../../graphql';
      if (!this.props.isShown && this.state.isRevealed) this.setState({ isRevealed: false })
    }
 
+   isHidden() {
+    return this.elCircleGroup && this.elCircleGroup.current && this.elCircleGroup.current.classList.contains('hidden')
+   }
+
    hasParent() {
      return this.props && this.props.parent !== '';
+   }
+
+   /** Is called when the css transition ends */
+   handleTransitionEnd(e) {
+    // checks whether the transition was on a position property
+    if (this.elCircleGroup && this.elCircleGroup.current && e && (e.propertyName === 'cx' || e.propertyName === 'cy')) {
+      if (this.elCircleGroup.current.classList.contains('hidden')) this.elCircleGroup.current.classList.add('afterHidden')
+      else if (this.elCircleGroup.current.classList.contains('afterHidden')) this.elCircleGroup.current.remove('afterHidden')
+    }
    }
 
    /** Is called when the cursor acrosses borders of the radial node getting inside of it */
@@ -52,6 +76,7 @@ import { setCurrentFocus } from '../../graphql';
 
    /** Is called when we click on the radial node */
    handleClick() {
+    if (this.isHidden()) return
      // anvoevodin: It's commented because zooming/scaling is baggy now and I need to make animations. Bags interfere
      // const {
      //   nodeID,
@@ -79,6 +104,9 @@ import { setCurrentFocus } from '../../graphql';
      this.setState({ initialFocus: value ? `#${value}` : undefined });
    };
 
+   handleMountChange = (checked) => {
+     this.setState({ focusOnMount: checked });
+   };
 
    handleFocusChange = (checked) => {
      this.setState({ containFocus: checked });
@@ -119,12 +147,12 @@ import { setCurrentFocus } from '../../graphql';
     const {
       nodeData,
       nodeID,
-      centerX,
-      centerY,
       radius,
       updateFocus,
       resetFocus
     } = this.props;
+    /** Position for the node */
+    let centerX = this.props.centerX, centerY = this.props.centerY
 
     // Scale factor might be able to be a prop.
     const childRadius = radius * 0.5;
@@ -133,14 +161,18 @@ import { setCurrentFocus } from '../../graphql';
 
     let parentNode = '';
     if (typeof(nodeData) !== undefined && nodeData.length > 0) {
-      parentNode = <g id={ nodeID ? `${nodeID}-children` : '' }>
-        { nodeData.map(data => (
-          <RadialNode
+      parentNode = <g
+        id={ nodeID ? `${nodeID}-children` : '' }
+      >
+        { nodeData.map(data => {
+          return <RadialNode
             key={ data.id }
             nodeData={ typeof(data.children) === undefined ? [] : data.children }
             nodeID={ data.id }
             centerX={ data.centerX }
             centerY={ data.centerY }
+            parentCenterX={ centerX }
+            parentCenterY={ centerY }
             radius={ childRadius }
             name={ data.name }
             parent={ data.parent }
@@ -153,12 +185,23 @@ import { setCurrentFocus } from '../../graphql';
             isShown={this.state.isRevealed /* The prop means whether the node is being rendered right now by its parent */}
             wasParentClickedAtLeastOnce={this.state.wasClickedAtLeastOnce /* Whether the parent of the node was clicked at least once (is used for initial animations) */}
           />
-        )) }
+        }) }
       </g>;
     }
 
-    const immersionClass = this.hasParent() ? 'child-node ' : 'parent-node '
-    const shownClass = this.hasParent() && this.props.wasParentClickedAtLeastOnce ? (this.props.isShown ? 'shown ' : 'hidden ') : '' // 'shown'-class we need only for those nodes that are able to show up and hide
+    /** "Immersion class" defines whether a node is a main (root node) or sub-node (has a parent) */
+    const immersionClass = this.hasParent() ? 'child-node' : 'parent-node';
+    /** "Shown class" exists only for those nodes that are able to show up and hide (child/sub nodes)  */
+    const shownClass = this.hasParent() && this.props.wasParentClickedAtLeastOnce ? (this.props.isShown ? 'shown' : 'hidden') : '';
+    /** We want to hide children at the start of the app */
+    const afterHiddenClass = this.hasParent() && shownClass === '' ? 'afterHidden' : ''
+    if (shownClass === 'hidden') {
+      centerX = this.props.parentCenterX
+      centerY = this.props.parentCenterY
+    } else if (this.hasParent() && shownClass === '') {
+      centerX = this.props.parentCenterX
+      centerY = this.props.parentCenterY
+    }
 
     // Child Node
     return (
@@ -167,14 +210,16 @@ import { setCurrentFocus } from '../../graphql';
           className='radial-group'
         >
           <g
+            ref={this.elCircleGroup}
             id={`${nodeID}-circle`}
-            className={'circle-group ' + immersionClass + shownClass}
+            className={'circle-group ' + immersionClass + ' ' + shownClass + ' ' + afterHiddenClass}
             onDoubleClick={this.handleDoubleClick}
           >
             <Mutation mutation={setCurrentFocus} variables={{ id, centerX, centerY }} onCompleted={this.handleClick} awaitRefetchQueries={true}>
               {focusCircle => (
                 <React.Fragment>
                   <circle
+                    ref={this.elCirclenode}
                     id={id}
                     className="circlenode"
                     cx={centerX}

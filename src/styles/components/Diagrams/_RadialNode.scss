@@ -3,21 +3,41 @@
 }
 
 .circle-group {
+
   &.parent-node {
     animation: initShowUp 1s;
   }
 
   &.child-node {
     opacity: 0;
+    pointer-events: none;
 
     &.shown {
+      display: inline;
       animation: showUp 0.5s;
       opacity: 1;
+      pointer-events: auto;
+
+      .circlenode {
+        transition:
+          cx 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+          cy 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
     }
 
     &.hidden {
-      animation: hideAway 0.5s;
+      animation: hideAway 0.1s;
       opacity: 0;
+
+      .circlenode {
+        transition:
+          cx 0.5s cubic-bezier(0.19, 1, 0.22, 1),
+          cy 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+      }
+    }
+
+    &.afterHidden {
+      display: none;
     }
   }
 }

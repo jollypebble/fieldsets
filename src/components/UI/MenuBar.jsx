@@ -20,8 +20,8 @@ export default class MenuBar extends React.Component {
         <Toolbar
           colored
           className="AppBarInner"
-          nav={ <Button icon onClick={ leftIconCallback }>menu</Button> }
-          actions={ <Button className="sync-icon" icon onClick={ rightIconCallback }>sync</Button> }
+          nav={<Button icon onClick={leftIconCallback}>menu</Button>}
+          actions={<Button icon onClick={rightIconCallback}>sync</Button>}
         >
           <Button
             flat

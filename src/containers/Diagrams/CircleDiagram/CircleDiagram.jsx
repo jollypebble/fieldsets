@@ -310,7 +310,6 @@ class CircleDiagram extends Component {
                       centerX={ diagram.centerX }
                       centerY={ diagram.centerY }
                       radius={ radius }
-                      visible={ typeof(diagram.visible) === 'undefined' ? true : diagram.visible }
                       name={ diagram.name }
                       parent={ diagram.parent }
                       fields={ diagram.fields }
