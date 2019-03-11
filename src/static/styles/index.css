@@ -249,19 +249,27 @@ caption,
     opacity: 1;
     pointer-events: auto; }
     .circle-group.child-node.shown .circlenode {
-      transition: cx 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), cy 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+      transition: cx 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), cy 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), stroke-width 0.15s; }
   .circle-group.child-node.hidden {
     animation: hideAway 0.1s;
     opacity: 0; }
     .circle-group.child-node.hidden .circlenode {
-      transition: cx 0.5s cubic-bezier(0.19, 1, 0.22, 1), cy 0.5s cubic-bezier(0.19, 1, 0.22, 1); }
+      transition: cx 0.5s cubic-bezier(0.19, 1, 0.22, 1), cy 0.5s cubic-bezier(0.19, 1, 0.22, 1), stroke-width 0.15s; }
   .circle-group.child-node.afterHidden {
     display: none; }
 
-.circletext tspan {
-  font-size: .5pt;
-  line-height: .75pt;
-  fill: #515359; }
+.circletext {
+  opacity: 0;
+  transition: opacity 0.5s; }
+  .circletext tspan {
+    font-size: .5pt;
+    line-height: .75pt;
+    fill: #515359; }
+  .circletext.shown {
+    opacity: 1; }
+  .circletext.hidden {
+    opacity: 1;
+    display: none; }
 
 /** Showing up an element */
 @keyframes showUp {

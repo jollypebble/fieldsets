@@ -30,15 +30,16 @@ import { setCurrentFocus } from '../../graphql';
 
      this.handleTransitionEnd = this.handleTransitionEnd.bind(this);
 
-     this.elCirclenode = React.createRef();
+     this.elCircleNode = React.createRef();
      this.elCircleGroup = React.createRef();
+     this.elCircleText = React.createRef();
    }
 
    componentDidMount() {
      this.updateNodeData();
-     if (this.elCirclenode && this.elCirclenode.current) {
-      this.elCirclenode.current.removeEventListener('transitionend', this.handleTransitionEnd)
-      this.elCirclenode.current.addEventListener('transitionend', this.handleTransitionEnd)
+     if (this.elCircleNode && this.elCircleNode.current) {
+      this.elCircleNode.current.removeEventListener('transitionend', this.handleTransitionEnd)
+      this.elCircleNode.current.addEventListener('transitionend', this.handleTransitionEnd)
      }
    }
 
@@ -59,8 +60,19 @@ import { setCurrentFocus } from '../../graphql';
    handleTransitionEnd(e) {
     // checks whether the transition was on a position property
     if (this.elCircleGroup && this.elCircleGroup.current && e && (e.propertyName === 'cx' || e.propertyName === 'cy')) {
-      if (this.elCircleGroup.current.classList.contains('hidden')) this.elCircleGroup.current.classList.add('afterHidden')
-      else if (this.elCircleGroup.current.classList.contains('afterHidden')) this.elCircleGroup.current.remove('afterHidden')
+      // Show/hide circles after the circle appearing animation
+      if (this.elCircleGroup.current.classList.contains('hidden')) {
+        this.elCircleGroup.current.classList.add('afterHidden')
+      } else if (this.elCircleGroup.current.classList.contains('afterHidden')) {
+        this.elCircleGroup.current.remove('afterHidden')
+      }
+
+      // Show/hide text labels after the circle appearing animation
+      if (this.elCircleGroup.current.classList.contains('shown')) {
+        if (!this.elCircleText.current.classList.contains('shown')) this.elCircleText.current.classList.add('shown')
+      } else {
+        if (this.elCircleText.current.classList.contains('shown')) this.elCircleText.current.classList.remove('shown')
+      }
     }
    }
 
@@ -148,6 +160,7 @@ import { setCurrentFocus } from '../../graphql';
       nodeData,
       nodeID,
       radius,
+      name,
       updateFocus,
       resetFocus
     } = this.props;
@@ -184,6 +197,7 @@ import { setCurrentFocus } from '../../graphql';
             nodes={this.props.nodes}
             isShown={this.state.isRevealed /* The prop means whether the node is being rendered right now by its parent */}
             wasParentClickedAtLeastOnce={this.state.wasClickedAtLeastOnce /* Whether the parent of the node was clicked at least once (is used for initial animations) */}
+
           />
         }) }
       </g>;
@@ -219,7 +233,7 @@ import { setCurrentFocus } from '../../graphql';
               {focusCircle => (
                 <React.Fragment>
                   <circle
-                    ref={this.elCirclenode}
+                    ref={this.elCircleNode}
                     id={id}
                     className="circlenode"
                     cx={centerX}
@@ -233,16 +247,17 @@ import { setCurrentFocus } from '../../graphql';
                     onClick={focusCircle}
                   />
                   <text
+                    ref={this.elCircleText}
                     x={centerX}
                     y={centerY}
                     textAnchor="middle"
-                    className='circletext'
+                    className={'circletext ' + (!this.hasParent() ? 'shown' : '') + ' ' + (!this.props.isShown ? ' hidden' : '') }
                     onMouseEnter={this.handleMouseEnter}
                     onMouseLeave={this.handleMouseLeave}
                     onClick={focusCircle}
                   >
-                    <tspan x={centerX} dy=".6em">{/*name*/ /* anvoevodin: It's commented because I need to make animations and text interferes */}</tspan>
-                    <tspan x={centerX} dy="1.2em">{ /*'Data: Value'*/ /* anvoevodin: It's commented because I need to make animations and text interferes */ }</tspan>
+                    <tspan x={centerX} dy=".6em">{name /* anvoevodin: It's commented because I need to make animations and text interferes */}</tspan>
+                    <tspan x={centerX} dy="1.2em">{ 'Data: Value' /* anvoevodin: It's commented because I need to make animations and text interferes */ }</tspan>
                   </text>
                 </React.Fragment>
               )}
