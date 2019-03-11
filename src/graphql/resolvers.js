@@ -16,7 +16,6 @@ export const resolvers = {
         data: {currentFocus}
       });
 
-      console.log('Focus Cache Updated');
       return currentFocus;
     },
   },

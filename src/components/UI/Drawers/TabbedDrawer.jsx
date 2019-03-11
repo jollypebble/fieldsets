@@ -78,10 +78,10 @@ export default class TabbedDrawer extends PureComponent {
             visible={visible}
             position={position}
             onVisibilityChange={this.handleVisibility}
-            openDrawer={this.openDrawer}
-            closeDrawer={this.closeDrawer}
+            openDrawer={this.toggleDrawer}
+            closeDrawer={this.toggleDrawer}
             handleVisibility={this.handleVisibility}
-            style={ { top: '64px', width: '33%' } }
+            style={ { top: '64px', width: '40%' } }
             header={(
               <Toolbar
                 colored
