@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import { MenuBar } from 'components/UI';
 import { TabbedDrawer, MenuDrawer } from 'components/UI/Drawers';
 import { BalanceSheet, ClientSheet } from 'components/Sheets';
@@ -11,6 +12,7 @@ const clientSheetItems = [
   'attyName',
   'ip'
 ];
+
 export default class Dashboard extends Component {
   constructor(props) {
     super(props);
@@ -73,14 +75,14 @@ export default class Dashboard extends Component {
             position="right"
             icon="account_box"
             title="Client"
-            top="64px"
+            renderContent={ this.renderClientSheet }
+            saveCallback={ this.handleClientSave }
           />
           <TabbedDrawer
             position="right"
             icon="library_books"
             title="Balance Sheet"
-            color=""
-            top="144px"
+            renderContent={ this.renderBalanceSheet }
           />
         </div>
         <div id="menu-wrapper">
