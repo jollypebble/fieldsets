@@ -2,9 +2,36 @@
 // At some point we will move the hacky excel functions to react callbacks and push this json data to an official data store/relational db
 export default [
   {
-    id: 'I8',
-    name: 'L6',
-    value: 'SUM(M12,G13,K13,O9)',
+    id: 'monthly_contribution',
+    name: 'Monthly Contribution',
+    description: '',
+    value: '280000',
+    type: 'currency',
+    callback: '',
+    notes:[],
+    owners:[],
+    parent: '',
+    order: 0,
+    alwaysDisplay: true,
+  },
+  {
+    id: 'lump_sums',
+    name: 'Lump Sums',
+    description: '',
+    value: '280000',
+    type: 'currency',
+    callback: '',
+    notes:[],
+    owners:[],
+    parent: '',
+    order: 0,
+    alwaysDisplay: true,
+  },
+  {
+    id: 'defense_allocation_monthly_total',
+    name: 'Monthly Total',
+    description: '',
+    value: '1604',
     type: 'currency',
     callback: '',
     notes:[],
@@ -14,8 +41,9 @@ export default [
     alwaysDisplay: true,
   },
   {
-    id: 'E11',
-    name: 'E9:E10',
+    id: 'will_status',
+    name: 'Status',
+    description: '',
     value: '',
     type: 'status',
     callback: false,
@@ -26,12 +54,13 @@ export default [
     alwaysDisplay: true,
   },
   {
-    id: 'G12:H12',
-    name: '"Monthly Benefit:"',
+    id: 'disability_insurance_monthly_benefit',
+    name: 'Monthly Benefit',
+    description: '',
     value: '',
     type: 'currency', // TODO: Define currency sub types [credit vs debt, loss etc.], for now I am assuming having type defs will be useful as we prototype data structures. A type will correspond with a react field component.
     callback: false,
-    notes:[],
+    notes:['is $12500 UNUM still there?'],
     owners:[],
     parent: 'disability_insurance',
     order: 0,
@@ -40,6 +69,7 @@ export default [
   {
     id: 'G13:I13',
     name: '"Premium:"',
+    description: '',
     value: 'SUM(F15,F16)',
     type: 'currency',
     callback: false,
@@ -52,6 +82,7 @@ export default [
   {
     id: 'F15',
     name: 'G15:H15',
+    description: '',
     value: '',
     type: 'currency',
     callback: false,
@@ -64,6 +95,7 @@ export default [
   {
     id: 'F16',
     name: 'G16:H16',
+    description: '',
     value: '',
     type: 'currency',
     callback: false,
@@ -76,6 +108,7 @@ export default [
   {
     id: 'K12',
     name: '"Daily Benefit:"',
+    description: '',
     value: '',
     type: 'currency',
     callback: false,
@@ -88,6 +121,7 @@ export default [
   {
     id: 'K13:L14',
     name: '"Premium:"',
+    description: '',
     value: 'SUM(L15,L16)',
     type: 'currency',
     callback: false,
@@ -100,6 +134,7 @@ export default [
   {
     id: 'L15',
     name: 'K15',
+    description: '',
     value: '',
     type: 'currency',
     callback: false,
@@ -112,6 +147,7 @@ export default [
   {
     id: 'L16',
     name: 'K16',
+    description: '',
     value: '',
     type: 'currency',
     callback: false,
@@ -129,6 +165,7 @@ export default [
   {
     id: 'N11:O11',
     name: '"Benefit:"',
+    description: '',
     value: '',
     type: 'currency',
     callback: false,
@@ -141,6 +178,7 @@ export default [
   {
     id: 'M12:N12',
     name: '"Premium:"',
+    description: '',
     value: 'SUM(M14,M15)',
     type: 'currency',
     callback: false,
@@ -153,6 +191,7 @@ export default [
   {
     id: 'M14',
     name: 'N14',
+    description: '',
     value: '',
     type: 'currency',
     callback: false,
@@ -165,6 +204,7 @@ export default [
   {
     id: 'M15',
     name: 'N15',
+    description: '',
     value: '',
     type: 'currency',
     callback: false,
@@ -177,7 +217,7 @@ export default [
   // TODO: offense_allocation
 
   // TODO: people
-  
+
 
 
   // TO Monthly Contribution, Lum Sum & Net Worth.
