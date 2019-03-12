@@ -298,16 +298,11 @@ caption,
   text-align: center;
   overflow: visible;
   float: right;
-<<<<<<< HEAD
-  position: relative;
-  display: block; }
-=======
   position: fixed;
   right: 0;
   top: 64px;
   display: flex;
   flex-direction: column; }
->>>>>>> origin/develop
 
 .drawer-sheet {
   overflow: visible;
@@ -401,10 +396,13 @@ caption,
   margin-top: 10px;
   display: inline-block; }
 
-<<<<<<< HEAD
 .totalAmount {
   background-color: #dbe6ff; }
-=======
+
+.amountWrap {
+  margin: 0;
+  text-decoration: underline; }
+
 #menu-wrapper .md-drawer {
   transition-duration: .3s;
   transition-property: transform; }
@@ -413,14 +411,6 @@ caption,
   padding: 20px; }
   #menu-wrapper .filter-items #select-filter-menu {
     width: 100%; }
-
-.sync-icon i:active {
-  animation: rotate 0.5s linear; }
->>>>>>> origin/develop
-
-.amountWrap {
-  margin: 0;
-  text-decoration: underline; }
 
 .diagramviewer {
   overflow: hidden;
@@ -542,26 +532,6 @@ text.nodeAttributesBase {
   height: 64px;
   line-height: 64px;
   color: #FFF;
-<<<<<<< HEAD
-  font-size: 20px;
-  /** We remove margin-left here because "Monthly Contribution" wasn't able to be placed at the center of the top bar */ }
-  .AppBarInner > .md-toolbar--action-right {
-    margin-left: 0; }
-  .AppBarInner .hidden {
-    display: none; }
-  .AppBarInner .centered {
-    margin: 0 auto; }
-    .AppBarInner .centered .contributions {
-      color: #FFF !important; }
-  .AppBarInner .textfield-monthly-contribution {
-    line-height: 0; }
-    .AppBarInner .textfield-monthly-contribution input {
-      line-height: 0;
-      margin-top: 0;
-      font-size: 14px; }
-    .AppBarInner .textfield-monthly-contribution hr {
-      display: none; }
-=======
   font-size: 20px; }
   .AppBarInner .toolbarText {
     flex: 1;
@@ -578,7 +548,6 @@ text.nodeAttributesBase {
         border: none;
         outline: none;
         color: white; }
->>>>>>> origin/develop
 
 .menufilters {
   padding: 15px; }
