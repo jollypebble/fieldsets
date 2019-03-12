@@ -521,9 +521,24 @@ text.nodeAttributesBase {
   height: 64px;
   line-height: 64px;
   color: #FFF;
-  font-size: 20px; }
-  .AppBarInner .contributions {
-    color: #FFF !important; }
+  font-size: 20px;
+  /** We remove margin-left here because "Monthly Contribution" wasn't able to be placed at the center of the top bar */ }
+  .AppBarInner > .md-toolbar--action-right {
+    margin-left: 0; }
+  .AppBarInner .hidden {
+    display: none; }
+  .AppBarInner .centered {
+    margin: 0 auto; }
+    .AppBarInner .centered .contributions {
+      color: #FFF !important; }
+  .AppBarInner .textfield-monthly-contribution {
+    line-height: 0; }
+    .AppBarInner .textfield-monthly-contribution input {
+      line-height: 0;
+      margin-top: 0;
+      font-size: 14px; }
+    .AppBarInner .textfield-monthly-contribution hr {
+      display: none; }
 
 .menufilters {
   padding: 15px; }
