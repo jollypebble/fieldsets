@@ -121,8 +121,26 @@ text.nodeAttributesBase {
   line-height: 64px;
   color: $app-white;
   font-size: 20px;
-  .contributions {
-    color: $app-white!important;
+
+  .toolbarText {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    font-size: 15px;
+
+    > div {
+      margin: 0 10px;
+
+      .textField {
+        width: 70px;
+        font-size: 15px;
+        background: transparent;
+        border: none;
+        outline: none;
+        color: white;
+      }
+    }
   }
 }
 
