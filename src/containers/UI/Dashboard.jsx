@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
+
 import { MenuBar } from 'components/UI';
-import { TabbedDrawer } from 'components/UI/Drawers';
-import { BalanceSheet } from 'components/Sheets';
-import { ClientSheet } from 'components/Sheets';
+import { TabbedDrawer, MenuDrawer } from 'components/UI/Drawers';
+import { BalanceSheet, ClientSheet } from 'components/Sheets';
 
 const clientSheetItems = [
   'accountName',
@@ -17,8 +17,13 @@ export default class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      clients: []
+      clients: [],
+      isMDVisible: false
     };
+  }
+
+  toggleDrawer = () => {
+    this.setState({ isMDVisible: !this.state.isMDVisible });
   }
 
   handleChange = (name, value) => {
@@ -27,9 +32,9 @@ export default class Dashboard extends Component {
 
   handleClientSave = () => {
     if (!this._clientSheet.isValidForm()) return;
-    let temp = {};
-    clientSheetItems.forEach(item => {
-      temp[item] = this._clientSheet[item]._field.getValue()
+    const temp = {};
+    clientSheetItems.forEach((item) => {
+      temp[item] = this._clientSheet[item]._field.getValue();
     });
     temp.dependencies = this._clientSheet.state.dependencies;
     this.setState({ clients: this.state.clients.concat(temp) });
@@ -37,7 +42,7 @@ export default class Dashboard extends Component {
   };
 
   initializeClientSheet = () => {
-    clientSheetItems.forEach(item => {
+    clientSheetItems.forEach((item) => {
       this._clientSheet[item]._field._field.value = '';
     });
     this._clientSheet.setState({ dependencies: [] });
@@ -46,7 +51,7 @@ export default class Dashboard extends Component {
   renderClientSheet = () => {
     return (
       <ClientSheet
-        ref={ item => { this._clientSheet = item } }
+        ref={ (item) => { this._clientSheet = item; } }
         clients={ this.state.clients }
         onChange={ this.handleChange }
       />
@@ -63,23 +68,28 @@ export default class Dashboard extends Component {
     return (
       <React.Fragment>
         <MenuBar
-          leftIconCallback={this.openDrawer}
+          leftIconCallback={ this.toggleDrawer }
         />
         <div id="tabs-wrapper">
           <TabbedDrawer
-            menuItems={[]}
-            position ='right'
-            icon='account_box'
+            position="right"
+            icon="account_box"
             title="Client"
             renderContent={ this.renderClientSheet }
             saveCallback={ this.handleClientSave }
           />
           <TabbedDrawer
-            menuItems={ [] }
             position="right"
             icon="library_books"
             title="Balance Sheet"
             renderContent={ this.renderBalanceSheet }
+          />
+        </div>
+        <div id="menu-wrapper">
+          <MenuDrawer
+            title={ 'My Awesome Drawer' }
+            isVisible={ this.state.isMDVisible }
+            toggleDrawer={ this.toggleDrawer }
           />
         </div>
       </React.Fragment>
