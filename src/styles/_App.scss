@@ -121,34 +121,25 @@ text.nodeAttributesBase {
   line-height: 64px;
   color: $app-white;
   font-size: 20px;
+  .toolbarText {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    font-size: 15px;
 
-  /** We remove margin-left here because "Monthly Contribution" wasn't able to be placed at the center of the top bar */
-  & > .md-toolbar--action-right {
-    margin-left: 0;
-  }
+    > div {
+      margin: 0 10px;
 
-  .hidden {
-      display: none;
-  }
-
-  .centered {
-    margin: 0 auto;
-
-    .contributions {
-      color: $app-white!important;
+      .textField {
+        width: 70px;
+        font-size: 15px;
+        background: transparent;
+        border: none;
+        outline: none;
+        color: white;
+      }
     }
-  }
-
-  .textfield-monthly-contribution {
-    line-height: 0;
-
-    input {
-      line-height: 0;
-      margin-top: 0;
-      font-size: 14px;
-    }
-
-    hr { display: none; }
   }
 }
 
