@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
-import { withApollo } from "react-apollo";
-import ReactGoogleSheets from 'react-google-sheets';
-
-import { Auth, Config } from './config';
+import { withApollo } from 'react-apollo';
 
 // Custom Components
 import { Dashboard } from './containers/UI'
@@ -29,6 +26,7 @@ class App extends Component {
   }
 
   componentDidMount() {
+    console.log('App did mount')
     Definder.init()
   }
 
@@ -42,12 +40,6 @@ class App extends Component {
 
     return (
       <React.Fragment>
-        <ReactGoogleSheets
-          clientId={Auth.google.web.client_id}
-          apiKey={Config.apiKey}
-          spreadsheetId={Config.sheetID}
-          afterLoading={() => this.setState({sheetLoaded: true})}
-        />
         <div id="econcircleapp">
           <CircleDiagram
             width={diagramWidth}
