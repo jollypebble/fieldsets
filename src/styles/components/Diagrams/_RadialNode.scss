@@ -1,7 +1,64 @@
+.circlenode {
+  transition: stroke-width 0.15s;
+}
+
+.circle-group {
+  &.parent-node {
+    animation: initShowUp 1s;
+  }
+
+  &.child-node {
+    opacity: 0;
+
+    &.shown {
+      animation: showUp 0.5s;
+      opacity: 1;
+    }
+
+    &.hidden {
+      animation: hideAway 0.5s;
+      opacity: 0;
+    }
+  }
+}
+
 .circletext {
   tspan {
     font-size: .5pt;
     line-height: .75pt;
     fill: rgb(81, 83, 89);
+  }
+}
+
+/** Showing up an element */
+@keyframes showUp {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/** Hiding an element */
+@keyframes hideAway {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/** Showing up an element with a little delay at the beginning */
+@keyframes initShowUp {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }

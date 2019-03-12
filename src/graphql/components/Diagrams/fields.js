@@ -14,5 +14,3 @@ export const getFields = gql`
       parent
   }
 `;
-
-export default getFields;
