@@ -241,18 +241,35 @@ caption,
   animation: initShowUp 1s; }
 
 .circle-group.child-node {
-  opacity: 0; }
+  opacity: 0;
+  pointer-events: none; }
   .circle-group.child-node.shown {
+    display: inline;
     animation: showUp 0.5s;
-    opacity: 1; }
+    opacity: 1;
+    pointer-events: auto; }
+    .circle-group.child-node.shown .circlenode {
+      transition: cx 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), cy 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), stroke-width 0.15s; }
   .circle-group.child-node.hidden {
-    animation: hideAway 0.5s;
+    animation: hideAway 0.1s;
     opacity: 0; }
+    .circle-group.child-node.hidden .circlenode {
+      transition: cx 0.5s cubic-bezier(0.19, 1, 0.22, 1), cy 0.5s cubic-bezier(0.19, 1, 0.22, 1), stroke-width 0.15s; }
+  .circle-group.child-node.afterHidden {
+    display: none; }
 
-.circletext tspan {
-  font-size: .5pt;
-  line-height: .75pt;
-  fill: #515359; }
+.circletext {
+  opacity: 0;
+  transition: opacity 0.5s; }
+  .circletext tspan {
+    font-size: .5pt;
+    line-height: .75pt;
+    fill: #515359; }
+  .circletext.shown {
+    opacity: 1; }
+  .circletext.hidden {
+    opacity: 1;
+    display: none; }
 
 /** Showing up an element */
 @keyframes showUp {
@@ -279,19 +296,31 @@ caption,
 
 #tabs-wrapper {
   text-align: center;
+  overflow: visible;
   float: right;
+<<<<<<< HEAD
+  position: relative;
+  display: block; }
+=======
   position: fixed;
   right: 0;
   top: 64px;
   display: flex;
   flex-direction: column; }
+>>>>>>> origin/develop
 
 .drawer-sheet {
-  overflow-y: auto;
+  overflow: visible;
   z-index: 1300; }
 
 .drawer-tab {
-  width: 40px; }
+  width: 40px;
+  height: 80px;
+  position: absolute;
+  float: left;
+  left: -40px;
+  transition-duration: 300;
+  display: flex; }
   .drawer-tab .drawer-tab__icon {
     width: 100%;
     border-radius: 90px 0 0 90px;
@@ -308,8 +337,6 @@ caption,
       color: #FFF; }
       .drawer-tab .drawer-tab__icon button svg {
         fill: #FFF !important; }
-  .drawer-tab .tabbed-drawer {
-    min-width: 450px; }
 
 .smallIcon {
   width: 24px;
@@ -321,119 +348,63 @@ caption,
   padding: 0px;
   color: #FFF; }
 
+.addFieldBtn {
+  position: absolute;
+  right: 45px;
+  top: 20px; }
+
+.removeFieldBtn {
+  position: absolute;
+  right: 45px;
+  top: 0; }
+
+.form-group {
+  position: relative; }
+
 .clientSheetContainer {
   height: 90%;
-  overflow-y: auto; }
-  .clientSheetContainer .form-group {
-    width: 90%;
-    margin: 0 auto;
-    margin-top: 20px; }
-    .clientSheetContainer .form-group .form-control > div {
-      width: 100%; }
-  .clientSheetContainer .dependency-panel .dependency-title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: -15px;
-    margin-top: 20px; }
-  .clientSheetContainer .dependency-panel .form-control {
-    display: flex;
-    flex-direction: row;
-    align-items: center; }
-    .clientSheetContainer .dependency-panel .form-control .md-icon {
-      margin-top: 10px;
-      margin-left: 10px; }
-  .clientSheetContainer .dependency-panel .md-icon {
-    cursor: pointer !important; }
-  .clientSheetContainer .dependency-panel > hr {
-    width: 80%;
-    height: 4px;
-    background: darkgray;
-    margin: 0 auto;
-    margin-top: 30px; }
-  .clientSheetContainer .client-table {
-    margin-top: 20px; }
-    .clientSheetContainer .client-table table {
-      display: block; }
-      .clientSheetContainer .client-table table p {
-        margin-top: 10px; }
+  overflow: scroll; }
 
 .dataValue {
   width: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center; }
+  display: inline-block;
+  text-align: center; }
 
 .balanceSheetContainer {
   padding: 10px;
   height: 90%;
-  overflow-y: auto; }
+  overflow: scroll; }
 
 .headerText {
+  text-align: left;
   margin-left: 10px;
-  margin-top: 10px;
-  font-size: 15px; }
-
-.dataFields {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 3px; }
+  margin-top: 10px; }
 
 .dataTitle {
   display: inline-block;
   width: 30%;
   text-align: right;
-  margin-left: 20px; }
-
-.totalAmount .dataTitle {
-  font-weight: 600;
-  font-style: italic;
-  color: #444; }
-
-.mainHeadContainer {
-  text-align: left;
-  padding: 0 10px;
-  margin-top: 3px; }
+  margin-left: 20px;
+  font-size: 15px; }
 
 .headerSingleTitle {
+  text-align: left;
   margin-left: 10px;
   margin-top: 10px;
   width: 40%;
   display: inline-block; }
 
 .headerSingleValue {
-  text-align: center;
-  margin-left: 4px;
-  width: 50%;
+  text-align: left;
+  margin-left: 15px;
+  width: 55%;
   margin-top: 10px;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center; }
+  display: inline-block; }
 
-.amountWrap {
-  margin: 0; }
-
-.tapHeader {
-  align-items: center;
-  font-size: 28px;
-  border-top: 1px solid grey; }
-
-@media screen and (max-width: 1024px) {
-  .md-drawer.tabbed-drawer {
-    width: 60% !important;
-    left: unset !important; } }
-
-@media screen and (max-width: 768px) {
-  #tabs-wrapper {
-    top: 56px; }
-  .AppBarInner.md-paper {
-    height: 56px; }
-  .md-drawer.tabbed-drawer {
-    width: 80% !important;
-    top: 56px !important;
-    left: unset !important; } }
-
+<<<<<<< HEAD
+.totalAmount {
+  background-color: #dbe6ff; }
+=======
 #menu-wrapper .md-drawer {
   transition-duration: .3s;
   transition-property: transform; }
@@ -445,12 +416,11 @@ caption,
 
 .sync-icon i:active {
   animation: rotate 0.5s linear; }
+>>>>>>> origin/develop
 
-@keyframes rotate {
-  0% {
-    transform: rotate(0deg); }
-  100% {
-    transform: rotate(360deg); } }
+.amountWrap {
+  margin: 0;
+  text-decoration: underline; }
 
 .diagramviewer {
   overflow: hidden;
@@ -572,6 +542,26 @@ text.nodeAttributesBase {
   height: 64px;
   line-height: 64px;
   color: #FFF;
+<<<<<<< HEAD
+  font-size: 20px;
+  /** We remove margin-left here because "Monthly Contribution" wasn't able to be placed at the center of the top bar */ }
+  .AppBarInner > .md-toolbar--action-right {
+    margin-left: 0; }
+  .AppBarInner .hidden {
+    display: none; }
+  .AppBarInner .centered {
+    margin: 0 auto; }
+    .AppBarInner .centered .contributions {
+      color: #FFF !important; }
+  .AppBarInner .textfield-monthly-contribution {
+    line-height: 0; }
+    .AppBarInner .textfield-monthly-contribution input {
+      line-height: 0;
+      margin-top: 0;
+      font-size: 14px; }
+    .AppBarInner .textfield-monthly-contribution hr {
+      display: none; }
+=======
   font-size: 20px; }
   .AppBarInner .toolbarText {
     flex: 1;
@@ -588,6 +578,7 @@ text.nodeAttributesBase {
         border: none;
         outline: none;
         color: white; }
+>>>>>>> origin/develop
 
 .menufilters {
   padding: 15px; }

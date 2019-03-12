@@ -51,12 +51,4 @@ export const typeDefs = `
     nodefields(parent: String): [Field!]
     nodes: [Circle!]
   }
-
-  enum FieldType {
-    currency
-    status
-    dob
-    firstname
-    lastname
-  }
 `;
