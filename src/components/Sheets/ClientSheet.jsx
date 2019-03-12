@@ -75,7 +75,7 @@ export default class ClientSheet extends React.Component {
 
   renderDependencies = () => {
     const { dependencies } = this.state;
-    
+
     return dependencies.map((item, index) => (
       <div key={ index } className="form-control">
         <TextField
