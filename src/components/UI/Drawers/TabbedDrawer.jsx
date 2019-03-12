@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Toolbar, Drawer, Button } from 'react-md';
 
 export default class TabbedDrawer extends PureComponent {
-
   constructor(props) {
     super(props);
     this.openposition = '-130px';
@@ -16,7 +15,6 @@ export default class TabbedDrawer extends PureComponent {
 
   static defaultProps = {
     type: Drawer.DrawerTypes.TEMPORARY,
-    saveCallback: null,
     position: 'right'
   }
 
@@ -46,7 +44,8 @@ export default class TabbedDrawer extends PureComponent {
       position,
       type,
       title,
-      saveCallback
+      saveCallback,
+      renderContent
     } = this.props;
 
     const drawerid=`tabbed-drawer-menu--${icon}`
@@ -72,27 +71,29 @@ export default class TabbedDrawer extends PureComponent {
             </Button>
           </div>
           <Drawer
-            id={drawerid}
-            className='tabbed-drawer'
-            type={type}
-            visible={visible}
-            position={position}
-            onVisibilityChange={this.handleVisibility}
-            openDrawer={this.toggleDrawer}
-            closeDrawer={this.toggleDrawer}
-            handleVisibility={this.handleVisibility}
+            id={ drawerid }
+            className="tabbed-drawer"
+            type={ type }
+            visible={ visible }
+            position={ position }
+            onVisibilityChange={ this.handleVisibility }
+            openDrawer={ this.toggleDrawer }
+            closeDrawer={ this.toggleDrawer }
+            handleVisibility={ this.handleVisibility }
             style={ { top: '64px', width: '40%' } }
-            header={(
+            header={ (
               <Toolbar
                 colored
-                nav={isLeft ? saveBtn : closeBtn}
-                actions={isLeft ? closeBtn : saveBtn}
-                className="md-divider-border md-divider-border--bottom"
+                nav={ isLeft ? saveBtn : closeBtn }
+                actions={ isLeft ? closeBtn : saveBtn }
+                className="md-divider-border md-divider-border--bottom tapHeader"
               >
                 {title}
               </Toolbar>
-            )}
-          />
+            ) }
+          >
+            { renderContent() }
+          </Drawer>
         </div>
       </React.Fragment>
     );
@@ -103,5 +104,8 @@ TabbedDrawer.propTypes = {
   icon: PropTypes.string.isRequired,
   position: PropTypes.string,
   title: PropTypes.string,
+  type: PropTypes.string,
+  saveCallback: PropTypes.func,
+  renderContent: PropTypes.func,
   top: PropTypes.string
 };
