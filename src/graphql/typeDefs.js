@@ -4,7 +4,7 @@ export const typeDefs = `
     name: String!
   }
 
-  type DataType implements Entity {
+  interface DataType {
     id: ID!
     name: String!
     format: String!
@@ -52,7 +52,8 @@ export const typeDefs = `
     nodes: [Circle!]
   }
 
-  enum FieldType {
+  enum DataType {
+    field
     currency
     status
     dob
