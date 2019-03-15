@@ -1,0 +1,28 @@
+#net_worth-group {
+  .circlenode {
+    fill: #ffe7a7;
+    stroke: #fde08c;
+    stroke-width: 0.1;
+    stroke-dasharray: 0.4;
+    transition:
+      stroke-dasharray 0.15s;
+  }
+
+  .circle-group:hover {
+    .circlenode {
+      stroke-dasharray: 0.2;
+    }
+  }
+
+  .circletext {
+    .amount {
+      font-weight: bold;
+      fill: #ff4f00;
+    }
+
+    .label {
+      font-size: .45pt;
+      fill: #6b4f00;
+    }
+  }
+}
