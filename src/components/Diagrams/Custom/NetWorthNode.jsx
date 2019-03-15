@@ -26,8 +26,8 @@ export default class NetWorthNode extends RadialNode {
       className={'circletext ' + (!this.hasParent() ? 'shown' : '') + ' ' + (!this.props.isShown ? ' hidden' : '') }
       onClick={focusCircle}
     >
-      <tspan className="amount" x={centerX} dy="-0.3em">$38,742,994</tspan>
-      <tspan className="label" x={centerX} dy="2em">{name}</tspan>
+      <tspan className="amount" style={{ fontSize: '0.4pt' }} x={centerX} dy="-0.3em">$38,742,994</tspan>
+      <tspan className="label"  style={{ fontSize: '0.4pt' }} x={centerX} dy="2em">{name}</tspan>
     </text>
   };
 

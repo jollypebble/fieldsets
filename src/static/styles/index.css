@@ -235,8 +235,6 @@ caption,
   width: 100%; }
 
 .circlenode {
-  fill: grey;
-  stroke: grey;
   transition: stroke-width 0.15s; }
 
 .circle-group.parent-node {
@@ -264,9 +262,7 @@ caption,
   opacity: 0;
   transition: opacity 0.5s; }
   .circletext tspan {
-    font-size: .4pt;
     line-height: .75pt;
-    fill: #515359;
     font-weight: bold; }
   .circletext.shown {
     opacity: 1; }

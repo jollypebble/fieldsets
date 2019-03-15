@@ -1,6 +1,4 @@
 .circlenode {
-  fill: grey;
-  stroke: grey;
   transition:
     stroke-width 0.15s;
 }
@@ -51,9 +49,7 @@
   transition: opacity 0.5s;
 
   tspan {
-    font-size: .4pt;
     line-height: .75pt;
-    fill: rgb(81, 83, 89);
     font-weight: bold;
   }
 
