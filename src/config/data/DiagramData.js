@@ -1,3 +1,15 @@
+/**
+  Type "Color" - is an usual object with props "bg" and "text" that determine color of node elements. E.g. color: { bg: '#5fc6f5', text: '#f5fcff' }
+
+  @param {Color} color If it's specified then a node ignores "childrenColor" property from its parent
+*/
+
+const defenseAllocationColor = { bg: '#5fc6f5', text: '#316277' }
+const offenseAllocationColor = { bg: '#f55f68', text: '#562428' }
+const shortTermMoneyColor = { bg: '#ffa26c', text: '#6b4328' }
+const midTermMoneyColor = { bg: '#84e494', text: '#276730' }
+const longTermMoneyColor = { bg: '#c35977', text: '#582635' }
+
 export default [
   {
     name: 'Net Worth',
@@ -15,6 +27,7 @@ export default [
     fields: [],
     centerX: 30.5, // X,Y represent points on a plane to map the current data to. If we wanted to get fancy we could rework this to include Z coordinates, but I don't see that showing a need for any time soon. If it does tracking down how these guys are used is a good place to start.
     centerY: 37,
+    color: defenseAllocationColor,
     children: [ // Should `children` be thought of as `data`. The `chldren` field name is used to imply this can be eith a series of liner data points or a series of relationally nested data objects.
       {
         name: 'Will',
@@ -23,6 +36,7 @@ export default [
         fields: [],
         centerX: 25,
         centerY: 36.5,
+        color: defenseAllocationColor,
         children: []
       },
       {
@@ -32,6 +46,7 @@ export default [
         fields: [],
         centerX: 28,
         centerY: 32.5,
+        color: defenseAllocationColor,
         children: []
       },
       {
@@ -41,6 +56,7 @@ export default [
         fields: [],
         centerX: 33,
         centerY: 32.5,
+        color: defenseAllocationColor,
         children: []
       },
       {
@@ -50,6 +66,7 @@ export default [
         fields: [],
         centerX: 36,
         centerY: 36.5,
+        color: defenseAllocationColor,
         children: []
       },
     ]
@@ -61,22 +78,25 @@ export default [
     fields: [],
     centerX: 30.5,
     centerY: 48,
+    color: offenseAllocationColor,
     children: [
       {
         name: 'Short Term Money',
         id: 'short_term_money',
         parent: 'offense_allocation',
         fields: [],
-        centerX: 23,
-        centerY: 51,
+        centerX: 24.5,
+        centerY: 49.5,
+        color: shortTermMoneyColor,
         children: [
           {
             name: 'Cash Equivalents',
             id: 'cash_equivalents',
             parent: 'short_term_money',
             fields: [],
-            centerX: 20,
-            centerY: 51,
+            centerX: 20.5,
+            centerY: 49.5,
+            color: shortTermMoneyColor,
             children: []
           },
           {
@@ -84,8 +104,9 @@ export default [
             id: 'mortgage',
             parent: 'short_term_money',
             fields: [],
-            centerX: 21,
-            centerY: 53,
+            centerX: 21.5,
+            centerY: 52.5,
+            color: shortTermMoneyColor,
             children: []
           },
           {
@@ -93,8 +114,9 @@ export default [
             id: 'liabilities_debt',
             parent: 'short_term_money',
             fields: [],
-            centerX: 23,
-            centerY: 54,
+            centerX: 24.5,
+            centerY: 53.5,
+            color: shortTermMoneyColor,
             children: []
           },
         ]
@@ -105,15 +127,17 @@ export default [
         parent: 'offense_allocation',
         fields: [],
         centerX: 30.5,
-        centerY: 54,
+        centerY: 53.5,
+        color: midTermMoneyColor,
         children: [
           {
             name: 'UTMA\'s',
             id: 'utmas',
             parent: 'mid_term_money',
             fields: [],
-            centerX: 28.5,
+            centerX: 27.5,
             centerY: 56,
+            color: midTermMoneyColor,
             children: []
           },
           {
@@ -122,7 +146,8 @@ export default [
             parent: 'mid_term_money',
             fields: [],
             centerX: 30.5,
-            centerY: 57,
+            centerY: 57.5,
+            color: midTermMoneyColor,
             children: []
           },
           {
@@ -130,8 +155,9 @@ export default [
             id: 'investment_account',
             parent: 'mid_term_money',
             fields: [],
-            centerX: 32.5,
+            centerX: 33.5,
             centerY: 56,
+            color: midTermMoneyColor,
             children: []
           },
         ]
@@ -141,8 +167,9 @@ export default [
         id: 'long_term_money',
         parent: 'offense_allocation',
         fields: [],
-        centerX: 38,
-        centerY: 50.75,
+        centerX: 36.5,
+        centerY: 49.5,
+        color: longTermMoneyColor,
         children: [
           {
             name: 'IRA ROTH',
@@ -150,7 +177,8 @@ export default [
             parent: 'long_term_money',
             fields: [],
             centerX: 36.5,
-            centerY: 53.75,
+            centerY: 53.5,
+            color: longTermMoneyColor,
             children: []
           },
           {
@@ -159,7 +187,8 @@ export default [
             parent: 'long_term_money',
             fields: [],
             centerX: 39,
-            centerY: 53.5,
+            centerY: 53.25,
+            color: longTermMoneyColor,
             children: []
           },
           {
@@ -168,7 +197,8 @@ export default [
             parent: 'long_term_money',
             fields: [],
             centerX: 40.75,
-            centerY: 51.5,
+            centerY: 51.25,
+            color: longTermMoneyColor,
             children: []
           },
           {
@@ -177,7 +207,8 @@ export default [
             parent: 'long_term_money',
             fields: [],
             centerX: 40.75,
-            centerY: 49,
+            centerY: 48.75,
+            color: longTermMoneyColor,
             children: []
           },
           {
@@ -186,7 +217,8 @@ export default [
             parent: 'long_term_money',
             fields: [],
             centerX: 38,
-            centerY: 55.5,
+            centerY: 55.25,
+            color: longTermMoneyColor,
             children: []
           },
           {
@@ -195,7 +227,8 @@ export default [
             parent: 'long_term_money',
             fields: [],
             centerX: 41.25,
-            centerY: 53.75,
+            centerY: 53.5,
+            color: longTermMoneyColor,
             children: []
           },
           {
@@ -204,7 +237,8 @@ export default [
             parent: 'long_term_money',
             fields: [],
             centerX: 42.75,
-            centerY: 50.25,
+            centerY: 50.0,
+            color: longTermMoneyColor,
             children: []
           }
         ]

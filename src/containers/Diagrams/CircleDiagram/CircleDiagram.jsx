@@ -309,11 +309,13 @@ class CircleDiagram extends Component {
                       key={ diagram.id }
                       nodeData={ typeof(diagram.children) === undefined ? [] : diagram.children }
                       nodeID={ diagram.id }
+                      scaleFactor={ 1 }
                       centerX={ diagram.centerX }
                       centerY={ diagram.centerY }
                       radius={ radius }
                       name={ diagram.name }
                       parent={ diagram.parent }
+                      color={ diagram.color }
                       fields={ diagram.fields }
                       updateFocus={ this.updateFocus }
                       resetFocus={ this.resetFocus }
