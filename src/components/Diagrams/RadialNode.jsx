@@ -25,10 +25,20 @@ import { setCurrentFocus } from '../../graphql';
 
      this.handleTargetChange = this.handleTargetChange.bind(this);
      this.handleFocusChange = this.handleFocusChange.bind(this);
+
+     this.handleTransitionEnd = this.handleTransitionEnd.bind(this);
+
+     this.elCircleNode = React.createRef();
+     this.elCircleGroup = React.createRef();
+     this.elCircleText = React.createRef();
    }
 
    componentDidMount() {
      this.updateNodeData();
+     if (this.elCircleNode && this.elCircleNode.current) {
+      this.elCircleNode.current.removeEventListener('transitionend', this.handleTransitionEnd)
+      this.elCircleNode.current.addEventListener('transitionend', this.handleTransitionEnd)
+     }
    }
 
    componentDidUpdate() {
@@ -36,8 +46,32 @@ import { setCurrentFocus } from '../../graphql';
      if (!this.props.isShown && this.state.isRevealed) this.setState({ isRevealed: false })
    }
 
+   isHidden() {
+    return this.elCircleGroup && this.elCircleGroup.current && this.elCircleGroup.current.classList.contains('hidden')
+   }
+
    hasParent() {
      return this.props && this.props.parent !== '';
+   }
+
+   /** Is called when the css transition ends */
+   handleTransitionEnd(e) {
+    // checks whether the transition was on a position property
+    if (this.elCircleGroup && this.elCircleGroup.current && e && (e.propertyName === 'cx' || e.propertyName === 'cy')) {
+      // Show/hide circles after the circle appearing animation
+      if (this.elCircleGroup.current.classList.contains('hidden')) {
+        this.elCircleGroup.current.classList.add('afterHidden')
+      } else if (this.elCircleGroup.current.classList.contains('afterHidden')) {
+        this.elCircleGroup.current.remove('afterHidden')
+      }
+
+      // Show/hide text labels after the circle appearing animation
+      if (this.elCircleText && this.elCircleGroup.current.classList.contains('shown')) {
+        if (!this.elCircleText.current.classList.contains('shown')) this.elCircleText.current.classList.add('shown')
+      } else {
+        if (this.elCircleText.current.classList.contains('shown')) this.elCircleText.current.classList.remove('shown')
+      }
+    }
    }
 
    /** Is called when the cursor acrosses borders of the radial node getting inside of it */
@@ -52,6 +86,7 @@ import { setCurrentFocus } from '../../graphql';
 
    /** Is called when we click on the radial node */
    handleClick() {
+    if (this.isHidden()) return
      // anvoevodin: It's commented because zooming/scaling is baggy now and I need to make animations. Bags interfere
      // const {
      //   nodeID,
@@ -79,128 +114,140 @@ import { setCurrentFocus } from '../../graphql';
      this.setState({ initialFocus: value ? `#${value}` : undefined });
    };
 
-
    handleFocusChange = (checked) => {
      this.setState({ containFocus: checked });
    };
 
-   updateNodeData() {
-     const {
-       nodeID,
-       name,
-       fields,
-       parent,
-       centerX,
-       centerY,
-       setNodeState,
-       nodes
-     } = this.props;
+   /** Extra properties that will be passed into Circle instance. It's for beign overrided by sub-classes. */
+   getAdditionalCircleProps() { return null };
+   
+   getInsideElements(name, centerX, centerY, focusCircle) {
+    let textColor = this.props.color && this.props.color.text ? this.props.color.text : '#515359'
+    const textSize = (0.4 * this.props.scaleFactor) + 'pt'
+    console.log(textSize)
+    return <text
+      ref={this.elCircleText}
+      x={centerX}
+      y={centerY}
+      textAnchor="middle"
+      className={'circletext ' + (!this.hasParent() ? 'shown' : '') + ' ' + (!this.props.isShown ? ' hidden' : '') }
+      onClick={focusCircle}
+    >
+      <tspan x={centerX} fill={textColor} style={{ fontSize: textSize }} dy="0em">{name}</tspan>
+      <tspan x={centerX} fill={textColor} style={{ fontSize: textSize }} dy="1.6em">{ 'Data: Value' }</tspan>
+    </text>
+   }
 
+   updateNodeData() {
      // TODO GET BOUNDING BOX HERE:
 
      // Emulate Circle Appollo Data Type in `graphql/typeDefs.js`
      const nodedata = {
-       id: nodeID,
-       name: name,
-       fields: fields,
-       parent: parent,
-       centerX: centerX,
-       centerY: centerY
+       id: this.props.nodeID,
+       name: this.props.name,
+       fields: this.props.fields,
+       parent: this.props.parent,
+       centerX: this.props.centerX,
+       centerY: this.props.centerY
      };
 
-     let updatedNodeList = nodes;
-     updatedNodeList[nodeID] = nodedata;
+     let updatedNodeList = this.props.nodes;
+     updatedNodeList[this.props.nodeID] = nodedata;
 
-     setNodeState(updatedNodeList); // Sets the top level Diagram node array.
+     this.props.setNodeState(updatedNodeList); // Sets the top level Diagram node array.
      return this.state.nodes;
    }
 
    render() {
-    const {
-      nodeData,
-      nodeID,
-      centerX,
-      centerY,
-      radius,
-      updateFocus,
-      resetFocus
-    } = this.props;
+    /** Position for the node */
+    let centerX = this.props.centerX, centerY = this.props.centerY
 
-    // Scale factor might be able to be a prop.
-    const childRadius = radius * 0.5;
-
-    const id = `${nodeID}`;
+    const id = `${this.props.nodeID}`;
 
     let parentNode = '';
-    if (typeof(nodeData) !== undefined && nodeData.length > 0) {
-      parentNode = <g id={ nodeID ? `${nodeID}-children` : '' }>
-        { nodeData.map(data => (
-          <RadialNode
+    if (typeof(this.props.nodeData) !== undefined && this.props.nodeData.length > 0) {
+      parentNode = <g
+        id={ this.props.nodeID ? `${this.props.nodeID}-children` : '' }
+      >
+        { this.props.nodeData.map(data => {
+          return <RadialNode
             key={ data.id }
             nodeData={ typeof(data.children) === undefined ? [] : data.children }
             nodeID={ data.id }
             centerX={ data.centerX }
             centerY={ data.centerY }
-            radius={ childRadius }
             name={ data.name }
             parent={ data.parent }
             fields={ data.fields }
-            updateFocus={ updateFocus }
-            resetFocus={ resetFocus }
+            color={ data.color }
+
+            parentCenterX={ centerX }
+            parentCenterY={ centerY }
+
+            updateFocus={ this.props.updateFocus }
+            resetFocus={ this.props.resetFocus }
             openDialog={ this.props.openDialog }
             setNodeState={ this.props.setNodeState }
-            nodes={this.props.nodes}
+            nodes={ this.props.nodes }
+            radius={ this.props.radius }
+            scaleFactor={ this.props.scaleFactor * 0.6 }
+
             isShown={this.state.isRevealed /* The prop means whether the node is being rendered right now by its parent */}
             wasParentClickedAtLeastOnce={this.state.wasClickedAtLeastOnce /* Whether the parent of the node was clicked at least once (is used for initial animations) */}
           />
-        )) }
+        }) }
       </g>;
     }
 
-    const immersionClass = this.hasParent() ? 'child-node ' : 'parent-node '
-    const shownClass = this.hasParent() && this.props.wasParentClickedAtLeastOnce ? (this.props.isShown ? 'shown ' : 'hidden ') : '' // 'shown'-class we need only for those nodes that are able to show up and hide
+    /** "Immersion class" defines whether a node is a main (root node) or sub-node (has a parent) */
+    const immersionClass = this.hasParent() ? 'child-node' : 'parent-node';
+    /** "Shown class" exists only for those nodes that are able to show up and hide (child/sub nodes)  */
+    const shownClass = this.hasParent() && this.props.wasParentClickedAtLeastOnce ? (this.props.isShown ? 'shown' : 'hidden') : '';
+    /** We want to hide children at the start of the app */
+    const afterHiddenClass = this.hasParent() && shownClass === '' ? 'afterHidden' : ''
+    if (shownClass === 'hidden') {
+      centerX = this.props.parentCenterX
+      centerY = this.props.parentCenterY
+    } else if (this.hasParent() && shownClass === '') {
+      centerX = this.props.parentCenterX
+      centerY = this.props.parentCenterY
+    }
 
     // Child Node
     return (
         <g
-          id={ nodeID ? `${nodeID}-group` : '' }
+          id={ this.props.nodeID ? `${this.props.nodeID}-group` : '' }
           className='radial-group'
         >
           <g
-            id={`${nodeID}-circle`}
-            className={'circle-group ' + immersionClass + shownClass}
+            ref={this.elCircleGroup}
+            id={`${this.props.nodeID}-circle`}
+            className={'circle-group ' + immersionClass + ' ' + shownClass + ' ' + afterHiddenClass}
             onDoubleClick={this.handleDoubleClick}
+            onMouseEnter={this.handleMouseEnter}
+            onMouseLeave={this.handleMouseLeave}
           >
             <Mutation mutation={setCurrentFocus} variables={{ id, centerX, centerY }} onCompleted={this.handleClick} awaitRefetchQueries={true}>
-              {focusCircle => (
-                <React.Fragment>
+              {focusCircle => {
+                let circleColor = {}
+                circleColor.stroke = this.props.color && this.props.color.bg ? this.props.color.bg : 'grey'
+                circleColor.fill = circleColor.stroke
+                return <React.Fragment>
                   <circle
+                    ref={this.elCircleNode}
                     id={id}
                     className="circlenode"
                     cx={centerX}
                     cy={centerY}
-                    r={radius}
-                    fill="grey"
-                    stroke="grey"
-                    strokeWidth={this.state.isMouseInside ? radius * 1.35 : radius}
-                    onMouseEnter={this.handleMouseEnter}
-                    onMouseLeave={this.handleMouseLeave}
+                    r={this.props.radius * this.props.scaleFactor}
+                    strokeWidth={(this.state.isMouseInside ? this.props.radius * 1.35 : this.props.radius) * this.props.scaleFactor}
                     onClick={focusCircle}
+                    {...this.getAdditionalCircleProps()}
+                    {...circleColor}
                   />
-                  <text
-                    x={centerX}
-                    y={centerY}
-                    textAnchor="middle"
-                    className='circletext'
-                    onMouseEnter={this.handleMouseEnter}
-                    onMouseLeave={this.handleMouseLeave}
-                    onClick={focusCircle}
-                  >
-                    <tspan x={centerX} dy=".6em">{/*name*/ /* anvoevodin: It's commented because I need to make animations and text interferes */}</tspan>
-                    <tspan x={centerX} dy="1.2em">{ /*'Data: Value'*/ /* anvoevodin: It's commented because I need to make animations and text interferes */ }</tspan>
-                  </text>
+                  {this.getInsideElements(this.props.name, centerX, centerY, focusCircle)}
                 </React.Fragment>
-              )}
+              }}
             </Mutation>
           </g>
           {parentNode}
@@ -215,6 +262,7 @@ RadialNode.propTypes = {
   name: PropTypes.string.isRequired,
   centerX: PropTypes.node.isRequired,
   centerY: PropTypes.node.isRequired,
+  color: PropTypes.object,
   fields: PropTypes.array.isRequired
 };
 
