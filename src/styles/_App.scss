@@ -4,7 +4,7 @@ body {
   font-family: $font-family;
 }
 header {
-  z-index: 1500
+  z-index: 1500;
 }
 #root {
 	width:100%;
@@ -121,6 +121,27 @@ text.nodeAttributesBase {
   line-height: 64px;
   color: $app-white;
   font-size: 20px;
+
+  .toolbarText {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    font-size: 15px;
+
+    > div {
+      margin: 0 10px;
+
+      .textField {
+        width: 70px;
+        font-size: 15px;
+        background: transparent;
+        border: none;
+        outline: none;
+        color: white;
+      }
+    }
+  }
 
   /** We remove margin-left here because "Monthly Contribution" wasn't able to be placed at the center of the top bar */
   & > .md-toolbar--action-right {

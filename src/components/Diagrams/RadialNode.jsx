@@ -12,10 +12,9 @@ import { setCurrentFocus } from '../../graphql';
      super(props);
      this.state = {
        isMouseInside: false,
-       visible: false,
+       visible: this.props.visible,
        isRevealed: false, // the prop means whether the node is rendering its chilren nodes right now. All sub-nodes are hidden from the very beginning
        wasClickedAtLeastOnce: false, // whether the node was clicked at least once (is used for initial animations)
-       focusOnMount: true,
        containFocus: true,
        initialFocus: undefined
      };
@@ -25,7 +24,6 @@ import { setCurrentFocus } from '../../graphql';
      this.handleClick = this.handleClick.bind(this);
 
      this.handleTargetChange = this.handleTargetChange.bind(this);
-     this.handleMountChange = this.handleMountChange.bind(this);
      this.handleFocusChange = this.handleFocusChange.bind(this);
 
      this.handleTransitionEnd = this.handleTransitionEnd.bind(this);
@@ -116,16 +114,13 @@ import { setCurrentFocus } from '../../graphql';
      this.setState({ initialFocus: value ? `#${value}` : undefined });
    };
 
-   handleMountChange = (checked) => {
-     this.setState({ focusOnMount: checked });
-   };
-
    handleFocusChange = (checked) => {
      this.setState({ containFocus: checked });
    };
 
    /** Extra properties that will be passed into Circle instance. It's for beign overrided by sub-classes. */
    getAdditionalCircleProps() { return null };
+   
    getInsideElements(name, centerX, centerY, focusCircle) {
     let textColor = this.props.color && this.props.color.text ? this.props.color.text : '#515359'
     const textSize = (0.4 * this.props.scaleFactor) + 'pt'
