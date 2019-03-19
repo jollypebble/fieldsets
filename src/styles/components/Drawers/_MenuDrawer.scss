@@ -1,0 +1,14 @@
+#menu-wrapper {
+  .md-drawer {
+    transition-duration: .3s;
+    transition-property: transform;
+  }
+
+  .filter-items {
+    padding: 20px;
+
+    #select-filter-menu {
+      width: 100%;
+    }
+  }
+}
