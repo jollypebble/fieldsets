@@ -1,5 +1,6 @@
 .circlenode {
-  transition: stroke-width 0.15s;
+  transition:
+    stroke-width 0.15s;
 }
 
 .circle-group {
@@ -9,24 +10,56 @@
 
   &.child-node {
     opacity: 0;
+    pointer-events: none;
 
     &.shown {
+      display: inline;
       animation: showUp 0.5s;
       opacity: 1;
+      pointer-events: auto;
+
+      .circlenode {
+        transition:
+          cx 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+          cy 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+          stroke-width 0.15s;
+      }
     }
 
     &.hidden {
-      animation: hideAway 0.5s;
+      animation: hideAway 0.1s;
       opacity: 0;
+
+      .circlenode {
+        transition:
+          cx 0.5s cubic-bezier(0.19, 1, 0.22, 1),
+          cy 0.5s cubic-bezier(0.19, 1, 0.22, 1),
+          stroke-width 0.15s;
+      }
+    }
+
+    &.afterHidden {
+      display: none;
     }
   }
 }
 
 .circletext {
+  opacity: 0;
+  transition: opacity 0.5s;
+
   tspan {
-    font-size: .5pt;
     line-height: .75pt;
-    fill: rgb(81, 83, 89);
+    font-weight: bold;
+  }
+
+  &.shown {
+    opacity: 1;
+  }
+
+  &.hidden {
+    opacity: 1;
+    display: none;
   }
 }
 

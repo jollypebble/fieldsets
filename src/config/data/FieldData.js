@@ -177,8 +177,6 @@ export default [
   // TODO: offense_allocation
 
   // TODO: people
-  
-
 
   // TO Monthly Contribution, Lum Sum & Net Worth.
 ];

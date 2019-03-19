@@ -4,7 +4,7 @@ import { DiagramData, FieldData } from '../../../config';
 import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
 
 //import { Diagram, DiagramCache } from 'containers/Diagrams/Diagram';
-import { RadialNode, RadialDialog } from '../../../components/Diagrams';
+import { NetWorthNode, RadialNode, RadialDialog } from '../../../components/Diagrams';
 import { getFields, getCurrentFocus, getNodes, defaults } from '../../../graphql';
 
 /**
@@ -276,7 +276,7 @@ class CircleDiagram extends Component {
     } = this.state;
 
     // Scale our SVG based on our desired width height based on a 100 x 75 canvas.
-    const baseradius = 2;
+    const baseradius = 2.3;
     const radius = (baseradius*75)/100;
 
     return (
@@ -302,17 +302,20 @@ class CircleDiagram extends Component {
                 id="circlediagram" width={width} height={height}
               >
                 <g id="diagramGroup">
-                  { DiagramData.map(diagram => (
-                    <RadialNode
+                  { DiagramData.map(diagram => {
+                    let NodeClass = RadialNode
+                    if (diagram.id === 'net_worth') NodeClass = NetWorthNode
+                    return <NodeClass
                       key={ diagram.id }
                       nodeData={ typeof(diagram.children) === undefined ? [] : diagram.children }
                       nodeID={ diagram.id }
+                      scaleFactor={ 1 }
                       centerX={ diagram.centerX }
                       centerY={ diagram.centerY }
                       radius={ radius }
-                      visible={ typeof(diagram.visible) === 'undefined' ? true : diagram.visible }
                       name={ diagram.name }
                       parent={ diagram.parent }
+                      color={ diagram.color }
                       fields={ diagram.fields }
                       updateFocus={ this.updateFocus }
                       resetFocus={ this.resetFocus }
@@ -322,7 +325,7 @@ class CircleDiagram extends Component {
                       nodes={this.state.nodes}
                       isShown={true /* The prop means whether the node is being rendered right now by its parent */}
                     />
-                  )) }
+                  }) }
                 </g>
               </svg>
             </ReactSVGPanZoom>

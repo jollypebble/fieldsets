@@ -26,7 +26,6 @@ class App extends Component {
   }
 
   componentDidMount() {
-    console.log('App did mount')
     Definder.init()
   }
 
