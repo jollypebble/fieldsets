@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withApollo } from "react-apollo";
-import { DiagramData, FieldData } from '../../../config';
+import { DiagramData, FieldDataTypes, FieldData, OwnerData } from '../../../config';
 import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
 
 //import { Diagram, DiagramCache } from 'containers/Diagrams/Diagram';
@@ -36,6 +36,7 @@ class CircleDiagram extends Component {
     this.updateZoom = this.updateZoom.bind(this);
     this.updateFocus = this.updateFocus.bind(this);
     this.primeCache = this.primeCache.bind(this);
+    this.setOwnerCache = this.setOwnerCache.bind(this);
     this.setFieldCache = this.setFieldCache.bind(this);
     this.setDataCache = this.setDataCache.bind(this);
     this.setNodeState = this.setNodeState.bind(this);
@@ -195,11 +196,20 @@ class CircleDiagram extends Component {
     this.setState({fields: fields});
   }
 
+  /**
+   * Set our data cache before we deal with User interactions.
+   * Make you you consider the order which you data is primed. In this case, owners are part of fields which are part of the diagram.
+   */
   primeCache = () => {
     // console.log('Priming');
     // @TODO: REMOTE GRAPHQL CALLS GO HERE. FOR NOW WE PULL IN CONFIG BASED DATA.
+    this.setOwnerCache(OwnerData);
     this.setFieldCache(FieldData);
     this.setDataCache(DiagramData);
+  }
+
+  setOwnerCache = (data=[]) => {
+
   }
 
   setFieldCache = (data=[]) => {
