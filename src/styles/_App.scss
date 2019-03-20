@@ -10,18 +10,6 @@ header {
 	width:100%;
 }
 
-.nodeBase ellipse {
-  fill: $circle-green-fill;
-  stroke: $circle-green-stroke;
-  stroke-width: $circle-stroke-width;
-}
-
-.leafNodeBase ellipse {
-  fill: $circle-yellow-fill;
-  stroke: $circle-yellow-stroke;
-  stroke-width: $circle-stroke-width;
-}
-
 text.nodeNameBase {
   transform: translate(-75px, 0);
 }
