@@ -40,7 +40,7 @@ export const typeDefs = `
     centerY: Float!
     parent: Circle
   }
-
+  
   type Mutation {
     setCurrentFocus(id: ID!): Circle
   }

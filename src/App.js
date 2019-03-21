@@ -31,11 +31,12 @@ class App extends Component {
 
   render() {
     /** Zoom of the main diagram */
-    let diagramZoom = 30
+    let diagramZoom = 30;
+    // let diagramZoom = 30;
     /** Width of the main diagram */
-    let diagramWidth = 1920
+    let diagramWidth = 1920;
     /** The screen width. We need it for setting startX in the middle of the screen */
-    let screenWidth = window.innerWidth ? window.innerWidth : 750 // 750 is fallback
+    let screenWidth = window.innerWidth ? window.innerWidth : 750; // 750 is fallback
 
     return (
       <React.Fragment>
