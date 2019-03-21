@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Toolbar, Button } from 'react-md';
-import { MenuDrawer } from 'components/UI/Drawers';
+import { MenuDrawer } from '../../components/UI/Drawers';
 
 const toolbarTexts = [
   { name: 'contributions', label: 'Monthly Contribution: ' },

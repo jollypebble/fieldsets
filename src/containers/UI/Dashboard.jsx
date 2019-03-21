@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import { MenuBar } from 'components/UI';
-import { TabbedDrawer, MenuDrawer } from 'components/UI/Drawers';
-import { BalanceSheet, ClientSheet } from 'components/Sheets';
+import { MenuBar } from '../../components/UI';
+import { TabbedDrawer, MenuDrawer } from '../../components/UI/Drawers';
+import { BalanceSheet, ClientSheet } from '../../components/Sheets';
 
 const clientSheetItems = [
   'accountName',
