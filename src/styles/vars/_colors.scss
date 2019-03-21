@@ -5,10 +5,26 @@ $md-secondary-color: $md-orange-a-700;
 $app-white: #FFF !default;
 $app-blue: $md-primary-color;
 
-$circle-green-fill: #7CB342 !default;
-$circle-green-stroke: #8BC34A !default;
-
-$circle-yellow-fill: #DCE775 !default;
-$circle-yellow-stroke: #F0F4C3 !default;
-
+// Circle defaults
 $circle-fields-fill: #212121 !default;
+
+// Individual circle styles
+$circle-group1-fill: #5fc6f5 !default;
+$circle-group1-stroke: $circle-group1-fill !default;
+$circle-group1-text: #316277 !default;
+
+$circle-group2-fill: #f55f68 !default;
+$circle-group2-stroke: $circle-group2-fill !default;
+$circle-group2-text: #562428 !default;
+
+$circle-group3-fill: #ffa26c !default;
+$circle-group3-stroke: $circle-group3-fill !default;
+$circle-group3-text: #6b4328 !default;
+
+$circle-group4-fill: #84e494 !default;
+$circle-group4-stroke: $circle-group4-fill !default;
+$circle-group4-text: #276730 !default;
+
+$circle-group5-fill: #c35977 !default;
+$circle-group5-stroke: $circle-group5-fill !default;
+$circle-group5-text: #582635 !default;

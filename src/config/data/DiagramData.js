@@ -4,12 +4,6 @@
   @param {Color} color If it's specified then a node ignores "childrenColor" property from its parent
 */
 
-const defenseAllocationColor = { bg: '#5fc6f5', text: '#316277' }
-const offenseAllocationColor = { bg: '#f55f68', text: '#562428' }
-const shortTermMoneyColor = { bg: '#ffa26c', text: '#6b4328' }
-const midTermMoneyColor = { bg: '#84e494', text: '#276730' }
-const longTermMoneyColor = { bg: '#c35977', text: '#582635' }
-
 export default [
   {
     name: 'Net Worth',
@@ -29,7 +23,6 @@ export default [
     centerX: 30.5, // X,Y represent points on a plane to map the current data to. If we wanted to get fancy we could rework this to include Z coordinates, but I don't see that showing a need for any time soon. If it does tracking down how these guys are used is a good place to start.
     centerY: 37,
     visible: true,
-    color: defenseAllocationColor,
     children: [ // Should `children` be thought of as `data`. The `chldren` field name is used to imply this can be eith a series of liner data points or a series of relationally nested data objects.
       {
         name: 'Will',
@@ -39,7 +32,6 @@ export default [
         centerX: 25,
         centerY: 36.5,
         visible: false,
-        color: defenseAllocationColor,
         children: []
       },
       {
@@ -50,7 +42,6 @@ export default [
         centerX: 28,
         centerY: 32.5,
         visible: false,
-        color: defenseAllocationColor,
         children: []
       },
       {
@@ -61,7 +52,6 @@ export default [
         centerX: 33,
         centerY: 32.5,
         visible: false,
-        color: defenseAllocationColor,
         children: []
       },
       {
@@ -72,7 +62,6 @@ export default [
         centerX: 36,
         centerY: 36.5,
         visible: false,
-        color: defenseAllocationColor,
         children: []
       },
     ]
@@ -85,7 +74,6 @@ export default [
     centerX: 30.5,
     centerY: 48,
     visible: true,
-    color: offenseAllocationColor,
     children: [
       {
         name: 'Short Term Money',
@@ -95,7 +83,6 @@ export default [
         centerX: 24.5,
         centerY: 49.5,
         visible: false,
-        color: shortTermMoneyColor,
         children: [
           {
             name: 'Cash Equivalents',
@@ -105,7 +92,6 @@ export default [
             centerX: 20.5,
             centerY: 49.5,
             visible: false,
-            color: shortTermMoneyColor,
             children: []
           },
           {
@@ -116,7 +102,6 @@ export default [
             centerX: 21.5,
             centerY: 52.5,
             visible: false,
-            color: shortTermMoneyColor,
             children: []
           },
           {
@@ -127,7 +112,6 @@ export default [
             centerX: 24.5,
             centerY: 53.5,
             visible: false,
-            color: shortTermMoneyColor,
             children: []
           },
         ]
@@ -140,7 +124,6 @@ export default [
         centerX: 30.5,
         centerY: 53.5,
         visible: false,
-        color: midTermMoneyColor,
         children: [
           {
             name: 'UTMA\'s',
@@ -150,7 +133,6 @@ export default [
             centerX: 27.5,
             centerY: 56,
             visible: false,
-            color: midTermMoneyColor,
             children: []
           },
           {
@@ -161,7 +143,6 @@ export default [
             centerX: 30.5,
             centerY: 57.5,
             visible: false,
-            color: midTermMoneyColor,
             children: []
           },
           {
@@ -172,7 +153,6 @@ export default [
             centerX: 33.5,
             centerY: 56,
             visible: false,
-            color: midTermMoneyColor,
             children: []
           },
         ]
@@ -185,7 +165,6 @@ export default [
         centerX: 36.5,
         centerY: 49.5,
         visible: false,
-        color: longTermMoneyColor,
         children: [
           {
             name: 'IRA ROTH',
@@ -195,7 +174,6 @@ export default [
             centerX: 36.5,
             centerY: 53.5,
             visible: false,
-            color: longTermMoneyColor,
             children: []
           },
           {
@@ -206,7 +184,6 @@ export default [
             centerX: 39,
             centerY: 53.25,
             visible: false,
-            color: longTermMoneyColor,
             children: []
           },
           {
@@ -217,7 +194,6 @@ export default [
             centerX: 40.75,
             centerY: 51.25,
             visible: false,
-            color: longTermMoneyColor,
             children: []
           },
           {
@@ -228,7 +204,6 @@ export default [
             centerX: 40.75,
             centerY: 48.75,
             visible: false,
-            color: longTermMoneyColor,
             children: []
           },
           {
@@ -239,7 +214,6 @@ export default [
             centerX: 38,
             centerY: 55.25,
             visible: false,
-            color: longTermMoneyColor,
             children: []
           },
           {
@@ -250,7 +224,6 @@ export default [
             centerX: 41.25,
             centerY: 53.5,
             visible: false,
-            color: longTermMoneyColor,
             children: []
           },
           {
@@ -261,7 +234,6 @@ export default [
             centerX: 42.75,
             centerY: 50.0,
             visible: false,
-            color: longTermMoneyColor,
             children: []
           }
         ]
