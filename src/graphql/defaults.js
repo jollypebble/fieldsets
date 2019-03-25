@@ -8,6 +8,14 @@ export const defaults = {
     fields: [],
     __typename: 'Circle'
   },
+  owners: [{
+    id: 'default',
+    name: '',
+    firstname: '',
+    lastname: '',
+    dob: '',
+    __typename: 'Owner'
+  }],
   fields: [{
     id: 'default',
     name: '',

@@ -5,7 +5,7 @@ import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
 
 //import { Diagram, DiagramCache } from 'containers/Diagrams/Diagram';
 import { NetWorthNode, RadialNode, RadialDialog } from '../../../components/Diagrams';
-import { getFields, getCurrentFocus, getNodes, defaults } from '../../../graphql';
+import { getOwners, getFields, getCurrentFocus, getNodes, defaults } from '../../../graphql';
 
 /**
  * This is the container for our main diagram. It has direct access to the apollo cache so it can track foucs of it's child nodes.
@@ -143,21 +143,18 @@ class CircleDiagram extends Component {
   }
 
   getFields = (variables) => {
-    // console.log('Getting cached fields');
-    // console.log(variables);
-    //if (variables.parent) {
-    //  console.log('Getting partial set of fields');
-    //  return this.props.client.readQuery({ query: getNodeFields, variables: variables });
-    //} else {
-    //  console.log('Getting all fields');
-      return this.props.client.readQuery({ query: getFields });
-    //}
+    return this.props.client.readQuery({ query: getFields });
   }
 
   getNodes = (variables) => {
     // console.log('Getting cached Nodes');
     return this.props.client.readQuery({ query: getNodes, variables: variables });
   }
+
+  getOwners = (variables) => {
+    return this.props.client.readQuery({ query: getOwners });
+  }
+
 
   updateFocus = (id,focusX, focusY) => {
     console.log('Updating Focus.....');
@@ -209,6 +206,26 @@ class CircleDiagram extends Component {
   }
 
   setOwnerCache = (data=[]) => {
+    let previous = this.getOwners({});
+    if (! data.length) {
+      return false;
+    }
+
+    data.map(currentOwner => {
+      // console.log('Current field:', currentField);
+      currentOwner.__typename = 'Owner';
+      previous.owners.push(currentOwner);
+      return true;
+    });
+    const owners = previous.owners;
+    this.props.client.writeData({
+      data: {owners}
+    });
+
+    // console.log('Field cache updated');
+    this.setOwnerState(owners);
+
+    return true;
 
   }
 

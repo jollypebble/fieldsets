@@ -14,9 +14,9 @@ export const typeDefs = `
   type Owner implements Entity {
     id: ID!
     name: String!
-    firstname: String!
-    lastname: [String]!
-    dob: String!
+    parent: String!
+    fields: [Field]!
+    children: [Owner]!
   }
 
   type Field implements Entity {
