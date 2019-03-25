@@ -87,27 +87,23 @@ import { setCurrentFocus } from '../../graphql';
    /** Is called when we click on the radial node */
    handleClick() {
     if (this.isHidden()) return
-     // anvoevodin: It's commented because zooming/scaling is baggy now and I need to make animations. Bags interfere
-     // const {
-     //   nodeID,
-     //   centerX,
-     //   centerY
-     // } = this.props;
-     // this.props.updateFocus(nodeID, centerX, centerY);
+     if (this.state.isRevealed) {
+      this.props.openDialog(this.props.nodeID);
+     } else {
+      this.props.updateFocus(this.props.nodeID, this.props.centerX, this.props.centerY);
+      this.setState({ isRevealed: !this.state.isRevealed });
+    }
 
-     this.setState({
-      wasClickedAtLeastOnce: true,
-      isRevealed: !this.state.isRevealed
-     })
+     this.setState({ wasClickedAtLeastOnce: true });
    }
 
    /** Is called when we doubleclick on the radial node */
    handleDoubleClick = () => {
-     const {
-       nodeID
-     } = this.props;
      // TODO: OPEN DIALOG AND SET FIELDS TO DISPLAY
-     this.props.openDialog(nodeID);
+     // this.props.openDialog(this.props.nodeID);
+     if (this.state.isRevealed) {
+      this.setState({ isRevealed: !this.state.isRevealed })
+     }
    }
 
    handleTargetChange = (value) => {
@@ -124,7 +120,6 @@ import { setCurrentFocus } from '../../graphql';
    getInsideElements(name, centerX, centerY, focusCircle) {
     let textColor = this.props.color && this.props.color.text ? this.props.color.text : '#515359'
     const textSize = (0.4 * this.props.scaleFactor) + 'pt'
-    console.log(textSize)
     return <text
       ref={this.elCircleText}
       x={centerX}
@@ -181,6 +176,7 @@ import { setCurrentFocus } from '../../graphql';
             fields={ data.fields }
             color={ data.color }
 
+            parentInstance={ this }
             parentCenterX={ centerX }
             parentCenterY={ centerY }
 

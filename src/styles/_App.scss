@@ -6,6 +6,13 @@ body {
 header {
   z-index: 1500;
 }
+
+svg {
+  & > g.animated {
+    transition: transform 0.3s;
+  }
+}
+
 #root {
 	width:100%;
 }

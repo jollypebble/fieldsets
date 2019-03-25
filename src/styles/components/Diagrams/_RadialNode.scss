@@ -58,27 +58,13 @@
     }
 
     &.hidden {
-      animation: hideAway 0.1s;
-      animation: showUp 0.5s;
-      opacity: 1;
-      pointer-events: auto;
-
-      .circlenode {
-        transition:
-          cx 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-          cy 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-          stroke-width 0.15s;
-      }
-    }
-
-    &.hidden {
-      animation: hideAway 0.1s;
+      animation: hideAway 0.25s;
       opacity: 0;
 
       .circlenode {
         transition:
-          cx 0.5s cubic-bezier(0.19, 1, 0.22, 1),
-          cy 0.5s cubic-bezier(0.19, 1, 0.22, 1),
+          cx 1s cubic-bezier(0.19, 1, 0.22, 1),
+          cy 1s cubic-bezier(0.19, 1, 0.22, 1),
           stroke-width 0.15s;
       }
     }
@@ -123,7 +109,7 @@
   0% {
     opacity: 1;
   }
-  100% {
+  50% {
     opacity: 0;
   }
 }

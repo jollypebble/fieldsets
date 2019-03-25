@@ -6,6 +6,11 @@ export const getNodes = gql`
       name
       centerX
       centerY
+      zoom {
+        x
+        y
+        scale
+      }
       fields {
         ...field
       }
@@ -19,6 +24,11 @@ export const getNodeData = gql`
     name
     centerX
     centerY
+    zoom {
+      x
+      y
+      scale
+    }
     fields {
       ...field
     }

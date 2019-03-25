@@ -1,10 +1,24 @@
 /**
   Type "Color" - is an usual object with props "bg" and "text" that determine color of node elements. E.g. color: { bg: '#5fc6f5', text: '#f5fcff' }
+  Type "ZoomScale" - an object that shows how to zoom our sheet when we click on particular node. All props are optional.
+    Object example: { scale: 1.5, x: 0.5, y: 0.5 }
+    - scale: multiplier for the standard scale
+    - x and y: values beetwen 0 and 1 (default 0.5) where 0 is 0 and 1 is max screen size (x=1 === x=window.innerWidth, same for y)
 
+  @param {ZoomScale} zoom Explaines how exactly we scale the sheet when we click on the node
   @param {Color} color If it's specified then a node ignores "childrenColor" property from its parent
 */
 
-export default [
+const defenseAllocationColor = { bg: '#5fc6f5', text: '#316277' }
+const offenseAllocationColor = { bg: '#f55f68', text: '#562428' }
+const shortTermMoneyColor = { bg: '#ffa26c', text: '#6b4328' }
+const midTermMoneyColor = { bg: '#84e494', text: '#276730' }
+const longTermMoneyColor = { bg: '#c35977', text: '#582635' }
+
+const zoomScaleChild1 = 1.66
+const zoomScaleChild2 = 2.77
+
+let ret = [
   {
     name: 'Net Worth',
     id: 'net_worth',
@@ -23,6 +37,8 @@ export default [
     centerX: 30.5, // X,Y represent points on a plane to map the current data to. If we wanted to get fancy we could rework this to include Z coordinates, but I don't see that showing a need for any time soon. If it does tracking down how these guys are used is a good place to start.
     centerY: 37,
     visible: true,
+    zoom: { y: 0.75 },
+    color: defenseAllocationColor,
     children: [ // Should `children` be thought of as `data`. The `chldren` field name is used to imply this can be eith a series of liner data points or a series of relationally nested data objects.
       {
         name: 'Will',
@@ -32,6 +48,8 @@ export default [
         centerX: 25,
         centerY: 36.5,
         visible: false,
+        zoom: { scale: zoomScaleChild1 },
+        color: defenseAllocationColor,
         children: []
       },
       {
@@ -42,6 +60,8 @@ export default [
         centerX: 28,
         centerY: 32.5,
         visible: false,
+        zoom: { scale: zoomScaleChild1 },
+        color: defenseAllocationColor,
         children: []
       },
       {
@@ -52,6 +72,8 @@ export default [
         centerX: 33,
         centerY: 32.5,
         visible: false,
+        zoom: { scale: zoomScaleChild1 },
+        color: defenseAllocationColor,
         children: []
       },
       {
@@ -62,6 +84,8 @@ export default [
         centerX: 36,
         centerY: 36.5,
         visible: false,
+        zoom: { scale: zoomScaleChild1 },
+        color: defenseAllocationColor,
         children: []
       },
     ]
@@ -74,6 +98,8 @@ export default [
     centerX: 30.5,
     centerY: 48,
     visible: true,
+    zoom: { y: 0.25 },
+    color: offenseAllocationColor,
     children: [
       {
         name: 'Short Term Money',
@@ -83,6 +109,8 @@ export default [
         centerX: 24.5,
         centerY: 49.5,
         visible: false,
+        zoom: { scale: zoomScaleChild1,  x: 0.7, y: 0.3 },
+        color: shortTermMoneyColor,
         children: [
           {
             name: 'Cash Equivalents',
@@ -92,6 +120,8 @@ export default [
             centerX: 20.5,
             centerY: 49.5,
             visible: false,
+            zoom: { scale: zoomScaleChild2 },
+            color: shortTermMoneyColor,
             children: []
           },
           {
@@ -102,6 +132,8 @@ export default [
             centerX: 21.5,
             centerY: 52.5,
             visible: false,
+            zoom: { scale: zoomScaleChild2 },
+            color: shortTermMoneyColor,
             children: []
           },
           {
@@ -112,6 +144,8 @@ export default [
             centerX: 24.5,
             centerY: 53.5,
             visible: false,
+            zoom: { scale: zoomScaleChild2 },
+            color: shortTermMoneyColor,
             children: []
           },
         ]
@@ -124,6 +158,8 @@ export default [
         centerX: 30.5,
         centerY: 53.5,
         visible: false,
+        zoom: { scale: zoomScaleChild1,  y: 0.3 },
+        color: midTermMoneyColor,
         children: [
           {
             name: 'UTMA\'s',
@@ -133,6 +169,8 @@ export default [
             centerX: 27.5,
             centerY: 56,
             visible: false,
+            zoom: { scale: zoomScaleChild2 },
+            color: midTermMoneyColor,
             children: []
           },
           {
@@ -143,6 +181,8 @@ export default [
             centerX: 30.5,
             centerY: 57.5,
             visible: false,
+            zoom: { scale: zoomScaleChild2 },
+            color: midTermMoneyColor,
             children: []
           },
           {
@@ -153,6 +193,8 @@ export default [
             centerX: 33.5,
             centerY: 56,
             visible: false,
+            zoom: { scale: zoomScaleChild2 },
+            color: midTermMoneyColor,
             children: []
           },
         ]
@@ -165,6 +207,8 @@ export default [
         centerX: 36.5,
         centerY: 49.5,
         visible: false,
+        zoom: { scale: zoomScaleChild1,  x: 0.3, y: 0.3 },
+        color: longTermMoneyColor,
         children: [
           {
             name: 'IRA ROTH',
@@ -174,6 +218,8 @@ export default [
             centerX: 36.5,
             centerY: 53.5,
             visible: false,
+            zoom: { scale: zoomScaleChild2 },
+            color: longTermMoneyColor,
             children: []
           },
           {
@@ -184,6 +230,8 @@ export default [
             centerX: 39,
             centerY: 53.25,
             visible: false,
+            zoom: { scale: zoomScaleChild2 },
+            color: longTermMoneyColor,
             children: []
           },
           {
@@ -194,6 +242,8 @@ export default [
             centerX: 40.75,
             centerY: 51.25,
             visible: false,
+            zoom: { scale: zoomScaleChild2 },
+            color: longTermMoneyColor,
             children: []
           },
           {
@@ -204,6 +254,8 @@ export default [
             centerX: 40.75,
             centerY: 48.75,
             visible: false,
+            zoom: { scale: zoomScaleChild2 },
+            color: longTermMoneyColor,
             children: []
           },
           {
@@ -214,6 +266,8 @@ export default [
             centerX: 38,
             centerY: 55.25,
             visible: false,
+            zoom: { scale: zoomScaleChild2 },
+            color: longTermMoneyColor,
             children: []
           },
           {
@@ -224,6 +278,8 @@ export default [
             centerX: 41.25,
             centerY: 53.5,
             visible: false,
+            zoom: { scale: zoomScaleChild2 },
+            color: longTermMoneyColor,
             children: []
           },
           {
@@ -234,6 +290,8 @@ export default [
             centerX: 42.75,
             centerY: 50.0,
             visible: false,
+            zoom: { scale: zoomScaleChild2 },
+            color: longTermMoneyColor,
             children: []
           }
         ]
@@ -241,3 +299,24 @@ export default [
     ]
   }
 ];
+
+// Put values that weren't specified in JSON
+const handle = function (obj) {
+    let value
+    for (let key in obj) {
+        value = obj[key]
+        handleZoomProperty(value)
+        if (value.children && value.children.length > 0) handle(value.children)
+    }
+}
+
+const handleZoomProperty = function (value) {
+    if (!value.zoom) value.zoom = {}
+    if (!value.zoom.x) value.zoom.x = 0.5
+    if (!value.zoom.y) value.zoom.y = 0.5
+    if (!value.zoom.scale) value.zoom.scale = 1
+}
+
+handle(ret)
+
+export default ret;

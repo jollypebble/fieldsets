@@ -271,17 +271,10 @@ caption,
     .circle-group.child-node.shown .circlenode {
       transition: cx 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), cy 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), stroke-width 0.15s; }
   .circle-group.child-node.hidden {
-    animation: hideAway 0.1s;
-    animation: showUp 0.5s;
-    opacity: 1;
-    pointer-events: auto; }
-    .circle-group.child-node.hidden .circlenode {
-      transition: cx 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), cy 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), stroke-width 0.15s; }
-  .circle-group.child-node.hidden {
-    animation: hideAway 0.1s;
+    animation: hideAway 0.25s;
     opacity: 0; }
     .circle-group.child-node.hidden .circlenode {
-      transition: cx 0.5s cubic-bezier(0.19, 1, 0.22, 1), cy 0.5s cubic-bezier(0.19, 1, 0.22, 1), stroke-width 0.15s; }
+      transition: cx 1s cubic-bezier(0.19, 1, 0.22, 1), cy 1s cubic-bezier(0.19, 1, 0.22, 1), stroke-width 0.15s; }
   .circle-group.child-node.afterHidden {
     display: none; }
 
@@ -308,7 +301,7 @@ caption,
 @keyframes hideAway {
   0% {
     opacity: 1; }
-  100% {
+  50% {
     opacity: 0; } }
 
 /** Showing up an element with a little delay at the beginning */
@@ -530,6 +523,9 @@ body {
 
 header {
   z-index: 1500; }
+
+svg > g.animated {
+  transition: transform 0.3s; }
 
 #root {
   width: 100%; }
