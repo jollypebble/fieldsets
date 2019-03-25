@@ -29,6 +29,8 @@ class CircleDiagram extends Component {
       mouseInCircle: false
     };
 
+    this.timeouts = []
+
     // Component Specific Methods
     this.setFocus = this.setFocus.bind(this);
     this.getFocus = this.getFocus.bind(this);
@@ -65,6 +67,10 @@ class CircleDiagram extends Component {
     this.resetFocus();
   }
 
+  componentWillUnmount() {
+    this.timeouts.forEach(clearTimeout)
+  }
+
   handleClick = (event) => {
     //console.log(event.x, event.y, event.originalEvent);
   }
@@ -74,6 +80,7 @@ class CircleDiagram extends Component {
   }
 
   resetState() {
+    // console.log('Reset state')
     const {
       startX,
       startY,
@@ -98,7 +105,7 @@ class CircleDiagram extends Component {
   }
 
   resetFocus() {
-    // console.log( 'Diagram Reset' );
+    // console.log('Reset focus');
     const {
       startX,
       startY,
@@ -112,30 +119,27 @@ class CircleDiagram extends Component {
   setFocus = () => {
     const focus = this.getFocus();
     const current = focus.currentFocus;
-    // console.log(`Moving Focus to ${current.centerX}, ${current.centerY}`);
+    const x = current.centerX, y = current.centerY
+    // console.log(`Moving Focus to ${x}, ${y}:`, focus);
 
-    // Get the bounding box of the SVG group and zoom in on it.
-    /**
-     * @TODO: $DREAMING_BIG
-     * Passs the groups up from the SVG properly.
-     * We shouldn't need document.querySelector but not sure the besf way to do this here, as this is hella slow.
-     * We should probably write our own bounding box function based off the current radius of the RadialNode and parent size when we prime the cache.
-     */
-    const group = document.querySelector(`#${current.id}-group`);
-    const bbox = group.getBBox();
+    /** Our desired zoom for the current node that was clicked */
+    const zoom = 35 * current.zoom.scale
+    /* Next two lines are needed to calculate the point that is the center of a client's screen
+     * As long as ReactSVGPanZoom lib calculates the center relatively to its own sizes we always got wrong numbers so
+     * here we including into the calculations our sizes of the screen.
+    */
+    const screenCenterX = (this.Viewer.props.width - window.innerWidth) * (1 - current.zoom.x) / zoom;
+    const screenCenterY = (this.Viewer.props.height - window.innerHeight) * (1 - current.zoom.y) / zoom;
 
-    const bboxX = bbox.x;
-    const bboxY = bbox.y;
-    const bboxW = bbox.width;
-    const bboxH = bbox.height;
+    this.Viewer.setPointOnViewerCenter(screenCenterX + x, screenCenterY + y, zoom);
 
-    // fitSelection updates zoom state.
-    this.Viewer.fitSelection(bboxX, bboxY, bboxW, bboxH);
-
-    // The fitSelection is a little too snug for our tastes, lets scale it back a notch more.
-    const currentZoom = this.state.currentZoom;
-    const newZoom = (currentZoom - (currentZoom/2.5)) > 200 ? 200 : currentZoom - (1.5 * (currentZoom/2.5)); // 2.5 is the scale factor we pass below. Let's not zoom in above 200. There is no need.
-    this.Viewer.setPointOnViewerCenter(current.centerX, current.centerY, newZoom);
+    // Add and remove the class "animated" in order to animate the movement only for Click Node Zooming (and not for the usual movement by the mouse)
+    // We remove the class upon the anim is ended, otherwise the anim won't start at all
+    if (!this.Viewer.mainG.classList.contains('animated')) {
+      const animTime = 300
+      this.Viewer.mainG.classList.add('animated')
+      this.timeouts.push(setTimeout(() => this.Viewer.mainG.classList.remove('animated'), animTime))
+    }
   }
 
   getFocus = () => {
@@ -155,19 +159,18 @@ class CircleDiagram extends Component {
   }
 
   getNodes = (variables) => {
-    // console.log('Getting cached Nodes');
+    // console.log('Getting cached Nodes', variables);
     return this.props.client.readQuery({ query: getNodes, variables: variables });
   }
 
-  updateFocus = (id,focusX, focusY) => {
-    console.log('Updating Focus.....');
-    // const current = this.state.nodes[id];
+  updateFocus = (id, focusX, focusY) => {
     const current = this.getFocus();
-    console.log(current);
 
-    this.setState({ currentID: current.id });
-    this.setState({ currentX: current.centerX });
-    this.setState({ currentY: current.centerY });
+    this.setState({
+      currentID: current.currentFocus.id,
+      currentX: current.currentFocus.centerX,
+      currentY: current.currentFocus.centerY
+    });
     this.setFocus();
   }
 
@@ -263,6 +266,7 @@ class CircleDiagram extends Component {
       });
 
       node.__typename = 'Circle';
+      if (node.zoom) node.zoom.__typename = 'ZoomScale';
       nodes.push(node);
       this.props.client.writeData({
         data: {nodes, fields}
@@ -301,9 +305,13 @@ class CircleDiagram extends Component {
               miniaturePosition='none'
               disableDoubleClickZoomWithToolAuto={true}
               scaleFactor={2.5}
-              scaleFactorOnWheel={1.1}
-              scaleFactorMin={10}
-              ref={Viewer => this.Viewer = Viewer}
+              scaleFactorOnWheel={1.06}
+              scaleFactorMin={1}
+              ref={Viewer => {
+                this.Viewer = Viewer
+                if (!this.Viewer) return
+                this.Viewer.mainG = this.Viewer.ViewerDOM.getElementsByTagName('g')[0]
+              }}
               onClick={this.handleClick}
               onZoom={this.updateZoom}
               onDoubleClick={this.handleDoubleClick}
@@ -322,6 +330,7 @@ class CircleDiagram extends Component {
                       scaleFactor={ 1 }
                       centerX={ diagram.centerX }
                       centerY={ diagram.centerY }
+                      zoom={ diagram.zoom }
                       radius={ radius }
                       name={ diagram.name }
                       parent={ diagram.parent }

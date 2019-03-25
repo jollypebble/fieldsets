@@ -6,6 +6,12 @@ export const defaults = {
     centerX: 0,
     centerY: 0,
     fields: [],
+    zoom: {
+        x: 0.5,
+        y: 0.5,
+        scale: 1,
+        __typename: 'ZoomScale'
+    },
     __typename: 'Circle'
   },
   fields: [{
@@ -27,6 +33,12 @@ export const defaults = {
     centerX: 0,
     centerY: 0,
     fields: [],
+    zoom: {
+        x: 0.5,
+        y: 0.5,
+        scale: 1,
+        __typename: 'ZoomScale'
+    },
     __typename: 'Circle'
   }]
 };
