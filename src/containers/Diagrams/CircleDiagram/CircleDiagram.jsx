@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withApollo } from "react-apollo";
-import { DiagramData, FieldDataTypes, FieldData, OwnerData } from '../../../config';
+import { DiagramData, FieldData, OwnerData } from '../../../config';
 import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
 
 //import { Diagram, DiagramCache } from 'containers/Diagrams/Diagram';
@@ -29,7 +29,7 @@ class CircleDiagram extends Component {
       mouseInCircle: false
     };
 
-    this.timeouts = []
+    this.timeouts = [];
 
     // Component Specific Methods
     this.setFocus = this.setFocus.bind(this);
@@ -47,6 +47,7 @@ class CircleDiagram extends Component {
     this.handleDoubleClick = this.handleDoubleClick.bind(this);
 
     this.Viewer = React.createRef();
+    this.backgroundSheet = React.createRef();
   }
 
   /**
@@ -68,11 +69,15 @@ class CircleDiagram extends Component {
   }
 
   componentWillUnmount() {
-    this.timeouts.forEach(clearTimeout)
+    this.timeouts.forEach(clearTimeout);
   }
 
   handleClick = (event) => {
-    //console.log(event.x, event.y, event.originalEvent);
+    const target = event.originalEvent.target;
+    if (!target) return;
+    if (target !== this.backgroundSheet) return;
+    this.resetFocus();
+    this.setTemporaryAnimatable();
   }
 
   handleDoubleClick = (event) => {
@@ -119,11 +124,12 @@ class CircleDiagram extends Component {
   setFocus = () => {
     const focus = this.getFocus();
     const current = focus.currentFocus;
-    const x = current.centerX, y = current.centerY
+
+    const x = current.centerX, y = current.centerY;
     // console.log(`Moving Focus to ${x}, ${y}:`, focus);
 
     /** Our desired zoom for the current node that was clicked */
-    const zoom = 35 * current.zoom.scale
+    const zoom = 35 * current.zoom.scale;
     /* Next two lines are needed to calculate the point that is the center of a client's screen
      * As long as ReactSVGPanZoom lib calculates the center relatively to its own sizes we always got wrong numbers so
      * here we including into the calculations our sizes of the screen.
@@ -133,12 +139,17 @@ class CircleDiagram extends Component {
 
     this.Viewer.setPointOnViewerCenter(screenCenterX + x, screenCenterY + y, zoom);
 
+    this.setTemporaryAnimatable();
+  }
+
+  /** Sets the zoom animatable just only for current case, then make it usual again */
+  setTemporaryAnimatable(animationDuration) {
+    if (animationDuration === undefined) animationDuration = 300
     // Add and remove the class "animated" in order to animate the movement only for Click Node Zooming (and not for the usual movement by the mouse)
     // We remove the class upon the anim is ended, otherwise the anim won't start at all
     if (!this.Viewer.mainG.classList.contains('animated')) {
-      const animTime = 300
-      this.Viewer.mainG.classList.add('animated')
-      this.timeouts.push(setTimeout(() => this.Viewer.mainG.classList.remove('animated'), animTime))
+      this.Viewer.mainG.classList.add('animated');
+      this.timeouts.push(setTimeout(() => this.Viewer.mainG.classList.remove('animated'), animationDuration));
     }
   }
 
@@ -218,9 +229,7 @@ class CircleDiagram extends Component {
   setFieldCache = (data=[]) => {
     // console.log('Updating Field cache');
     let previous = this.getFields({});
-    if (! data.length) {
-      return false;
-    }
+    if (!data.length) return false;
 
     // Get your fields here. This is defined as a static json, but could be modified here to get remote field type definitions.
     data.map(currentField => {
@@ -280,15 +289,6 @@ class CircleDiagram extends Component {
   }
 
   render() {
-    const {
-      width,
-      height
-    } = this.props;
-
-    const {
-      currentDialog,
-    } = this.state;
-
     // Scale our SVG based on our desired width height based on a 100 x 75 canvas.
     const baseradius = 2.3;
     const radius = (baseradius*75)/100;
@@ -297,32 +297,33 @@ class CircleDiagram extends Component {
         <div className="diagramviewer">
           <div className="viewer">
             <ReactSVGPanZoom
-              width={width}
-              height={height}
+              width={ this.props.width }
+              height={ this.props.height }
               background='transparent'
               tool='auto'
               toolbarPosition='none'
               miniaturePosition='none'
-              disableDoubleClickZoomWithToolAuto={true}
-              scaleFactor={2.5}
-              scaleFactorOnWheel={1.06}
-              scaleFactorMin={1}
+              disableDoubleClickZoomWithToolAuto={ true }
+              scaleFactor={ 2.5 }
+              scaleFactorOnWheel={ 1.06 }
+              scaleFactorMin={ 1 }
               ref={Viewer => {
-                this.Viewer = Viewer
-                if (!this.Viewer) return
-                this.Viewer.mainG = this.Viewer.ViewerDOM.getElementsByTagName('g')[0]
+                this.Viewer = Viewer;
+                if (!this.Viewer) return;
+                this.Viewer.mainG = this.Viewer.ViewerDOM.getElementsByTagName('g')[0];
+                this.backgroundSheet = this.Viewer.mainG.getElementsByTagName('rect')[0];
               }}
-              onClick={this.handleClick}
-              onZoom={this.updateZoom}
-              onDoubleClick={this.handleDoubleClick}
+              onClick={ this.handleClick }
+              onZoom={ this.updateZoom }
+              onDoubleClick={ this.handleDoubleClick }
             >
               <svg
-                id="circlediagram" width={width} height={height}
+                id="circlediagram" width={this.props.width} height={this.props.height}
               >
                 <g id="diagramGroup">
                   { DiagramData.map(diagram => {
-                    let NodeClass = RadialNode
-                    if (diagram.id === 'net_worth') NodeClass = NetWorthNode
+                    let NodeClass = RadialNode;
+                    if (diagram.id === 'net_worth') NodeClass = NetWorthNode;
                     return <NodeClass
                       key={ diagram.id }
                       nodeData={ typeof(diagram.children) === undefined ? [] : diagram.children }
@@ -341,8 +342,8 @@ class CircleDiagram extends Component {
                       openDialog={ this.openDialog }
                       closeDialog={ this.closeDialog }
                       setNodeState={ this.setNodeState }
-                      nodes={this.state.nodes}
-                      isShown={true /* The prop means whether the node is being rendered right now by its parent */}
+                      nodes={ this.state.nodes }
+                      isShown={ true /* The prop means whether the node is being rendered right now by its parent */ }
                     />
                   }) }
                 </g>
@@ -354,7 +355,7 @@ class CircleDiagram extends Component {
           <div className="diagramDialogs">
             <RadialDialog
               name={ 'Dialog Box' }
-              nodeID={ currentDialog }
+              nodeID={ this.state.currentDialog }
             />
           </div>
         </div>
