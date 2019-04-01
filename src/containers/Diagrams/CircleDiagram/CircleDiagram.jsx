@@ -5,7 +5,7 @@ import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
 
 //import { Diagram, DiagramCache } from 'containers/Diagrams/Diagram';
 import { NetWorthNode, RadialNode, RadialDialog } from '../../../components/Diagrams';
-import { getFields, getCurrentFocus, getNodes, defaults } from '../../../graphql';
+import { getFields, getParentFields, getCurrentFocus, getNodes, defaults } from '../../../graphql';
 
 /**
  * This is the container for our main diagram. It has direct access to the apollo cache so it can track foucs of it's child nodes.
@@ -45,7 +45,8 @@ class CircleDiagram extends Component {
     this.setNodeState = this.setNodeState.bind(this);
     this.getNodesData = this.getNodesData.bind(this);
     this.setFieldState = this.setFieldState.bind(this);
-    this.getFieldsData = this.getFieldsData.bind(this);
+    this.getFieldData = this.getFieldData.bind(this);
+    this.getAllFields = this.getAllFields.bind(this);
     this.handleDoubleClick = this.handleDoubleClick.bind(this);
 
     this.Viewer = React.createRef();
@@ -184,8 +185,12 @@ class CircleDiagram extends Component {
     return this.props.client.readQuery({ query: getCurrentFocus });
   }
 
-  getFieldsData = (variables) => {
+  getAllFields = () => {
     return this.props.client.readQuery({ query: getFields });
+  }
+
+  getFieldData = (variables) => {
+    return this.props.client.readQuery({ query: getParentFields, variables: variables });
   }
 
   getNodesData = (variables) => {
@@ -248,7 +253,7 @@ class CircleDiagram extends Component {
 
   setFieldCache = (data=[]) => {
     // console.log('Updating Field cache');
-    let previous = this.getFieldsData({});
+    let previous = this.getAllFields({});
     if (!data.length) return false;
 
     // Get your fields here. This is defined as a static json, but could be modified here to get remote field type definitions.
@@ -280,15 +285,15 @@ class CircleDiagram extends Component {
     }
 
     data.map(node => {
-      // console.log('Node:', node);
+      console.log('Node:', node);
       const children = typeof(node.children) === undefined ? [] : node.children;
       if (children.length) {
         // console.log('Caching child nodes....');
         this.setDataCache(children);
       }
 
-      const previous = this.getFieldsData({parent: node.id});
-      // console.log('Previous fields:', previous.fields);
+      const previous = this.getFieldData({parent: node.id});
+      console.log('Previous fields:', previous.fields);
       const fields = previous.fields.map(field => {
         field.__typename = 'Field';
         return field;

@@ -13,3 +13,11 @@ export const getFields = gql`
       parent
   }
 `;
+
+export const getParentFields = gql`
+  query getParentFields($parent: String!) @client {
+    fields(parent: $parent) {
+      ...field
+    }
+  }
+`;
