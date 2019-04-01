@@ -43,8 +43,9 @@ class CircleDiagram extends Component {
     this.setFieldCache = this.setFieldCache.bind(this);
     this.setDataCache = this.setDataCache.bind(this);
     this.setNodeState = this.setNodeState.bind(this);
+    this.getNodesData = this.getNodesData.bind(this);
     this.setFieldState = this.setFieldState.bind(this);
-    this.getFields = this.getFields.bind(this);
+    this.getFieldsData = this.getFieldsData.bind(this);
     this.handleDoubleClick = this.handleDoubleClick.bind(this);
 
     this.Viewer = React.createRef();
@@ -183,19 +184,11 @@ class CircleDiagram extends Component {
     return this.props.client.readQuery({ query: getCurrentFocus });
   }
 
-  getFields = (variables) => {
-    // console.log('Getting cached fields');
-    // console.log(variables);
-    //if (variables.parent) {
-    //  console.log('Getting partial set of fields');
-    //  return this.props.client.readQuery({ query: getNodeFields, variables: variables });
-    //} else {
-    //  console.log('Getting all fields');
-      return this.props.client.readQuery({ query: getFields });
-    //}
+  getFieldsData = (variables) => {
+    return this.props.client.readQuery({ query: getFields });
   }
 
-  getNodes = (variables) => {
+  getNodesData = (variables) => {
     // console.log('Getting cached Nodes', variables);
     return this.props.client.readQuery({ query: getNodes, variables: variables });
   }
@@ -255,7 +248,7 @@ class CircleDiagram extends Component {
 
   setFieldCache = (data=[]) => {
     // console.log('Updating Field cache');
-    let previous = this.getFields({});
+    let previous = this.getFieldsData({});
     if (!data.length) return false;
 
     // Get your fields here. This is defined as a static json, but could be modified here to get remote field type definitions.
@@ -279,7 +272,7 @@ class CircleDiagram extends Component {
   setDataCache = (data=[]) => {
     // console.log('Caching nodes: ');
 
-    let previous = this.getNodes({});
+    let previous = this.getNodesData({});
     let nodes = previous.nodes;
 
     if (! data.length) {
@@ -294,7 +287,7 @@ class CircleDiagram extends Component {
         this.setDataCache(children);
       }
 
-      const previous = this.getFields({parent: node.id});
+      const previous = this.getFieldsData({parent: node.id});
       // console.log('Previous fields:', previous.fields);
       const fields = previous.fields.map(field => {
         field.__typename = 'Field';
