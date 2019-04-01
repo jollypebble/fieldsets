@@ -5,6 +5,7 @@ export const defaults = {
     name: '',
     centerX: 0,
     centerY: 0,
+    depth: 0,
     fields: [],
     zoom: {
         x: 0.5,
@@ -32,6 +33,7 @@ export const defaults = {
     name: '',
     centerX: 0,
     centerY: 0,
+    depth: 0,
     fields: [],
     zoom: {
         x: 0.5,

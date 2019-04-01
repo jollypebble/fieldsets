@@ -86,9 +86,10 @@ import { setCurrentFocus } from '../../graphql';
 
    /** Is called when we click on the radial node */
    handleClick() {
-    if (this.isHidden()) return
+     if (this.isHidden()) return
      if (this.state.isRevealed) {
-      this.props.openDialog(this.props.nodeID);
+      if (this.hasParent()) this.props.openDialog(this.props.nodeID);
+      else this.props.updateFocus(this.props.nodeID, this.props.centerX, this.props.centerY);
      } else {
       this.props.updateFocus(this.props.nodeID, this.props.centerX, this.props.centerY);
       this.setState({ isRevealed: !this.state.isRevealed });

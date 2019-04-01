@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withApollo } from "react-apollo";
-import { DiagramData, FieldData, OwnerData } from '../../../config';
+import { DiagramData, FieldData, OwnerData, DataUtils } from '../../../config';
 import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
 
 //import { Diagram, DiagramCache } from 'containers/Diagrams/Diagram';
@@ -129,15 +129,42 @@ class CircleDiagram extends Component {
     // console.log(`Moving Focus to ${x}, ${y}:`, focus);
 
     /** Our desired zoom for the current node that was clicked */
-    const zoom = 35 * current.zoom.scale;
+    let zoom = this.props.zoom * current.zoom.scale;
+
+    let xs = [], ys = [];
+    xs.push(current.centerX - this.getStandardRadius(current.depth) - this.getStandardStrokeWidth(current.depth))
+    xs.push(current.centerX + this.getStandardRadius(current.depth) + this.getStandardStrokeWidth(current.depth))
+    ys.push(current.centerY - this.getStandardRadius(current.depth) - this.getStandardStrokeWidth(current.depth))
+    ys.push(current.centerY + this.getStandardRadius(current.depth) + this.getStandardStrokeWidth(current.depth))
+
+    const children = DataUtils.getChildrenOf(current.id);
+    const hasChildren = children && children.length > 0
+    if (hasChildren) {
+      children.forEach(child => {
+        xs.push(child.centerX - this.getStandardRadius(child.depth) - this.getStandardStrokeWidth(child.depth))
+        xs.push(child.centerX + this.getStandardRadius(child.depth) + this.getStandardStrokeWidth(child.depth))
+        ys.push(child.centerY - this.getStandardRadius(child.depth) - this.getStandardStrokeWidth(child.depth))
+        ys.push(child.centerY + this.getStandardRadius(child.depth) + this.getStandardStrokeWidth(child.depth))
+      })
+    }
+    const minX = Math.min.apply(null, xs)
+    const maxX = Math.max.apply(null, xs)
+    const minY = Math.min.apply(null, ys)
+    const maxY = Math.max.apply(null, ys)
+    let k = (window.innerHeight / this.props.zoom) / (maxY - minY)
+    zoom = zoom * k * 0.8
     /* Next two lines are needed to calculate the point that is the center of a client's screen
      * As long as ReactSVGPanZoom lib calculates the center relatively to its own sizes we always got wrong numbers so
      * here we including into the calculations our sizes of the screen.
     */
-    const screenCenterX = (this.Viewer.props.width - window.innerWidth) * (1 - current.zoom.x) / zoom;
-    const screenCenterY = (this.Viewer.props.height - window.innerHeight) * (1 - current.zoom.y) / zoom;
+    // const screenCenterX = (this.Viewer.props.width - window.innerWidth) * (1 - current.zoom.x) / zoom;
+    // const screenCenterY = (this.Viewer.props.height - window.innerHeight) * (1 - current.zoom.y) / zoom;
+    const screenCenterX = (minX + (maxX - minX) * 0.5);
+    const screenCenterY = (minY + (maxY - minY) * 0.5) + 0.5;
+    // const screenCenterY = minY + (maxY - minY) * 0.5;
 
-    this.Viewer.setPointOnViewerCenter(screenCenterX + x, screenCenterY + y, zoom);
+    // this.Viewer.setPointOnViewerCenter(screenCenterX + x, screenCenterY + y, zoom);
+    this.Viewer.setPointOnViewerCenter(screenCenterX, screenCenterY, hasChildren ? zoom : this.Viewer.state.value.a);
 
     this.setTemporaryAnimatable();
   }
@@ -288,11 +315,17 @@ class CircleDiagram extends Component {
     return true;
   }
 
-  render() {
+  getStandardRadius(depth = 0) {
     // Scale our SVG based on our desired width height based on a 100 x 75 canvas.
     const baseradius = 2.3;
-    const radius = (baseradius*75)/100;
+    return (baseradius * 75) / 100 * (Math.pow(0.6, depth));
+  }
 
+  getStandardStrokeWidth(depth = 0) {
+    return this.getStandardRadius(depth) * 0.5;
+  }
+
+  render() {
     return (
         <div className="diagramviewer">
           <div className="viewer">
@@ -332,7 +365,7 @@ class CircleDiagram extends Component {
                       centerX={ diagram.centerX }
                       centerY={ diagram.centerY }
                       zoom={ diagram.zoom }
-                      radius={ radius }
+                      radius={ this.getStandardRadius() }
                       name={ diagram.name }
                       parent={ diagram.parent }
                       color={ diagram.color }

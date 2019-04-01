@@ -15,8 +15,10 @@ const shortTermMoneyColor = { bg: '#ffa26c', text: '#6b4328' }
 const midTermMoneyColor = { bg: '#84e494', text: '#276730' }
 const longTermMoneyColor = { bg: '#c35977', text: '#582635' }
 
-const zoomScaleChild1 = 1.66
-const zoomScaleChild2 = 2.77
+// const zoomScaleChild1 = 1.66
+// const zoomScaleChild2 = 2.77
+const zoomScaleChild1 = 1
+const zoomScaleChild2 = 1
 
 let ret = [
   {
@@ -301,12 +303,14 @@ let ret = [
 ];
 
 // Put values that weren't specified in JSON
-const handle = function (obj) {
+const handle = function (obj, depth = 0) {
     let value
     for (let key in obj) {
         value = obj[key]
+        value.depth = depth
         handleZoomProperty(value)
-        if (value.children && value.children.length > 0) handle(value.children)
+        if (!value.children) value.children = []
+        if (value.children.length > 0) handle(value.children, depth + 1)
     }
 }
 

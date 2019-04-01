@@ -6,6 +6,7 @@ export const getNodes = gql`
       name
       centerX
       centerY
+      depth
       zoom {
         x
         y
