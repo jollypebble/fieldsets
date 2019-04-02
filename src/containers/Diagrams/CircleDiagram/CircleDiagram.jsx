@@ -164,7 +164,9 @@ class CircleDiagram extends Component {
   }
 
   getFieldData = (variables) => {
-    return this.props.client.readQuery({ query: getParentFields, variables: variables });
+    console.log(variables);
+    const id = `Field:${variables.id}`;
+    return this.props.client.readFragment({ id: id, query: getParentFields, variables: variables });
   }
 
   getNodesData = (variables) => {
@@ -226,7 +228,8 @@ class CircleDiagram extends Component {
 
   setFieldCache = (data=[]) => {
     // console.log('Updating Field cache');
-    let previous = this.getAllFields({});
+    let previous = this.getAllFields();
+    console.log(previous.fields);
     if (!data.length) return false;
 
     // Get your fields here. This is defined as a static json, but could be modified here to get remote field type definitions.
@@ -265,7 +268,7 @@ class CircleDiagram extends Component {
         this.setDataCache(children);
       }
 
-      const previous = this.getFieldData({parent: node.id});
+      const previous = this.getFieldData({id: node.id});
       console.log('Previous fields:', previous.fields);
       const fields = previous.fields.map(field => {
         field.__typename = 'Field';

@@ -15,8 +15,8 @@ export const getFields = gql`
 `;
 
 export const getParentFields = gql`
-  query getParentFields($parent: String!) @client {
-    fields(parent: $parent) {
+  fragment getParentFields($parent: String!) on Field {
+    fields(parent: $parent!) @client {
       ...field
     }
   }

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withApollo } from "react-apollo";
+
 import { DiagramData, FieldData } from '../../config';
 
 import { getFields, getCurrentFocus, getNodes, defaults } from '../../graphql';
