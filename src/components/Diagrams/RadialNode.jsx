@@ -171,9 +171,11 @@ import { setCurrentFocus } from '../../graphql';
     return (
       <Mutation mutation={setCurrentFocus} variables={{ id, centerX, centerY }} onCompleted={this.handleClick} awaitRefetchQueries={true}>
         {focusCircle => {
-          let circleColor = {}
-          circleColor.stroke = this.props.color && this.props.color.bg ? this.props.color.bg : 'grey'
-          circleColor.fill = circleColor.stroke
+          let circleColor = {};
+          circleColor.stroke = this.props.color && this.props.color.bg ? this.props.color.bg : 'grey';
+          circleColor.fill = circleColor.stroke;
+          if (shape === 'ellipse')
+          console.log('circleColor', circleColor);
           return (
             <React.Fragment>
               {

@@ -124,8 +124,6 @@ class CircleDiagram extends Component {
   setFocus = () => {
     const focus = this.getFocus();
     const current = focus.currentFocus;
-
-    const x = current.centerX, y = current.centerY;
     // console.log(`Moving Focus to ${x}, ${y}:`, focus);
 
     /** Our desired zoom for the current node that was clicked */
