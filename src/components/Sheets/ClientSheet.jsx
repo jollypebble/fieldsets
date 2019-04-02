@@ -80,7 +80,8 @@ export default class ClientSheet extends React.Component {
       <div key={ index } className="form-control">
         <TextField
           id={ item }
-          label='Dependent Name'
+          label={`Dependent Name${index + 1}`}
+          value={ item }
           onChange={ (value) => this.handleDependencyChange(index, value) }
         />
         <FontIcon onClick={() => this.removeDependency(index) }>remove</FontIcon>
@@ -92,29 +93,31 @@ export default class ClientSheet extends React.Component {
     const { clients } = this.props;
 
     return (
-      <DataTable plain className="client-table">
-        <TableHeader>
-          <TableRow>
-            <TableColumn>Account Name</TableColumn>
-            <TableColumn>Client Name</TableColumn>
-            <TableColumn>CPA Name</TableColumn>
-            <TableColumn>ATTY Name</TableColumn>
-            <TableColumn>IP</TableColumn>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          { clients.map((client, i) => (
-            <TableRow key={ i }>
-              <TableColumn>{ client.accountName }</TableColumn>
-              <TableColumn>{ client.clientName1 }</TableColumn>
-              <TableColumn>{ client.cpaName }</TableColumn>
-              <TableColumn>{ client.attyName }</TableColumn>
-              <TableColumn>{ client.ip }</TableColumn>
+      <div className="client-table">
+        <DataTable plain>
+          <TableHeader>
+            <TableRow>
+              <TableColumn>Account Name</TableColumn>
+              <TableColumn>Client Name</TableColumn>
+              <TableColumn>CPA Name</TableColumn>
+              <TableColumn>ATTY Name</TableColumn>
+              <TableColumn>IP</TableColumn>
             </TableRow>
-          )) }
-        </TableBody>
+          </TableHeader>
+          <TableBody>
+            { clients.map((client, i) => (
+              <TableRow key={ i }>
+                <TableColumn>{ client.accountName }</TableColumn>
+                <TableColumn>{ client.clientName1 }</TableColumn>
+                <TableColumn>{ client.cpaName }</TableColumn>
+                <TableColumn>{ client.attyName }</TableColumn>
+                <TableColumn>{ client.ip }</TableColumn>
+              </TableRow>
+            )) }
+          </TableBody>
+        </DataTable>
         <p>{ !clients.length && 'There is no client yet.' }</p>
-      </DataTable>
+      </div>
     );
   };
 

@@ -254,6 +254,25 @@ caption,
   stroke: #c35977;
   fill: #c35977; }
 
+.radialDialog > div {
+  width: 450px;
+  height: 450px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  text-align: center;
+  border-radius: 50%; }
+  .radialDialog > div > h2 {
+    font-size: 22px;
+    font-weight: bold; }
+  .radialDialog > div > section {
+    margin: 0 !important; }
+  .radialDialog > div > footer {
+    display: block;
+    padding-left: 20px; }
+    .radialDialog > div > footer > button {
+      margin: 0 !important; }
+
 .circlenode {
   transition: stroke-width 0.15s; }
 
@@ -337,8 +356,7 @@ caption,
   position: fixed;
   right: 0;
   top: 64px;
-  display: flex;
-  flex-direction: column; }
+  display: block; }
 
 .drawer-sheet {
   overflow-y: auto;
@@ -364,6 +382,14 @@ caption,
         fill: #FFF !important; }
   .drawer-tab .tabbed-drawer {
     min-width: 450px; }
+    .drawer-tab .tabbed-drawer .tapHeader {
+      font-size: 24px;
+      font-weight: bold;
+      text-transform: uppercase;
+      font-family: sans-serif; }
+    .drawer-tab .tabbed-drawer .closeBtn i {
+      font-size: 18px;
+      font-weight: bold; }
 
 .smallIcon {
   width: 24px;
@@ -406,11 +432,10 @@ caption,
     margin: 0 auto;
     margin-top: 30px; }
   .clientSheetContainer .client-table {
-    margin-top: 20px; }
-    .clientSheetContainer .client-table table {
-      display: block; }
-      .clientSheetContainer .client-table table p {
-        margin-top: 10px; }
+    margin-top: 20px;
+    padding: 0 20px; }
+    .clientSheetContainer .client-table p {
+      margin-top: 10px; }
 
 .dataValue {
   width: 50%;

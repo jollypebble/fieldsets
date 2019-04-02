@@ -82,6 +82,7 @@ import PropTypes from 'prop-types';
        <div id={divID}>
          <DialogContainer
            id={dialogID}
+           className="radialDialog"
            title={name}
            visible={visible}
            actions={actions}
