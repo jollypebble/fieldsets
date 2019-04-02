@@ -9,14 +9,6 @@
   @param {Color} color If it's specified then a node ignores "childrenColor" property from its parent
 */
 
-const defenseAllocationColor = { bg: '#5fc6f5', text: '#316277' }
-const offenseAllocationColor = { bg: '#f55f68', text: '#562428' }
-const shortTermMoneyColor = { bg: '#ffa26c', text: '#6b4328' }
-const midTermMoneyColor = { bg: '#84e494', text: '#276730' }
-const longTermMoneyColor = { bg: '#c35977', text: '#582635' }
-
-// const zoomScaleChild1 = 1.66
-// const zoomScaleChild2 = 2.77
 const zoomScaleChild1 = 1
 const zoomScaleChild2 = 1
 
@@ -64,7 +56,6 @@ let ret = [
     centerY: 37,
     visible: true,
     zoom: { y: 0.75 },
-    color: defenseAllocationColor,
     children: [ // Should `children` be thought of as `data`. The `chldren` field name is used to imply this can be eith a series of liner data points or a series of relationally nested data objects.
       {
         name: 'Will',
@@ -76,7 +67,6 @@ let ret = [
         centerY: 36.5,
         visible: false,
         zoom: { scale: zoomScaleChild1 },
-        color: defenseAllocationColor,
         children: []
       },
       {
@@ -89,7 +79,6 @@ let ret = [
         centerY: 32.5,
         visible: false,
         zoom: { scale: zoomScaleChild1 },
-        color: defenseAllocationColor,
         children: []
       },
       {
@@ -102,7 +91,6 @@ let ret = [
         centerY: 32.5,
         visible: false,
         zoom: { scale: zoomScaleChild1 },
-        color: defenseAllocationColor,
         children: []
       },
       {
@@ -115,7 +103,6 @@ let ret = [
         centerY: 36.5,
         visible: false,
         zoom: { scale: zoomScaleChild1 },
-        color: defenseAllocationColor,
         children: []
       },
     ]
@@ -130,7 +117,6 @@ let ret = [
     centerY: 48,
     visible: true,
     zoom: { y: 0.25 },
-    color: offenseAllocationColor,
     children: [
       {
         name: 'Short Term Money',
@@ -142,7 +128,6 @@ let ret = [
         centerY: 49.5,
         visible: false,
         zoom: { scale: zoomScaleChild1,  x: 0.7, y: 0.3 },
-        color: shortTermMoneyColor,
         children: [
           {
             name: 'Cash Equivalents',
@@ -154,7 +139,6 @@ let ret = [
             centerY: 49.5,
             visible: false,
             zoom: { scale: zoomScaleChild2 },
-            color: shortTermMoneyColor,
             children: []
           },
           {
@@ -167,7 +151,6 @@ let ret = [
             centerY: 52.5,
             visible: false,
             zoom: { scale: zoomScaleChild2 },
-            color: shortTermMoneyColor,
             children: []
           },
           {
@@ -180,7 +163,6 @@ let ret = [
             centerY: 53.5,
             visible: false,
             zoom: { scale: zoomScaleChild2 },
-            color: shortTermMoneyColor,
             children: []
           },
         ]
@@ -195,7 +177,6 @@ let ret = [
         centerY: 53.5,
         visible: false,
         zoom: { scale: zoomScaleChild1,  y: 0.3 },
-        color: midTermMoneyColor,
         children: [
           {
             name: 'UTMA\'s',
@@ -207,7 +188,6 @@ let ret = [
             centerY: 56,
             visible: false,
             zoom: { scale: zoomScaleChild2 },
-            color: midTermMoneyColor,
             children: []
           },
           {
@@ -220,7 +200,6 @@ let ret = [
             centerY: 57.5,
             visible: false,
             zoom: { scale: zoomScaleChild2 },
-            color: midTermMoneyColor,
             children: []
           },
           {
@@ -233,7 +212,6 @@ let ret = [
             centerY: 56,
             visible: false,
             zoom: { scale: zoomScaleChild2 },
-            color: midTermMoneyColor,
             children: []
           },
         ]
@@ -248,7 +226,6 @@ let ret = [
         centerY: 49.5,
         visible: false,
         zoom: { scale: zoomScaleChild1,  x: 0.3, y: 0.3 },
-        color: longTermMoneyColor,
         children: [
           {
             name: 'IRA ROTH',
@@ -259,7 +236,6 @@ let ret = [
             centerY: 53.5,
             visible: false,
             zoom: { scale: zoomScaleChild2 },
-            color: longTermMoneyColor,
             children: []
           },
           {
@@ -271,7 +247,6 @@ let ret = [
             centerY: 53.25,
             visible: false,
             zoom: { scale: zoomScaleChild2 },
-            color: longTermMoneyColor,
             children: []
           },
           {
@@ -283,7 +258,6 @@ let ret = [
             centerY: 51.25,
             visible: false,
             zoom: { scale: zoomScaleChild2 },
-            color: longTermMoneyColor,
             children: []
           },
           {
@@ -295,7 +269,6 @@ let ret = [
             centerY: 48.75,
             visible: false,
             zoom: { scale: zoomScaleChild2 },
-            color: longTermMoneyColor,
             children: []
           },
           {
@@ -307,7 +280,6 @@ let ret = [
             centerY: 55.25,
             visible: false,
             zoom: { scale: zoomScaleChild2 },
-            color: longTermMoneyColor,
             children: []
           },
           {
@@ -319,7 +291,6 @@ let ret = [
             centerY: 53.5,
             visible: false,
             zoom: { scale: zoomScaleChild2 },
-            color: longTermMoneyColor,
             children: []
           },
           {
@@ -331,7 +302,6 @@ let ret = [
             centerY: 50.0,
             visible: false,
             zoom: { scale: zoomScaleChild2 },
-            color: longTermMoneyColor,
             children: []
           }
         ]
