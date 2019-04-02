@@ -534,8 +534,7 @@ caption,
 .diagramviewer {
   overflow: hidden;
   width: 100vw;
-  height: 100vh;
-  /*height: 98vh;*/
+  height: 98vh;
   z-index: -100; }
 
 #circlediagram {
