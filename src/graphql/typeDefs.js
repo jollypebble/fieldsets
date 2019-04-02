@@ -36,8 +36,10 @@ export const typeDefs = `
     id: ID!
     name: String!
     fields: [Field!]!
+    children: [NodeChild]
     centerX: Float!
     centerY: Float!
+    depth: Int!,
     parent: Circle
   }
   

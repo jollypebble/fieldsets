@@ -7,6 +7,7 @@ export const getCurrentFocus = gql`
       name
       centerX
       centerY
+      depth
       zoom {
         x
         y
