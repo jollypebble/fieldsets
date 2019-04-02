@@ -118,19 +118,20 @@ import { setCurrentFocus } from '../../graphql';
    /** Extra properties that will be passed into Circle instance. It's for beign overrided by sub-classes. */
    getAdditionalCircleProps() { return null };
    
-   getInsideElements(name, centerX, centerY, focusCircle) {
-    let textColor = this.props.color && this.props.color.text ? this.props.color.text : '#515359'
-    const textSize = (0.4 * this.props.scaleFactor) + 'pt'
+  getInsideElements(name, centerX, centerY, focusCircle) {
+    const { textX, textY, color, scaleFactor } = this.props;
+    let textColor = color && color.text ? color.text : '#515359';
+    const textSize = (0.4 * scaleFactor) + 'pt';
     return <text
       ref={this.elCircleText}
-      x={centerX}
-      y={centerY}
+      x={textX ? textX : centerX}
+      y={textY ? textY : centerY}
       textAnchor="middle"
       className={'circletext ' + (!this.hasParent() ? 'shown' : '') + ' ' + (!this.props.isShown ? ' hidden' : '') }
       onClick={focusCircle}
     >
-      <tspan x={centerX} fill={textColor} style={{ fontSize: textSize }} dy="0em">{name}</tspan>
-      <tspan x={centerX} fill={textColor} style={{ fontSize: textSize }} dy="1.6em">{ 'Data: Value' }</tspan>
+      <tspan x={textX ? textX : centerX} fill={textColor} style={{ fontSize: textSize }} dy="0em">{name}</tspan>
+      <tspan x={textX ? textX : centerX} fill={textColor} style={{ fontSize: textSize }} dy="1.6em">{ 'Data: Value' }</tspan>
     </text>
    }
 
@@ -144,7 +145,8 @@ import { setCurrentFocus } from '../../graphql';
        fields: this.props.fields,
        parent: this.props.parent,
        centerX: this.props.centerX,
-       centerY: this.props.centerY
+       centerY: this.props.centerY,
+       shape: this.props.shape
      };
 
      let updatedNodeList = this.props.nodes;
@@ -154,11 +156,85 @@ import { setCurrentFocus } from '../../graphql';
      return this.state.nodes;
    }
 
+   renderShape(shownClass) {
+    const id = this.props.nodeID;
+    let { shape, centerX, centerY, radiusX, radiusY } = this.props;
+
+    if (shownClass === 'hidden') {
+      centerX = this.props.parentCenterX
+      centerY = this.props.parentCenterY
+    } else if (this.hasParent() && shownClass === '') {
+      centerX = this.props.parentCenterX
+      centerY = this.props.parentCenterY
+    }
+
+    return (
+      <Mutation mutation={setCurrentFocus} variables={{ id, centerX, centerY }} onCompleted={this.handleClick} awaitRefetchQueries={true}>
+        {focusCircle => {
+          let circleColor = {}
+          circleColor.stroke = this.props.color && this.props.color.bg ? this.props.color.bg : 'grey'
+          circleColor.fill = circleColor.stroke
+          return (
+            <React.Fragment>
+              {
+                shape === 'ellipse' &&
+                <ellipse
+                  ref={this.elCircleNode}
+                  id={id}
+                  className="circlenode"
+                  cx={centerX}
+                  cy={centerY}
+                  rx={radiusX}
+                  ry={radiusY}
+                  // r={this.props.radius * this.props.scaleFactor}
+                  strokeWidth={(this.state.isMouseInside ? this.props.radius * 1.35 : this.props.radius) * this.props.scaleFactor}
+                  onClick={focusCircle}
+                  {...this.getAdditionalCircleProps()}
+                  {...circleColor}
+                />
+              }
+              {
+                shape === 'rectangle' &&
+                <rect
+                  ref={this.elCircleNode}
+                  id={id}
+                  className="circlenode"
+                  x={centerX}
+                  y={centerY}
+                  width={10}
+                  height={5}
+                  strokeWidth={(this.state.isMouseInside ? this.props.radius * 1.35 : this.props.radius) * this.props.scaleFactor}
+                  onClick={focusCircle}
+                  {...this.getAdditionalCircleProps()}
+                  {...circleColor}
+                />
+              }
+              {
+                shape !== 'ellipse' && shape !== 'rectangle' &&
+                <circle
+                  ref={this.elCircleNode}
+                  id={id}
+                  className="circlenode"
+                  cx={centerX}
+                  cy={centerY}
+                  r={this.props.radius * this.props.scaleFactor}
+                  strokeWidth={(this.state.isMouseInside ? this.props.radius * 1.35 : this.props.radius) * this.props.scaleFactor}
+                  onClick={focusCircle}
+                  {...this.getAdditionalCircleProps()}
+                  {...circleColor}
+                />
+              }
+              {this.getInsideElements(this.props.name, centerX, centerY, focusCircle)}
+            </React.Fragment>
+          );
+        }}
+      </Mutation>
+     );
+   }
+
    render() {
     /** Position for the node */
     let centerX = this.props.centerX, centerY = this.props.centerY
-
-    const id = `${this.props.nodeID}`;
 
     let parentNode = '';
     if (typeof(this.props.nodeData) !== undefined && this.props.nodeData.length > 0) {
@@ -170,6 +246,7 @@ import { setCurrentFocus } from '../../graphql';
             key={ data.id }
             nodeData={ typeof(data.children) === undefined ? [] : data.children }
             nodeID={ data.id }
+            shape={ data.shape }
             centerX={ data.centerX }
             centerY={ data.centerY }
             name={ data.name }
@@ -202,13 +279,6 @@ import { setCurrentFocus } from '../../graphql';
     const shownClass = this.hasParent() && this.props.wasParentClickedAtLeastOnce ? (this.props.isShown ? 'shown' : 'hidden') : '';
     /** We want to hide children at the start of the app */
     const afterHiddenClass = this.hasParent() && shownClass === '' ? 'afterHidden' : ''
-    if (shownClass === 'hidden') {
-      centerX = this.props.parentCenterX
-      centerY = this.props.parentCenterY
-    } else if (this.hasParent() && shownClass === '') {
-      centerX = this.props.parentCenterX
-      centerY = this.props.parentCenterY
-    }
 
     // Child Node
     return (
@@ -224,28 +294,7 @@ import { setCurrentFocus } from '../../graphql';
             onMouseEnter={this.handleMouseEnter}
             onMouseLeave={this.handleMouseLeave}
           >
-            <Mutation mutation={setCurrentFocus} variables={{ id, centerX, centerY }} onCompleted={this.handleClick} awaitRefetchQueries={true}>
-              {focusCircle => {
-                let circleColor = {}
-                circleColor.stroke = this.props.color && this.props.color.bg ? this.props.color.bg : 'grey'
-                circleColor.fill = circleColor.stroke
-                return <React.Fragment>
-                  <circle
-                    ref={this.elCircleNode}
-                    id={id}
-                    className="circlenode"
-                    cx={centerX}
-                    cy={centerY}
-                    r={this.props.radius * this.props.scaleFactor}
-                    strokeWidth={(this.state.isMouseInside ? this.props.radius * 1.35 : this.props.radius) * this.props.scaleFactor}
-                    onClick={focusCircle}
-                    {...this.getAdditionalCircleProps()}
-                    {...circleColor}
-                  />
-                  {this.getInsideElements(this.props.name, centerX, centerY, focusCircle)}
-                </React.Fragment>
-              }}
-            </Mutation>
+            { this.renderShape(shownClass) }
           </g>
           {parentNode}
         </g>
@@ -257,6 +306,7 @@ RadialNode.propTypes = {
   nodeID: PropTypes.string.isRequired,
   nodeData: PropTypes.array.isRequired,
   name: PropTypes.string.isRequired,
+  shape: PropTypes.string,
   centerX: PropTypes.node.isRequired,
   centerY: PropTypes.node.isRequired,
   color: PropTypes.object,
