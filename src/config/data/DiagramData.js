@@ -66,6 +66,9 @@ let ret = [
     centerY: 37,
     radiusX: 3.5,
     radiusY: 1.5,
+    color: {
+      bg: '#5fc6f5'
+    },
     visible: true,
     zoom: { y: 0.75 },
     children: [ // Should `children` be thought of as `data`. The `chldren` field name is used to imply this can be eith a series of liner data points or a series of relationally nested data objects.
@@ -88,7 +91,7 @@ let ret = [
         shape: 'circle',
         fields: [],
         centerX: 28,
-        centerY: 31.5,
+        centerY: 32,
         visible: false,
         zoom: { scale: zoomScaleChild1 },
         children: []
@@ -100,7 +103,7 @@ let ret = [
         shape: 'circle',
         fields: [],
         centerX: 33,
-        centerY: 31.5,
+        centerY: 32,
         visible: false,
         zoom: { scale: zoomScaleChild1 },
         children: []
@@ -129,6 +132,9 @@ let ret = [
     centerY: 48,
     radiusX: 3.5,
     radiusY: 1.5,
+    color: {
+      bg: '#f55f68'
+    },
     visible: true,
     zoom: { y: 0.25 },
     children: [
