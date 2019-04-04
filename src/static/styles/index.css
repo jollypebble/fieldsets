@@ -645,7 +645,12 @@ text.nodeAttributesBase {
   line-height: 64px;
   color: #FFF;
   font-size: 20px;
+  transition: top 0.2s;
   /** We remove margin-left here because "Monthly Contribution" wasn't able to be placed at the center of the top bar */ }
+  .AppBarInner.hidden {
+    top: -64px; }
+  .AppBarInner.visible {
+    top: 0; }
   .AppBarInner .toolbarText {
     flex: 1;
     display: flex;
@@ -669,6 +674,8 @@ text.nodeAttributesBase {
     margin: 0 auto; }
     .AppBarInner .centered .contributions {
       color: #FFF !important; }
+  .AppBarInner .logo-title {
+    font-size: 20px; }
   .AppBarInner .textfield-monthly-contribution {
     line-height: 0; }
     .AppBarInner .textfield-monthly-contribution input {
