@@ -124,8 +124,6 @@ class CircleDiagram extends Component {
   setFocus = () => {
     const focus = this.getFocus();
     const current = focus.currentFocus;
-
-    const x = current.centerX, y = current.centerY;
     // console.log(`Moving Focus to ${x}, ${y}:`, focus);
 
     /** Our desired zoom for the current node that was clicked */
@@ -362,14 +360,8 @@ class CircleDiagram extends Component {
                       nodeData={ typeof(diagram.children) === undefined ? [] : diagram.children }
                       nodeID={ diagram.id }
                       scaleFactor={ 1 }
-                      centerX={ diagram.centerX }
-                      centerY={ diagram.centerY }
-                      zoom={ diagram.zoom }
+                      {...diagram}
                       radius={ this.getStandardRadius() }
-                      name={ diagram.name }
-                      parent={ diagram.parent }
-                      color={ diagram.color }
-                      fields={ diagram.fields }
                       updateFocus={ this.updateFocus }
                       resetFocus={ this.resetFocus }
                       openDialog={ this.openDialog }
