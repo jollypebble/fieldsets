@@ -130,27 +130,27 @@ class CircleDiagram extends Component {
     let zoom = this.props.zoom * current.zoom.scale;
 
     let xs = [], ys = [];
-    xs.push(current.centerX - this.getStandardRadius(current.depth) - this.getStandardStrokeWidth(current.depth))
-    xs.push(current.centerX + this.getStandardRadius(current.depth) + this.getStandardStrokeWidth(current.depth))
-    ys.push(current.centerY - this.getStandardRadius(current.depth) - this.getStandardStrokeWidth(current.depth))
-    ys.push(current.centerY + this.getStandardRadius(current.depth) + this.getStandardStrokeWidth(current.depth))
+    xs.push(current.centerX - this.getStandardRadius(current.depth) - this.getStandardStrokeWidth(current.depth));
+    xs.push(current.centerX + this.getStandardRadius(current.depth) + this.getStandardStrokeWidth(current.depth));
+    ys.push(current.centerY - this.getStandardRadius(current.depth) - this.getStandardStrokeWidth(current.depth));
+    ys.push(current.centerY + this.getStandardRadius(current.depth) + this.getStandardStrokeWidth(current.depth));
 
     const children = DataUtils.getChildrenOf(current.id);
-    const hasChildren = children && children.length > 0
+    const hasChildren = children && children.length > 0;
     if (hasChildren) {
       children.forEach(child => {
-        xs.push(child.centerX - this.getStandardRadius(child.depth) - this.getStandardStrokeWidth(child.depth))
-        xs.push(child.centerX + this.getStandardRadius(child.depth) + this.getStandardStrokeWidth(child.depth))
-        ys.push(child.centerY - this.getStandardRadius(child.depth) - this.getStandardStrokeWidth(child.depth))
-        ys.push(child.centerY + this.getStandardRadius(child.depth) + this.getStandardStrokeWidth(child.depth))
+        xs.push(child.centerX - this.getStandardRadius(child.depth) - this.getStandardStrokeWidth(child.depth));
+        xs.push(child.centerX + this.getStandardRadius(child.depth) + this.getStandardStrokeWidth(child.depth));
+        ys.push(child.centerY - this.getStandardRadius(child.depth) - this.getStandardStrokeWidth(child.depth));
+        ys.push(child.centerY + this.getStandardRadius(child.depth) + this.getStandardStrokeWidth(child.depth));
       })
     }
-    const minX = Math.min.apply(null, xs)
-    const maxX = Math.max.apply(null, xs)
-    const minY = Math.min.apply(null, ys)
-    const maxY = Math.max.apply(null, ys)
-    let k = (window.innerHeight / this.props.zoom) / (maxY - minY)
-    zoom = zoom * k * 0.8
+    const minX = Math.min.apply(null, xs);
+    const maxX = Math.max.apply(null, xs);
+    const minY = Math.min.apply(null, ys);
+    const maxY = Math.max.apply(null, ys);
+    let k = (window.innerHeight / this.props.zoom) / (maxY - minY);
+    zoom = zoom * k * 0.8;
     /* Next two lines are needed to calculate the point that is the center of a client's screen
      * As long as ReactSVGPanZoom lib calculates the center relatively to its own sizes we always got wrong numbers so
      * here we including into the calculations our sizes of the screen.
@@ -227,13 +227,13 @@ class CircleDiagram extends Component {
   setNodeState = (nodes) => {
     // console.log('Setting Node state.');
     // Do something to update a node state.
-    this.setState({nodes: nodes});
+    this.setState({ nodes });
   }
 
   setFieldState = (fields) => {
     // console.log('Setting Field state.');
     // Do something to update a node state.
-    this.setState({fields: fields});
+    this.setState({ fields });
   }
 
   /**

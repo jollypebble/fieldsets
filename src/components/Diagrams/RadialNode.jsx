@@ -12,6 +12,7 @@ const ellipseGroup = ['ellipse'];
 const rectGroup = ['rectangle', 'labelGroup', 'radialGroup'];
 const circleGroup = ['circle'];
 const noValueList = ['monthly_contribution', 'lump_sums', 'short_term_money', 'mid_term_money', 'long_term_money'];
+const offenseAllocation = 'offense_allocation';
 
 class RadialNode extends React.Component {
   constructor(props) {
@@ -109,7 +110,7 @@ class RadialNode extends React.Component {
   handleDoubleClick = () => {
     // TODO: OPEN DIALOG AND SET FIELDS TO DISPLAY
     // this.props.openDialog(this.props.nodeID);
-    if (this.props.parent === 'offense_allocation') return;
+    if (this.props.parent === offenseAllocation) return;
     if (this.state.isRevealed) {
     this.setState({ isRevealed: !this.state.isRevealed })
     }
@@ -127,9 +128,9 @@ class RadialNode extends React.Component {
   getAdditionalCircleProps() { return null };
    
   getInsideElements(name, centerX, centerY, focusCircle) {
-    let { textX, textY, color, scaleFactor, textSize, ratio, id } = this.props;
+    let { textX, textY, color, scaleFactor, textSize, ratio, id, parent } = this.props;
     let textColor = color && color.text ? color.text : '#515359';
-    textSize = ratio ? ratio * textSize * 0.9 : textSize;
+    textSize = ratio && parent !== offenseAllocation ? ratio * textSize * 0.9 : textSize;
     const fontSize = (textSize ? textSize : 0.5 * scaleFactor) + 'pt';
     return (
       <React.Fragment>
@@ -173,13 +174,14 @@ class RadialNode extends React.Component {
   }
 
   getExtendedValue(value) {
-    return this.state.isMouseInside ? value * 1.1 : value;
+    return this.state.isMouseInside && this.props.parent !== offenseAllocation ? value * 1.1 : value;
   }
 
   renderShape(shownClass) {
     const id = this.props.nodeID;
     let { shape, centerX, centerY, radiusX, radiusY, radius, name, scaleFactor, color, width, height, rotate, ratio } = this.props;
     radius = ratio ? ratio * radius : radius;
+    const strokeWidth = radius * scaleFactor / 40;
 
     if (shownClass === 'hidden') {
       centerX = this.props.parentCenterX;
@@ -208,7 +210,7 @@ class RadialNode extends React.Component {
                   cy={centerY}
                   rx={this.getExtendedValue(radiusX)}
                   ry={this.getExtendedValue(radiusY)}
-                  strokeWidth={radius * scaleFactor / 40}
+                  strokeWidth={strokeWidth}
                   onClick={focusCircle}
                   {...this.getAdditionalCircleProps()}
                   {...circleColor}
@@ -243,7 +245,7 @@ class RadialNode extends React.Component {
                   cx={centerX}
                   cy={centerY}
                   r={this.getExtendedValue(radius) * scaleFactor}
-                  strokeWidth={radius * scaleFactor / 20}
+                  strokeWidth={strokeWidth}
                   onClick={focusCircle}
                   {...this.getAdditionalCircleProps()}
                   {...circleColor}
