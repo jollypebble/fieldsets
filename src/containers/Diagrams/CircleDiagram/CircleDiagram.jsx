@@ -315,7 +315,7 @@ class CircleDiagram extends Component {
 
   getStandardRadius(depth = 0) {
     // Scale our SVG based on our desired width height based on a 100 x 75 canvas.
-    const baseradius = 8.5;
+    const baseradius = 9;
     return (baseradius * 75) / 100 * (Math.pow(0.6, depth));
   }
 
@@ -353,7 +353,6 @@ class CircleDiagram extends Component {
             >
               <g id="diagramGroup">
                 { DiagramData.map(diagram => {
-                  if (diagram.name==="Deffered Comp") console.log('diagram', diagram);
                   let NodeClass = RadialNode;
                   if (diagram.id === 'net_worth') NodeClass = NetWorthNode;
                   return <NodeClass

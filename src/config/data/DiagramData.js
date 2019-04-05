@@ -16,7 +16,7 @@ const xsTextSize = 0.35;
 const smTextSize = 0.4;
 const mdTextSize = 0.6;
 
-const ratio = 0.7
+const ratio = 0.7;
 
 const bgColor1 = '#f55f68';
 const strokeColor1 = '#f00';

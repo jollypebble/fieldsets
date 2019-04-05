@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Mutation } from 'react-apollo';
 import { setCurrentFocus } from '../../graphql';
-import { FontIcon } from 'react-md';
 
 /**
  * Radial Nodes are functional components that represent parent circle nodes.
@@ -126,23 +125,28 @@ class RadialNode extends React.Component {
   getAdditionalCircleProps() { return null };
    
   getInsideElements(name, centerX, centerY, focusCircle, shape) {
-    let { textX, textY, color, scaleFactor, textSize, ratio } = this.props;
+    let { textX, textY, color, scaleFactor, textSize, ratio, id } = this.props;
     let textColor = color && color.text ? color.text : '#515359';
     textSize = ratio ? ratio * textSize * 0.9 : textSize;
     const fontSize = (textSize ? textSize : 0.5 * scaleFactor) + 'pt';
-    return <text
-      ref={this.elCircleText}
-      x={textX ? textX : centerX}
-      y={textY ? textY : centerY}
-      textAnchor="middle"
-      className={'circletext ' + (!this.hasParent() ? 'shown' : '') + ' ' + (!this.props.isShown ? ' hidden' : 'shown') }
-      onClick={focusCircle}
-    >
-      <tspan x={textX ? textX : centerX} fill={textColor} style={{ fontSize }} dy="0em">{name}</tspan>
-      <tspan x={textX ? textX : centerX} fill={textColor} style={{ fontSize }} dy="1.6em">
-        { rectGroup.indexOf(shape) > -1 ? '' : 'Data: Value' }
-      </tspan>
-    </text>
+    return (
+      <React.Fragment>
+        <text
+          ref={this.elCircleText}
+          x={textX ? textX : centerX}
+          y={textY ? textY : centerY}
+          textAnchor="middle"
+          className={'circletext ' + (!this.hasParent() ? 'shown' : '') + ' ' + (!this.props.isShown ? ' hidden' : 'shown') }
+          onClick={focusCircle}
+        >
+          <tspan x={textX ? textX : centerX} fill={textColor} style={{ fontSize }} dy="0em">{name}</tspan>
+          <tspan x={textX ? textX : centerX} fill={textColor} style={{ fontSize }} dy="1.6em">
+            { rectGroup.indexOf(shape) > -1 ? '' : 'Data: Value' }
+          </tspan>
+          { id === 'long_term_money' && <tspan fill={color.stroke} y={textY ? textY + 0.2 : centerY + 0.2 } className="refresh-icon">&#xf021;</tspan>}
+        </text>
+      </React.Fragment>
+    );
   }
 
   updateNodeData() {

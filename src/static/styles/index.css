@@ -313,6 +313,11 @@ caption,
     opacity: 1;
     display: none; }
 
+.refresh-icon {
+  font-family: FontAwesome;
+  font-size: 1pt;
+  cursor: pointer; }
+
 /** Showing up an element */
 @keyframes showUp {
   0% {
