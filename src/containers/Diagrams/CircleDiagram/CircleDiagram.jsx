@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { withApollo } from "react-apollo";
-import { DiagramData, FieldData, OwnerData } from '../../../config';
+import { DiagramData, FieldData, OwnerData, DataUtils } from '../../../config';
 import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
 
 //import { Diagram, DiagramCache } from 'containers/Diagrams/Diagram';
 import { NetWorthNode, RadialNode, RadialDialog } from '../../../components/Diagrams';
-import { getFields, getParentFields, getCurrentFocus, getNodes, defaults } from '../../../graphql';
+import { getFields, getFieldList, getCurrentFocus, getNodes, defaults } from '../../../graphql';
 
 /**
  * This is the container for our main diagram. It has direct access to the apollo cache so it can track foucs of it's child nodes.
@@ -131,15 +131,42 @@ class CircleDiagram extends Component {
     // console.log(`Moving Focus to ${x}, ${y}:`, focus);
 
     /** Our desired zoom for the current node that was clicked */
-    const zoom = 35 * current.zoom.scale;
+    let zoom = this.props.zoom * current.zoom.scale;
+
+    let xs = [], ys = [];
+    xs.push(current.centerX - this.getStandardRadius(current.depth) - this.getStandardStrokeWidth(current.depth))
+    xs.push(current.centerX + this.getStandardRadius(current.depth) + this.getStandardStrokeWidth(current.depth))
+    ys.push(current.centerY - this.getStandardRadius(current.depth) - this.getStandardStrokeWidth(current.depth))
+    ys.push(current.centerY + this.getStandardRadius(current.depth) + this.getStandardStrokeWidth(current.depth))
+
+    const children = DataUtils.getChildrenOf(current.id);
+    const hasChildren = children && children.length > 0
+    if (hasChildren) {
+      children.forEach(child => {
+        xs.push(child.centerX - this.getStandardRadius(child.depth) - this.getStandardStrokeWidth(child.depth))
+        xs.push(child.centerX + this.getStandardRadius(child.depth) + this.getStandardStrokeWidth(child.depth))
+        ys.push(child.centerY - this.getStandardRadius(child.depth) - this.getStandardStrokeWidth(child.depth))
+        ys.push(child.centerY + this.getStandardRadius(child.depth) + this.getStandardStrokeWidth(child.depth))
+      })
+    }
+    const minX = Math.min.apply(null, xs)
+    const maxX = Math.max.apply(null, xs)
+    const minY = Math.min.apply(null, ys)
+    const maxY = Math.max.apply(null, ys)
+    let k = (window.innerHeight / this.props.zoom) / (maxY - minY)
+    zoom = zoom * k * 0.8
     /* Next two lines are needed to calculate the point that is the center of a client's screen
      * As long as ReactSVGPanZoom lib calculates the center relatively to its own sizes we always got wrong numbers so
      * here we including into the calculations our sizes of the screen.
     */
-    const screenCenterX = (this.Viewer.props.width - window.innerWidth) * (1 - current.zoom.x) / zoom;
-    const screenCenterY = (this.Viewer.props.height - window.innerHeight) * (1 - current.zoom.y) / zoom;
+    // const screenCenterX = (this.Viewer.props.width - window.innerWidth) * (1 - current.zoom.x) / zoom;
+    // const screenCenterY = (this.Viewer.props.height - window.innerHeight) * (1 - current.zoom.y) / zoom;
+    const screenCenterX = (minX + (maxX - minX) * 0.5);
+    const screenCenterY = (minY + (maxY - minY) * 0.5) + 0.5;
+    // const screenCenterY = minY + (maxY - minY) * 0.5;
 
-    this.Viewer.setPointOnViewerCenter(screenCenterX + x, screenCenterY + y, zoom);
+    // this.Viewer.setPointOnViewerCenter(screenCenterX + x, screenCenterY + y, zoom);
+    this.Viewer.setPointOnViewerCenter(screenCenterX, screenCenterY, hasChildren ? zoom : this.Viewer.state.value.a);
 
     this.setTemporaryAnimatable();
   }
@@ -164,9 +191,8 @@ class CircleDiagram extends Component {
   }
 
   getFieldData = (variables) => {
-    console.log(variables);
-    const id = `Field:${variables.id}`;
-    return this.props.client.readFragment({ id: id, query: getParentFields, variables: variables });
+    const fields = this.props.client.cache.readQuery({ query: getFieldList, variables: {parent: variables.id} });
+    return fields;
   }
 
   getNodesData = (variables) => {
@@ -228,18 +254,40 @@ class CircleDiagram extends Component {
 
   setFieldCache = (data=[]) => {
     // console.log('Updating Field cache');
-    let previous = this.getAllFields();
-    console.log(previous.fields);
+    let allFields = this.getAllFields();
+    allFields.__typename = 'FieldList';
+
+    console.log(allFields.fields);
     if (!data.length) return false;
+    allFields.fields.list = (allFields.fields.list) ? allFields.fields.list : [];
 
     // Get your fields here. This is defined as a static json, but could be modified here to get remote field type definitions.
     data.map(currentField => {
-      // console.log('Current field:', currentField);
       currentField.__typename = 'Field';
-      previous.fields.push(currentField);
+      console.log(currentField);
+
+      // Append the field to the complete set.
+      allFields.fields.list.push(currentField);
+
+      const id = `FieldList:${currentField.parent}`;
+      let nodeList = this.props.client.readFragment({
+        fragment: {getFieldList},
+        id: {id}
+      });
+      nodeList.fields.list = (nodeList.fields.list) ? nodeList.fields.list : [];
+      nodeList.fields.list.push(currentField);
+
+      // Now append this field to the parent node field list
+      this.props.client.writeFragment({
+        fragment: getFieldList,
+        id: id,
+        data: {nodeList}
+      });
+
       return true;
     });
-    const fields = previous.fields;
+
+    const fields = allFields.fields.list;
     this.props.client.writeData({
       data: {fields}
     });
@@ -253,8 +301,10 @@ class CircleDiagram extends Component {
   setDataCache = (data=[]) => {
     // console.log('Caching nodes: ');
 
-    let previous = this.getNodesData({});
-    let nodes = previous.nodes;
+    let allNodes = this.getNodesData({});
+    allNodes.__typename = 'NodeList';
+
+    let nodes = (allNodes.nodes.list) ? allNodes.nodes.list : [];
 
     if (! data.length) {
       return false;
@@ -268,9 +318,9 @@ class CircleDiagram extends Component {
         this.setDataCache(children);
       }
 
-      const previous = this.getFieldData({id: node.id});
-      console.log('Previous fields:', previous.fields);
-      const fields = previous.fields.map(field => {
+      const allNodes = this.getFieldData({id: node.id});
+      console.log('Previous fields:', allNodes.fields);
+      const fields = allNodes.fields.map(field => {
         field.__typename = 'Field';
         return field;
       });
@@ -289,11 +339,17 @@ class CircleDiagram extends Component {
     return true;
   }
 
-  render() {
+  getStandardRadius(depth = 0) {
     // Scale our SVG based on our desired width height based on a 100 x 75 canvas.
     const baseradius = 2.3;
-    const radius = (baseradius*75)/100;
+    return (baseradius * 75) / 100 * (Math.pow(0.6, depth));
+  }
 
+  getStandardStrokeWidth(depth = 0) {
+    return this.getStandardRadius(depth) * 0.5;
+  }
+
+  render() {
     return (
         <div className="diagramviewer">
           <div className="viewer">
@@ -333,7 +389,7 @@ class CircleDiagram extends Component {
                       centerX={ diagram.centerX }
                       centerY={ diagram.centerY }
                       zoom={ diagram.zoom }
-                      radius={ radius }
+                      radius={ this.getStandardRadius() }
                       name={ diagram.name }
                       parent={ diagram.parent }
                       color={ diagram.color }

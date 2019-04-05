@@ -75,13 +75,13 @@ export default class Dashboard extends Component {
             position="right"
             icon="account_box"
             title="Client"
-            renderContent={ this.renderClientSheet }
+            renderContent={ () => this.renderClientSheet() }
             saveCallback={ this.handleClientSave }
           />
           <TabbedDrawer
             position="right"
             icon="library_books"
-            title="Balance Sheet"
+            title="Balance"
             renderContent={ this.renderBalanceSheet }
           />
         </div>

@@ -13,4 +13,20 @@ export const resolvers = {
       return currentFocus;
     },
   },
+  Query: {
+    getNodeFields: ( object, variables, { cache, getCacheKey } ) => {
+      console.log( 'HOWDY');
+      //const nodeID = getCacheKey({__typename: 'Circle', id: variables.id});
+      //const node = cache.readFragment({ id: id, fragment: getNodeData });
+
+      //const fields = cache.readQuery({ id: id, fragment: getNodeData });
+      /**
+        cache.writeFragment({
+          query: getCurrentFocus,
+          data: {currentFocus}
+        });
+      **/
+      //return fields;
+    },
+  },
 };

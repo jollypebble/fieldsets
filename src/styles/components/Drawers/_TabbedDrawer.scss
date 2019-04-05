@@ -4,8 +4,7 @@
   position: fixed;
   right: 0;
   top: 64px;
-  display: flex;
-  flex-direction: column;
+  display: block;
 }
 .drawer-sheet {
   overflow-y: auto;
@@ -15,7 +14,7 @@
     width: $tab-width;
 
     .drawer-tab__icon {
-      width:100%;
+      width: 100%;
       border-radius: 90px 0 0 90px;
       background: $app-blue;
       color: $app-white;
@@ -37,6 +36,18 @@
 
     .tabbed-drawer {
       min-width: 450px;
+
+      .tapHeader {
+        font-size: 24px;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-family: sans-serif;
+      }
+
+      .closeBtn i {
+        font-size: 18px;
+        font-weight: bold;
+      }
     }
 }
 .smallIcon {
@@ -100,13 +111,10 @@
 
   .client-table {
     margin-top: $largeMarginSize;
+    padding: 0 20px;
 
-    table {
-      display: block;
-
-      p {
-        margin-top: $mediumMarginSize;
-      }
+    p {
+      margin-top: $mediumMarginSize;
     }
   }
 }

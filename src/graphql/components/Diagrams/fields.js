@@ -1,23 +1,28 @@
 import gql from 'graphql-tag';
 
-export const getFields = gql`
-  query getFields @client {
-    fields {
-      ...field
-    }
-  }
+const fields = `
   fragment field on Field @client {
       id
       name
       value
       parent
   }
-`;
-
-export const getParentFields = gql`
-  fragment getParentFields($parent: String!) on Field {
-    fields(parent: $parent!) @client {
+  fragment fields on FieldList @client {
+    fields(id: $parent) {
       ...field
     }
   }
+`;
+
+export const getFields = gql`
+  query getFields @client {
+    ...fields
+  }
+  ${fields}
+`;
+
+export const getFieldData = gql`${fields}`;
+
+export const getFieldList = gql`
+  ${fields}
 `;

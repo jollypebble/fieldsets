@@ -18,6 +18,10 @@ export const typeDefs = `
     lastname: [String]!
     dob: String!
   }
+  type OwnerList {
+    id: ID!
+    list: [Field!]
+  }
 
   type Field implements Entity {
     id: ID!
@@ -32,25 +36,37 @@ export const typeDefs = `
     order: Int!,
   }
 
+  type FieldList {
+    id: ID!
+    list: [Field!]
+  }
+
   type Circle implements Entity {
     id: ID!
     name: String!
-    fields: [Field!]!
+    fields: FieldList!
+    children: NodeList!
     centerX: Float!
     centerY: Float!
+    depth: Int!,
     parent: Circle
   }
-  
+
+  type NodeList {
+    id: ID!
+    list: [Circle!]
+  }
+
   type Mutation {
     setCurrentFocus(id: ID!): Circle
   }
 
   type Query {
     currentFocus: Circle!
-    fields: [Field!]
-    nodefields(parent: String): [Field!]
-    nodes: [Circle!]
+    fields: FieldList!
+    nodes: NodeList!
   }
+
   enum FieldType {
     currency
     status

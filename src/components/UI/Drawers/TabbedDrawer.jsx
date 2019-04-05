@@ -51,9 +51,9 @@ export default class TabbedDrawer extends PureComponent {
     const drawerid=`tabbed-drawer-menu--${icon}`
     const { visible } = this.state;
     const isLeft = position === 'left';
-    const hasSave = saveCallback !== null;
+    const hasSave = saveCallback !== (null || undefined);
 
-    const closeBtn = <Button icon onClick={this.closeDrawer}>close</Button>;
+    const closeBtn = <Button className="closeBtn" icon onClick={this.closeDrawer}>close</Button>;
     const saveBtn = hasSave ? <Button icon onClick={saveCallback}>save</Button> : null;
 
     return (
@@ -67,7 +67,7 @@ export default class TabbedDrawer extends PureComponent {
               icon
               onClick={ this.toggleDrawer }
             >
-              {this.props.icon}
+              { this.props.icon} 
             </Button>
           </div>
           <Drawer
@@ -77,9 +77,7 @@ export default class TabbedDrawer extends PureComponent {
             visible={ visible }
             position={ position }
             onVisibilityChange={ this.handleVisibility }
-            openDrawer={ this.toggleDrawer }
-            closeDrawer={ this.toggleDrawer }
-            handleVisibility={ this.handleVisibility }
+            overlay={ false }
             style={ { top: '64px', width: '40%' } }
             header={ (
               <Toolbar
@@ -88,7 +86,7 @@ export default class TabbedDrawer extends PureComponent {
                 actions={ isLeft ? closeBtn : saveBtn }
                 className="md-divider-border md-divider-border--bottom tapHeader"
               >
-                {title}
+                { title }
               </Toolbar>
             ) }
           >
