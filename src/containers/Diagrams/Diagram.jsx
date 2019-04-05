@@ -7,6 +7,7 @@ import { getFields, getCurrentFocus, getNodes, defaults } from '../../graphql';
 
 /**
  * This top level object for a diagram. All data priming and loading is handled in with this and other classes can extend it.
+ * Fields, Nodes, Lists and Sheets are cached here and bound to the diagram props.
  */
 class Diagram extends Component {
   constructor(props) {

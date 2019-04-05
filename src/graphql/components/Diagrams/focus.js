@@ -13,7 +13,6 @@ export const getCurrentFocus = gql`
         y
         scale
       }
-      fields
     }
   }
 `;

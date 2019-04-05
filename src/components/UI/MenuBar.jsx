@@ -3,49 +3,13 @@ import PropTypes from 'prop-types';
 import { Toolbar, Button } from 'react-md';
 import { MenuDrawer } from '../../components/UI/Drawers';
 
-const toolbarTexts = [
-  { name: 'contributions', label: 'Monthly Contribution: ' },
-  { name: 'lumps', label: 'Lump Sums: ' }
-];
-
 export default class MenuBar extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = {
-      contributions: 280000,
-      lumps: 280000
+      isMouseOvered: false
     };
   }
-
-  handleChange = (e) => {
-    const { name, value } = e.target;
-
-    this.setState({ [name]: value });
-  };
-
-  renderToolbarText = () => {
-    return (
-      <div className="toolbarText">
-        {
-          toolbarTexts.map((item, index) => (
-            <div key={ index } className={ item.name }>
-              <label>{ item.label }</label>
-              <label>
-                $
-                <input
-                  type="text"
-                  name={ item.name }
-                  className="textField"
-                  value={ this.state[item.name] }
-                  onChange={ this.handleChange }
-                />
-              </label>
-            </div>
-          ))
-        }
-      </div>
-    );
-  };
 
   render() {
     const {
@@ -53,15 +17,17 @@ export default class MenuBar extends React.Component {
       rightIconCallback,
     } = this.props;
 
+    const isClassHidden = this.state.isMouseOvered ? 'visible' : 'hidden'
+
     return (
       <React.Fragment>
         <Toolbar
           colored
-          className="AppBarInner"
+          className={"AppBarInner " + isClassHidden}
           nav={ <Button icon onClick={ leftIconCallback }>menu</Button> }
           actions={ <Button className="sync-icon" icon onClick={ rightIconCallback }>sync</Button> }
         >
-          {this.renderToolbarText()}
+          <div className="toolbarText">Econ Circles</div>
         </Toolbar>
         <MenuDrawer
           id="contributions-menu"

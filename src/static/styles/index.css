@@ -234,25 +234,23 @@ caption,
   top: 0;
   width: 100%; }
 
-#defense_allocation-group circle {
-  stroke: #5fc6f5;
-  fill: #5fc6f5; }
+@font-face {
+  font-family: "OpenSans";
+  font-style: normal;
+  font-weight: 400;
+  src: url("/assets/fonts/OpenSans-Regular.ttf"); }
 
-#offense_allocation-group circle {
-  stroke: #f55f68;
-  fill: #f55f68; }
+@font-face {
+  font-family: "OpenSansBold";
+  font-style: normal;
+  font-weight: 700;
+  src: url("/assets/fonts/OpenSans-Bold.ttf"); }
 
-#short_term_money-group circle {
-  stroke: #ffa26c;
-  fill: #ffa26c; }
-
-#mid_term_money-group circle {
-  stroke: #84e494;
-  fill: #84e494; }
-
-#long_term_money-group circle {
-  stroke: #c35977;
-  fill: #c35977; }
+@font-face {
+  font-family: "OpenSansLight";
+  font-style: normal;
+  font-weight: 100;
+  src: url("/assets/fonts/OpenSans-Light.ttf"); }
 
 .radialDialog > div {
   width: 450px;
@@ -261,20 +259,26 @@ caption,
   flex-direction: column;
   justify-content: space-around;
   text-align: center;
-  border-radius: 50%; }
+  border-radius: 50%;
+  padding: 20px 0; }
   .radialDialog > div > h2 {
     font-size: 22px;
     font-weight: bold; }
   .radialDialog > div > section {
+    padding: 0 30px 30px !important;
     margin: 0 !important; }
   .radialDialog > div > footer {
     display: block;
-    padding-left: 20px; }
+    padding-left: 20px;
+    margin-bottom: 20px; }
     .radialDialog > div > footer > button {
       margin: 0 !important; }
 
-.circlenode {
-  transition: stroke-width 0.15s; }
+.circlenode.ellipse {
+  transition: rx 0.15s, ry 0.15s !important; }
+
+.circlenode.rectangle {
+  transition: width 0.15s, height 0.15s !important; }
 
 .circle-group.parent-node {
   animation: initShowUp 1s; }
@@ -288,12 +292,12 @@ caption,
     opacity: 1;
     pointer-events: auto; }
     .circle-group.child-node.shown .circlenode {
-      transition: cx 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), cy 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), stroke-width 0.15s; }
+      transition: cx 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), cy 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), r 0.15s, stroke-width 0.15s; }
   .circle-group.child-node.hidden {
     animation: hideAway 0.25s;
     opacity: 0; }
     .circle-group.child-node.hidden .circlenode {
-      transition: cx 1s cubic-bezier(0.19, 1, 0.22, 1), cy 1s cubic-bezier(0.19, 1, 0.22, 1), stroke-width 0.15s; }
+      transition: cx 1s cubic-bezier(0.19, 1, 0.22, 1), cy 1s cubic-bezier(0.19, 1, 0.22, 1), r 0.15s, stroke-width 0.15s; }
   .circle-group.child-node.afterHidden {
     display: none; }
 
@@ -301,13 +305,18 @@ caption,
   opacity: 0;
   transition: opacity 0.5s; }
   .circletext tspan {
-    line-height: .75pt;
+    line-height: 1pt;
     font-weight: bold; }
   .circletext.shown {
     opacity: 1; }
   .circletext.hidden {
     opacity: 1;
     display: none; }
+
+.refresh-icon {
+  font-family: FontAwesome;
+  font-size: 1pt;
+  cursor: pointer; }
 
 /** Showing up an element */
 @keyframes showUp {
@@ -385,8 +394,7 @@ caption,
     .drawer-tab .tabbed-drawer .tapHeader {
       font-size: 24px;
       font-weight: bold;
-      text-transform: uppercase;
-      font-family: sans-serif; }
+      text-transform: uppercase; }
     .drawer-tab .tabbed-drawer .closeBtn i {
       font-size: 18px;
       font-weight: bold; }
@@ -544,7 +552,7 @@ caption,
 body {
   margin: 0;
   padding: 0;
-  font-family: "Roboto", sans-serif; }
+  font-family: "OpenSans", Roboto, sans-serif !important; }
 
 header {
   z-index: 1500; }
@@ -561,7 +569,7 @@ text.nodeNameBase {
 text.nodeAttributesBase {
   fill: #212121;
   stroke: transparent;
-  font-family: "Roboto", sans-serif;
+  font-family: "OpenSans", Roboto, sans-serif;
   transform: translate(-75px, 0); }
 
 .custom_button {
@@ -645,22 +653,19 @@ text.nodeAttributesBase {
   line-height: 64px;
   color: #FFF;
   font-size: 20px;
+  transition: top 0.2s;
   /** We remove margin-left here because "Monthly Contribution" wasn't able to be placed at the center of the top bar */ }
+  .AppBarInner.hidden {
+    top: -64px; }
+  .AppBarInner.visible {
+    top: 0; }
   .AppBarInner .toolbarText {
     flex: 1;
     display: flex;
-    flex-direction: row;
+    align-items: center;
     justify-content: center;
-    font-size: 15px; }
-    .AppBarInner .toolbarText > div {
-      margin: 0 10px; }
-      .AppBarInner .toolbarText > div .textField {
-        width: 70px;
-        font-size: 15px;
-        background: transparent;
-        border: none;
-        outline: none;
-        color: white; }
+    font: bold 20px auto;
+    text-transform: uppercase; }
   .AppBarInner > .md-toolbar--action-right {
     margin-left: 0; }
   .AppBarInner .hidden {
@@ -669,6 +674,8 @@ text.nodeAttributesBase {
     margin: 0 auto; }
     .AppBarInner .centered .contributions {
       color: #FFF !important; }
+  .AppBarInner .logo-title {
+    font-size: 20px; }
   .AppBarInner .textfield-monthly-contribution {
     line-height: 0; }
     .AppBarInner .textfield-monthly-contribution input {

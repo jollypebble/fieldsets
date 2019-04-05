@@ -1,2 +1,21 @@
 // Various font styles
-$font-family: 'Roboto', sans-serif;
+@font-face {
+  font-family: "OpenSans";
+  font-style: normal;
+  font-weight: 400;
+  src: url('/assets/fonts/OpenSans-Regular.ttf');
+}
+@font-face {
+  font-family: "OpenSansBold";
+  font-style: normal;
+  font-weight: 700;
+  src: url('/assets/fonts/OpenSans-Bold.ttf');
+}
+@font-face {
+  font-family: "OpenSansLight";
+  font-style: normal;
+  font-weight: 100;
+  src: url('/assets/fonts/OpenSans-Light.ttf');
+}
+
+$font-family: "OpenSans", Roboto, sans-serif;

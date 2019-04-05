@@ -4,7 +4,20 @@ export const typeDefs = `
     name: String!
   }
 
-  type DataType implements Entity {
+  interface List {
+    id: ID!
+    list: [Entity!]
+  }
+
+  interface Node {
+    id: ID!
+    list: [Entity!]
+    name: String!
+    children: NodeList!
+    parent: Node
+  }
+
+  type DataType {
     id: ID!
     name: String!
     format: String!
@@ -18,9 +31,10 @@ export const typeDefs = `
     lastname: [String]!
     dob: String!
   }
-  type OwnerList {
+
+  type OwnerList implements List {
     id: ID!
-    list: [Field!]
+    list: [Owner!]
   }
 
   type Field implements Entity {
@@ -29,30 +43,28 @@ export const typeDefs = `
     parent: Circle!
     value: String!
     alwaysDisplay: Boolean!
-    datatype: DataType!,
-    callback: String!,
-    notes:[String!]!,
-    owners:[Owner!]!,
-    order: Int!,
+    datatype: DataType!
+    callback: String!
+    notes:[String!]!
+    owners: OwnerList!
+    order: Int!
   }
 
-  type FieldList {
+  type FieldList implements List {
     id: ID!
     list: [Field!]
   }
 
-  type Circle implements Entity {
+  type Circle implements Node {
     id: ID!
     name: String!
-    fields: FieldList!
     children: NodeList!
+    parent: Circle
     centerX: Float!
     centerY: Float!
-    depth: Int!,
-    parent: Circle
   }
 
-  type NodeList {
+  type NodeList implements List {
     id: ID!
     list: [Circle!]
   }
@@ -65,6 +77,7 @@ export const typeDefs = `
     currentFocus: Circle!
     fields: FieldList!
     nodes: NodeList!
+    owners: OwnerList!
   }
 
   enum FieldType {

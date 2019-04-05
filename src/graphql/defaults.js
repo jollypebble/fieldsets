@@ -1,4 +1,4 @@
-// Think of these as DB table definitions with defaults..
+// The default place holders. These might not be needed after we do a cache prime and can most likely be removed from index.js.
 export const defaults = {
   currentFocus: {
     id: 'default',
@@ -56,7 +56,6 @@ export const defaults = {
       centerX: 0,
       centerY: 0,
       depth: 0,
-      fields: [],
       zoom: {
           x: 0.5,
           y: 0.5,

@@ -45,7 +45,7 @@ class App extends Component {
             width={diagramWidth}
             height={1080}
             zoom={diagramZoom}
-            startX={30.8 + (diagramWidth - screenWidth) / diagramZoom * 0.5} // here we calculate the point which means the center of the screen (the first "magic number" is unknown shift which puts "0" of diagram to "0" of the screen)
+            startX={50.8 + (diagramWidth - screenWidth) / diagramZoom * 0.5} // here we calculate the point which means the center of the screen (the first "magic number" is unknown shift which puts "0" of diagram to "0" of the screen)
             startY={46}
           />
         </div>

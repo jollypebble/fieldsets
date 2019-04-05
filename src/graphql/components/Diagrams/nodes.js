@@ -1,27 +1,13 @@
 import gql from 'graphql-tag';
-const node = `
-  fragment node on Circle @client {
-    id
-    name
-    centerX
-    centerY
-    zoom {
-      x
-      y
-      scale
-    }
-    fields {
-      ...field
-    }
-  }
-`;
+import { nodes } from '../../fragments'
+
 export const getNodes = gql`
   query getNodes @client {
     nodes {
-      ...node
+      ...nodes
     }
   }
-  ${node}
+  ${nodes}
 `;
 
-export const getNodeData = gql`${node}`;
+export const getNodeList = gql`${nodes}`;
