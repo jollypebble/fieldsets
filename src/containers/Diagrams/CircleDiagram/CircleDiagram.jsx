@@ -215,7 +215,8 @@ class CircleDiagram extends Component {
     this.setState({ isZoomed: true });
   }
 
-  openDialog = (nodeID) => {
+  openDialog = (nodeID, parent = '') => {
+    if (parent === 'offense_allocation') return;
     this.setState({ currentDialog: nodeID });
   }
 
@@ -315,7 +316,7 @@ class CircleDiagram extends Component {
 
   getStandardRadius(depth = 0) {
     // Scale our SVG based on our desired width height based on a 100 x 75 canvas.
-    const baseradius = 2.3;
+    const baseradius = 10;
     return (baseradius * 75) / 100 * (Math.pow(0.6, depth));
   }
 
@@ -325,65 +326,65 @@ class CircleDiagram extends Component {
 
   render() {
     return (
-        <div className="diagramviewer">
-          <div className="viewer">
-            <ReactSVGPanZoom
-              width={ this.props.width }
-              height={ this.props.height }
-              background='transparent'
-              tool='auto'
-              toolbarPosition='none'
-              miniaturePosition='none'
-              disableDoubleClickZoomWithToolAuto={ true }
-              scaleFactor={ 2.5 }
-              scaleFactorOnWheel={ 1.06 }
-              scaleFactorMin={ 1 }
-              ref={Viewer => {
-                this.Viewer = Viewer;
-                if (!this.Viewer) return;
-                this.Viewer.mainG = this.Viewer.ViewerDOM.getElementsByTagName('g')[0];
-                this.backgroundSheet = this.Viewer.mainG.getElementsByTagName('rect')[0];
-              }}
-              onClick={ this.handleClick }
-              onZoom={ this.updateZoom }
-              onDoubleClick={ this.handleDoubleClick }
+      <div className="diagramviewer">
+        <div className="viewer">
+          <ReactSVGPanZoom
+            width={ this.props.width }
+            height={ this.props.height }
+            background='transparent'
+            tool='auto'
+            toolbarPosition='none'
+            miniaturePosition='none'
+            disableDoubleClickZoomWithToolAuto={ true }
+            scaleFactor={ 2.5 }
+            scaleFactorOnWheel={ 1.06 }
+            scaleFactorMin={ 1 }
+            ref={Viewer => {
+              this.Viewer = Viewer;
+              if (!this.Viewer) return;
+              this.Viewer.mainG = this.Viewer.ViewerDOM.getElementsByTagName('g')[0];
+              this.backgroundSheet = this.Viewer.mainG.getElementsByTagName('rect')[0];
+            }}
+            onClick={ this.handleClick }
+            onZoom={ this.updateZoom }
+            onDoubleClick={ this.handleDoubleClick }
+          >
+            <svg
+              id="circlediagram" width={this.props.width} height={this.props.height}
             >
-              <svg
-                id="circlediagram" width={this.props.width} height={this.props.height}
-              >
-                <g id="diagramGroup">
-                  { DiagramData.map(diagram => {
-                    let NodeClass = RadialNode;
-                    if (diagram.id === 'net_worth') NodeClass = NetWorthNode;
-                    return <NodeClass
-                      key={ diagram.id }
-                      nodeData={ typeof(diagram.children) === undefined ? [] : diagram.children }
-                      nodeID={ diagram.id }
-                      scaleFactor={ 1 }
-                      {...diagram}
-                      radius={ this.getStandardRadius() }
-                      updateFocus={ this.updateFocus }
-                      resetFocus={ this.resetFocus }
-                      openDialog={ this.openDialog }
-                      closeDialog={ this.closeDialog }
-                      setNodeState={ this.setNodeState }
-                      nodes={ this.state.nodes }
-                      isShown={ true /* The prop means whether the node is being rendered right now by its parent */ }
-                    />
-                  }) }
-                </g>
-              </svg>
-            </ReactSVGPanZoom>
-          </div>
-          <div className="diagramSheet">
-          </div>
-          <div className="diagramDialogs">
-            <RadialDialog
-              name={ 'Dialog Box' }
-              nodeID={ this.state.currentDialog }
-            />
-          </div>
+              <g id="diagramGroup">
+                { DiagramData.map(diagram => {
+                  let NodeClass = RadialNode;
+                  if (diagram.id === 'net_worth') NodeClass = NetWorthNode;
+                  return <NodeClass
+                    key={ diagram.id }
+                    nodeData={ typeof(diagram.children) === undefined ? [] : diagram.children }
+                    nodeID={ diagram.id }
+                    scaleFactor={ 1 }
+                    {...diagram}
+                    radius={ this.getStandardRadius() }
+                    updateFocus={ this.updateFocus }
+                    resetFocus={ this.resetFocus }
+                    openDialog={ this.openDialog }
+                    closeDialog={ this.closeDialog }
+                    setNodeState={ this.setNodeState }
+                    nodes={ this.state.nodes }
+                    isShown={ true /* The prop means whether the node is being rendered right now by its parent */ }
+                  />
+                }) }
+              </g>
+            </svg>
+          </ReactSVGPanZoom>
         </div>
+        <div className="diagramSheet">
+        </div>
+        <div className="diagramDialogs">
+          <RadialDialog
+            name={ 'Dialog Box' }
+            nodeID={ this.state.currentDialog }
+          />
+        </div>
+      </div>
     );
   }
 }
