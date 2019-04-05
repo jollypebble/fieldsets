@@ -11,6 +11,7 @@ import { setCurrentFocus } from '../../graphql';
 const ellipseGroup = ['ellipse'];
 const rectGroup = ['rectangle', 'labelGroup', 'radialGroup'];
 const circleGroup = ['circle'];
+const noValueList = ['monthly_contribution', 'lump_sums', 'short_term_money', 'mid_term_money', 'long_term_money'];
 
 class RadialNode extends React.Component {
   constructor(props) {
@@ -94,7 +95,7 @@ class RadialNode extends React.Component {
   handleClick() {
     if (this.isHidden()) return
     if (this.state.isRevealed) {
-    if (this.hasParent()) this.props.openDialog(this.props.nodeID);
+    if (this.hasParent()) this.props.openDialog(this.props.nodeID, this.props.parent);
     else this.props.updateFocus(this.props.nodeID, this.props.centerX, this.props.centerY);
     } else {
     this.props.updateFocus(this.props.nodeID, this.props.centerX, this.props.centerY);
@@ -108,6 +109,7 @@ class RadialNode extends React.Component {
   handleDoubleClick = () => {
     // TODO: OPEN DIALOG AND SET FIELDS TO DISPLAY
     // this.props.openDialog(this.props.nodeID);
+    if (this.props.parent === 'offense_allocation') return;
     if (this.state.isRevealed) {
     this.setState({ isRevealed: !this.state.isRevealed })
     }
@@ -124,7 +126,7 @@ class RadialNode extends React.Component {
   /** Extra properties that will be passed into Circle instance. It's for beign overrided by sub-classes. */
   getAdditionalCircleProps() { return null };
    
-  getInsideElements(name, centerX, centerY, focusCircle, shape) {
+  getInsideElements(name, centerX, centerY, focusCircle) {
     let { textX, textY, color, scaleFactor, textSize, ratio, id } = this.props;
     let textColor = color && color.text ? color.text : '#515359';
     textSize = ratio ? ratio * textSize * 0.9 : textSize;
@@ -141,7 +143,7 @@ class RadialNode extends React.Component {
         >
           <tspan x={textX ? textX : centerX} fill={textColor} style={{ fontSize }} dy="0em">{name}</tspan>
           <tspan x={textX ? textX : centerX} fill={textColor} style={{ fontSize }} dy="1.6em">
-            { rectGroup.indexOf(shape) > -1 ? '' : 'Data: Value' }
+            { noValueList.indexOf(id) > -1 ? '' : 'Data: Value' }
           </tspan>
           { id === 'long_term_money' && <tspan fill={color.stroke} y={textY ? textY + 0.2 : centerY + 0.2 } className="refresh-icon">&#xf0e2;</tspan>}
         </text>
@@ -247,7 +249,7 @@ class RadialNode extends React.Component {
                   {...circleColor}
                 />
               }
-              {this.getInsideElements(name, centerX, centerY, focusCircle, shape)}
+              {this.getInsideElements(name, centerX, centerY, focusCircle)}
             </React.Fragment>
           );
         }}

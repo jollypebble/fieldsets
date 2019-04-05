@@ -215,7 +215,8 @@ class CircleDiagram extends Component {
     this.setState({ isZoomed: true });
   }
 
-  openDialog = (nodeID) => {
+  openDialog = (nodeID, parent = '') => {
+    if (parent === 'offense_allocation') return;
     this.setState({ currentDialog: nodeID });
   }
 
