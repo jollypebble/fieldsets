@@ -10,6 +10,7 @@ import { getFields, getCurrentFocus, getNodes, defaults } from '../../../graphql
 /**
  * This is the container for our main diagram. It has direct access to the apollo cache so it can track foucs of it's child nodes.
  */
+
 class CircleDiagram extends Component {
   constructor(props) {
     super(props);
