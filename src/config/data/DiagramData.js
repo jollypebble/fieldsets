@@ -199,7 +199,7 @@ let ret = [
     radiusX: 9,
     radiusY: 1.8,
     visible: true,
-    zoom: { scale: 1 },
+    zoom: { scale: zoomScaleChild1 },
     color: {
       bg: offenseColors.parent.bg
     },
@@ -209,12 +209,18 @@ let ret = [
       {
         name: 'Short Term Money',
         id: 'short_term_money',
-        shape: 'circle',
+        shape: 'labelGroup',
         parent: 'offense_allocation',
         fields: [],
-        centerX: 33,
-        centerY: 57,
-        ratio: 2,
+        centerX: 24,
+        centerY: 50,
+        textX: 32,
+        textY: 57,
+        width: 18,
+        height: 14,
+        radiusX: 6.5,
+        radiusY: 6.5,
+        rotate: '-45 33 57',
         color: {
           bg: offenseColors.shortTerm.bg,
           stroke: offenseColors.shortTerm.stroke
@@ -226,7 +232,7 @@ let ret = [
             name: 'Cash Equivalents',
             id: 'cash_equivalents',
             parent: 'short_term_money',
-            centerX: 33,
+            centerX: 32,
             centerY: 53,
             ...shortTermCommon
           },
@@ -234,7 +240,7 @@ let ret = [
             name: 'Mortgage',
             id: 'mortgage',
             parent: 'short_term_money',
-            centerX: 38.5,
+            centerX: 38,
             centerY: 56.5,
             ...shortTermCommon
           },
@@ -242,7 +248,7 @@ let ret = [
             name: 'Liabilities/Debt',
             id: 'liabilities_debt',
             parent: 'short_term_money',
-            centerX: 32,
+            centerX: 31,
             centerY: 60.5,
             ...shortTermCommon
           },
@@ -292,91 +298,91 @@ let ret = [
           },
         ]
       },
-      // {
-      //   name: 'Long Term Money',
-      //   id: 'long_term_money',
-      //   parent: 'offense_allocation',
-      //   shape: 'radialGroup',
-      //   fields: [],
-      //   centerX: 79,
-      //   centerY: -16,
-      //   width: 20,
-      //   height: 17,
-      //   textX: 68,
-      //   textY: 58,
-      //   radiusX: 7.5,
-      //   radiusY: 7.5,
-      //   rotate: 45,
-      //   visible: false,
-      //   color: {
-      //     bg: offenseColors.longTerm.bg,
-      //     stroke: offenseColors.longTerm.stroke
-      //   },
-      //   textSize: smTextSize,
-      //   zoom: { scale: 1.5 },
-      //   children: [
-      //     {
-      //       name: 'IRA ROTH',
-      //       id: 'ira_roth',
-      //       parent: 'long_term_money',
-      //       centerX: 65,
-      //       centerY: 52.5,
-      //       ...longTermCommon
-      //     },
-      //     {
-      //       name: 'Cash Value Life',
-      //       id: 'cash_value_life',
-      //       parent: 'long_term_money',
-      //       centerX: 62,
-      //       centerY: 58,
-      //       ...longTermCommon
-      //     },
-      //     {
-      //       name: '401_K',
-      //       id: 'k_401',
-      //       parent: 'long_term_money',
-      //       centerX: 66.5,
-      //       centerY: 62,
-      //       ...longTermCommon
-      //     },
-      //     {
-      //       name: 'Annuity',
-      //       id: 'annuity',
-      //       parent: 'long_term_money',
-      //       centerX: 72,
-      //       centerY: 64,
-      //       ratio,
-      //       ...longTermCommon
-      //     },
-      //     {
-      //       name: 'Stock option',
-      //       id: 'stock_option',
-      //       parent: 'long_term_money',
-      //       centerX: 75,
-      //       centerY: 60.5,
-      //       ratio,
-      //       ...longTermCommon
-      //     },
-      //     {
-      //       name: 'Investment Real Estate',
-      //       id: 'investment_real_estate',
-      //       parent: 'long_term_money',
-      //       centerX: 75,
-      //       centerY: 56,
-      //       ratio,
-      //       ...longTermCommon
-      //     },
-      //     {
-      //       name: 'Deffered Comp',
-      //       id: 'deffered_comp',
-      //       parent: 'long_term_money',
-      //       centerX: 71.75,
-      //       centerY: 52.75,
-      //       ratio,
-      //       ...longTermCommon
-      //     }
-      //   ]
-      // }
+      {
+        name: 'Long Term Money',
+        id: 'long_term_money',
+        parent: 'offense_allocation',
+        shape: 'radialGroup',
+        fields: [],
+        centerX: 60,
+        centerY: 49,
+        width: 20,
+        height: 17,
+        textX: 69,
+        textY: 57.5,
+        radiusX: 7.5,
+        radiusY: 7.5,
+        rotate: '45 70 57',
+        visible: false,
+        color: {
+          bg: offenseColors.longTerm.bg,
+          stroke: offenseColors.longTerm.stroke
+        },
+        textSize: smTextSize,
+        zoom: { scale: zoomScaleChild1 },
+        children: [
+          {
+            name: 'IRA ROTH',
+            id: 'ira_roth',
+            parent: 'long_term_money',
+            centerX: 66.5,
+            centerY: 51.5,
+            ...longTermCommon
+          },
+          {
+            name: 'Cash Value Life',
+            id: 'cash_value_life',
+            parent: 'long_term_money',
+            centerX: 63.5,
+            centerY: 57,
+            ...longTermCommon
+          },
+          {
+            name: '401_K',
+            id: 'k_401',
+            parent: 'long_term_money',
+            centerX: 67.5,
+            centerY: 61.5,
+            ...longTermCommon
+          },
+          {
+            name: 'Annuity',
+            id: 'annuity',
+            parent: 'long_term_money',
+            centerX: 73,
+            centerY: 63,
+            ratio,
+            ...longTermCommon
+          },
+          {
+            name: 'Stock option',
+            id: 'stock_option',
+            parent: 'long_term_money',
+            centerX: 76.5,
+            centerY: 60,
+            ratio,
+            ...longTermCommon
+          },
+          {
+            name: 'Investment Real Estate',
+            id: 'investment_real_estate',
+            parent: 'long_term_money',
+            centerX: 76,
+            centerY: 55.5,
+            ratio,
+            ...longTermCommon
+          },
+          {
+            name: 'Deffered Comp',
+            id: 'deffered_comp',
+            parent: 'long_term_money',
+            centerX: 73,
+            centerY: 52,
+            ratio,
+            ...longTermCommon
+          }
+        ]
+      }
     ]
   }
 ];
