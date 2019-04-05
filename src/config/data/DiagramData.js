@@ -9,8 +9,85 @@
   @param {Color} color If it's specified then a node ignores "childrenColor" property from its parent
 */
 
-const zoomScaleChild1 = 1
-const zoomScaleChild2 = 1
+const zoomScaleChild1 = 1;
+const zoomScaleChild2 = 1;
+
+const xsTextSize = 0.35;
+const smTextSize = 0.4;
+const mdTextSize = 0.6;
+
+const ratio = 0.7
+
+const bgColor1 = '#f55f68';
+const strokeColor1 = '#f00';
+
+const bgColor2 = '#9cff9c';
+const strokeColor2 = '#66cccc';
+
+const bgColor3 = '#ccccff';
+const strokeColor3 = '#73cbd2';
+
+const bgColor4 = '#ccffff';
+const strokeColor4 = '#6ccfcf';
+
+const offenseColors = {
+  parent: { bg: '#5fc6f5' },
+  shortTerm: { bg: '#e3ffe3', stroke: '#66cccc' },
+  midTerm: { bg: '#dadaff', stroke: '#75ced2' },
+  longTerm: { bg: '#e5ffff', stroke: '#7dd6d6' }
+};
+
+const defenceCommon = {
+  color: {
+    bg: bgColor1,
+    stroke: strokeColor1
+  },
+  fields: [],
+  shape: 'circle',
+  children: [],
+  visible: false,
+  zoom: { scale: zoomScaleChild1 },
+  textSize: smTextSize
+};
+
+const shortTermCommon = {
+  color: {
+    bg: bgColor2,
+    stroke: strokeColor2
+  },
+  fields: [],
+  children: [],
+  visible: false,
+  zoom: { scale: zoomScaleChild2 },
+  shape: 'circle',
+  textSize: xsTextSize
+};
+
+const midTermCommon = {
+  color: {
+    bg: bgColor3,
+    stroke: strokeColor3
+  },
+  fields: [],
+  children: [],
+  visible: false,
+  zoom: { scale: zoomScaleChild2 },
+  shape: 'circle',
+  textSize: xsTextSize
+};
+
+const longTermCommon = {
+  color: {
+    bg: bgColor4,
+    stroke: strokeColor4
+  },
+  fields: [],
+  children: [],
+  visible: false,
+  zoom: { scale: zoomScaleChild2 },
+  shape: 'circle',
+  textSize: xsTextSize
+};
 
 let ret = [
   {
@@ -19,14 +96,17 @@ let ret = [
     parent: '',
     shape: 'rectangle',
     fields: [],
-    centerX: 10,
-    centerY: 25,
-    textX: 15,
-    textY: 27.5,
+    centerX: 37.5,
+    centerY: 28,
+    radiusX: 0,
+    radiusY: 0,
+    textX: 42.5,
+    textY: 30.5,
     width: 10,
-    height: 5,
+    height: 4,
     visible: true,
-    children: []
+    children: [],
+    textSize: mdTextSize
   },
   {
     name: 'Lump Sums',
@@ -34,14 +114,17 @@ let ret = [
     parent: '',
     shape: 'rectangle',
     fields: [],
-    centerX: 40,
-    centerY: 25,
-    textX: 45,
-    textY: 27.5,
+    centerX: 54,
+    centerY: 28,
+    radiusX: 0,
+    radiusY: 0,
+    textX: 59,
+    textY: 30.5,
     width: 10,
-    height: 5,
+    height: 4,
     visible: true,
-    children: []
+    children: [],
+    textSize: mdTextSize
   },
   {
     name: 'Net Worth',
@@ -49,76 +132,59 @@ let ret = [
     parent: '',
     shape: 'ellipse',
     fields: [],
-    centerX: 30.5,
+    centerX: 51,
     centerY: 42.5,
-    radiusX: 3.5,
-    radiusY: 1.5,
+    radiusX: 9,
+    radiusY: 1.8,
     visible: true,
-    children: []
+    children: [],
+    textSize: mdTextSize
   },
   {
     name: 'Defense Allocation',
     id: 'defense_allocation',
     parent: '',
-    shape: 'ellipse',
-    fields: [],
-    centerX: 30.5, // X,Y represent points on a plane to map the current data to. If we wanted to get fancy we could rework this to include Z coordinates, but I don't see that showing a need for any time soon. If it does tracking down how these guys are used is a good place to start.
+    centerX: 51, // X,Y represent points on a plane to map the current data to. If we wanted to get fancy we could rework this to include Z coordinates, but I don't see that showing a need for any time soon. If it does tracking down how these guys are used is a good place to start.
     centerY: 37,
-    radiusX: 3.5,
-    radiusY: 1.5,
-    color: {
-      bg: '#5fc6f5'
-    },
-    visible: true,
+    radiusX: 9,
+    radiusY: 1.8,
     zoom: { y: 0.75 },
+    visible: true,
+    ...defenceCommon,
+    textSize: mdTextSize,
+    shape: 'ellipse',
     children: [ // Should `children` be thought of as `data`. The `chldren` field name is used to imply this can be eith a series of liner data points or a series of relationally nested data objects.
       {
         name: 'Will',
         id: 'will',
         parent: 'defense_allocation',
-        shape: 'circle',
-        fields: [],
-        centerX: 23,
-        centerY: 36.5,
-        visible: false,
-        zoom: { scale: zoomScaleChild1 },
-        children: []
+        centerX: 28,
+        centerY: 35,
+        ...defenceCommon,
       },
       {
         name: 'Disabilty Insurance',
         id: 'disability_insurance',
         parent: 'defense_allocation',
-        shape: 'circle',
-        fields: [],
-        centerX: 28,
-        centerY: 32,
-        visible: false,
-        zoom: { scale: zoomScaleChild1 },
-        children: []
+        centerX: 36,
+        centerY: 38.5,
+        ...defenceCommon,
       },
       {
         name: 'Long Term Care',
         id: 'long_term_care',
         parent: 'defense_allocation',
-        shape: 'circle',
-        fields: [],
-        centerX: 33,
-        centerY: 32,
-        visible: false,
-        zoom: { scale: zoomScaleChild1 },
-        children: []
+        centerX: 66,
+        centerY: 38.5,
+        ...defenceCommon,
       },
       {
         name: 'Term Insurance',
         id: 'term_insurance',
         parent: 'defense_allocation',
-        shape: 'circle',
-        fields: [],
-        centerX: 38,
-        centerY: 36.5,
-        visible: false,
-        zoom: { scale: zoomScaleChild1 },
-        children: []
+        centerX: 74,
+        centerY: 35,
+        ...defenceCommon,
       },
     ]
   },
@@ -127,63 +193,63 @@ let ret = [
     id: 'offense_allocation',
     shape: 'ellipse',
     parent: '',
-    fields: [],
-    centerX: 30.5,
+    centerX: 51,
     centerY: 48,
-    radiusX: 3.5,
-    radiusY: 1.5,
-    color: {
-      bg: '#f55f68'
-    },
+    radiusX: 9,
+    radiusY: 1.8,
     visible: true,
-    zoom: { y: 0.25 },
+    zoom: { scale: 1.5 },
+    color: {
+      bg: offenseColors.parent.bg
+    },
+    fields: [],
+    textSize: 0.5,
     children: [
       {
         name: 'Short Term Money',
         id: 'short_term_money',
-        shape: 'labelgroup',
+        shape: 'labelGroup',
         parent: 'offense_allocation',
         fields: [],
-        centerX: 24.5,
-        centerY: 49.5,
-        visible: false,
-        zoom: { scale: zoomScaleChild1,  x: 0.7, y: 0.3 },
+        centerX: -23,
+        centerY: 58,
+        width: 16,
+        height: 13,
+        textX: 34,
+        textY: 56.3,
+        radiusX: 6.5,
+        radiusY: 6.5,
+        rotate: -45,
+        color: {
+          bg: offenseColors.shortTerm.bg,
+          stroke: offenseColors.shortTerm.stroke
+        },
+        textSize: smTextSize,
+        zoom: { scale: 0.5 },
         children: [
           {
             name: 'Cash Equivalents',
             id: 'cash_equivalents',
             parent: 'short_term_money',
-            shape: 'circle',
-            fields: [],
-            centerX: 20.5,
-            centerY: 49.5,
-            visible: false,
-            zoom: { scale: zoomScaleChild2 },
-            children: []
+            centerX: 33,
+            centerY: 53,
+            ...shortTermCommon
           },
           {
             name: 'Mortgage',
             id: 'mortgage',
             parent: 'short_term_money',
-            shape: 'circle',
-            fields: [],
-            centerX: 21.5,
-            centerY: 52.5,
-            visible: false,
-            zoom: { scale: zoomScaleChild2 },
-            children: []
+            centerX: 39,
+            centerY: 56,
+            ...shortTermCommon
           },
           {
             name: 'Liabilities/Debt',
             id: 'liabilities_debt',
             parent: 'short_term_money',
-            shape: 'circle',
-            fields: [],
-            centerX: 24.5,
-            centerY: 53.5,
-            visible: false,
-            zoom: { scale: zoomScaleChild2 },
-            children: []
+            centerX: 33,
+            centerY: 59.5,
+            ...shortTermCommon
           },
         ]
       },
@@ -191,48 +257,43 @@ let ret = [
         name: 'Mid Term Money',
         id: 'mid_term_money',
         parent: 'offense_allocation',
-        shape: 'labelgroup',
+        shape: 'ellipse',
         fields: [],
-        centerX: 30.5,
-        centerY: 53.5,
+        centerX: 50.5,
+        centerY: 60,
+        radiusX: 7,
+        radiusY: 8,
         visible: false,
-        zoom: { scale: zoomScaleChild1,  y: 0.3 },
+        color: {
+          bg: offenseColors.midTerm.bg,
+          stroke: offenseColors.midTerm.stroke
+        },
+        textSize: smTextSize,
+        zoom: { scale: zoomScaleChild1 },
         children: [
           {
             name: 'UTMA\'s',
             id: 'utmas',
             parent: 'mid_term_money',
-            shape: 'circle',
-            fields: [],
-            centerX: 27.5,
-            centerY: 56,
-            visible: false,
-            zoom: { scale: zoomScaleChild2 },
-            children: []
+            centerX: 47.5,
+            centerY: 63,
+            ...midTermCommon
           },
           {
             name: '529 Plan',
             id: 'plan_529',
             parent: 'mid_term_money',
-            shape: 'circle',
-            fields: [],
-            centerX: 30.5,
-            centerY: 57.5,
-            visible: false,
-            zoom: { scale: zoomScaleChild2 },
-            children: []
+            centerX: 50.5,
+            centerY: 56.5,
+            ...midTermCommon
           },
           {
             name: 'Investment Account',
             id: 'investment_account',
             parent: 'mid_term_money',
-            shape: 'circle',
-            fields: [],
-            centerX: 33.5,
-            centerY: 56,
-            visible: false,
-            zoom: { scale: zoomScaleChild2 },
-            children: []
+            centerX: 53.5,
+            centerY: 63,
+            ...midTermCommon
           },
         ]
       },
@@ -240,89 +301,84 @@ let ret = [
         name: 'Long Term Money',
         id: 'long_term_money',
         parent: 'offense_allocation',
-        shape: 'radialgroup',
+        shape: 'radialGroup',
         fields: [],
-        centerX: 36.5,
-        centerY: 49.5,
+        centerX: 79,
+        centerY: -16,
+        width: 20,
+        height: 17,
+        textX: 68,
+        textY: 58,
+        radiusX: 7.5,
+        radiusY: 7.5,
+        rotate: 45,
         visible: false,
-        zoom: { scale: zoomScaleChild1,  x: 0.3, y: 0.3 },
+        color: {
+          bg: offenseColors.longTerm.bg,
+          stroke: offenseColors.longTerm.stroke
+        },
+        textSize: smTextSize,
+        zoom: { scale: 1.5 },
         children: [
           {
             name: 'IRA ROTH',
             id: 'ira_roth',
             parent: 'long_term_money',
-            fields: [],
-            centerX: 36.5,
-            centerY: 53.5,
-            visible: false,
-            zoom: { scale: zoomScaleChild2 },
-            children: []
+            centerX: 65,
+            centerY: 53,
+            ...longTermCommon
           },
           {
             name: 'Cash Value Life',
             id: 'cash_value_life',
             parent: 'long_term_money',
-            fields: [],
-            centerX: 39,
-            centerY: 53.25,
-            visible: false,
-            zoom: { scale: zoomScaleChild2 },
-            children: []
+            centerX: 62,
+            centerY: 58,
+            ...longTermCommon
           },
           {
             name: '401_K',
             id: 'k_401',
             parent: 'long_term_money',
-            fields: [],
-            centerX: 40.75,
-            centerY: 51.25,
-            visible: false,
-            zoom: { scale: zoomScaleChild2 },
-            children: []
+            centerX: 66.5,
+            centerY: 62,
+            ...longTermCommon
           },
           {
             name: 'Annuity',
             id: 'annuity',
             parent: 'long_term_money',
-            fields: [],
-            centerX: 40.75,
-            centerY: 48.75,
-            visible: false,
-            zoom: { scale: zoomScaleChild2 },
-            children: []
+            centerX: 72,
+            centerY: 64,
+            ratio,
+            ...longTermCommon
           },
           {
             name: 'Stock option',
             id: 'stock_option',
             parent: 'long_term_money',
-            fields: [],
-            centerX: 38,
-            centerY: 55.25,
-            visible: false,
-            zoom: { scale: zoomScaleChild2 },
-            children: []
+            centerX: 75,
+            centerY: 60.5,
+            ratio,
+            ...longTermCommon
           },
           {
             name: 'Investment Real Estate',
             id: 'investment_real_estate',
             parent: 'long_term_money',
-            fields: [],
-            centerX: 41.25,
-            centerY: 53.5,
-            visible: false,
-            zoom: { scale: zoomScaleChild2 },
-            children: []
+            centerX: 75,
+            centerY: 56,
+            ratio,
+            ...longTermCommon
           },
           {
             name: 'Deffered Comp',
             id: 'deffered_comp',
             parent: 'long_term_money',
-            fields: [],
-            centerX: 42.75,
-            centerY: 50.0,
-            visible: false,
-            zoom: { scale: zoomScaleChild2 },
-            children: []
+            centerX: 72,
+            centerY: 53,
+            ratio,
+            ...longTermCommon
           }
         ]
       }

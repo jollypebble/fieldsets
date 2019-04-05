@@ -252,26 +252,6 @@ caption,
   font-weight: 100;
   src: url("/assets/fonts/OpenSans-Light.ttf"); }
 
-#defense_allocation-group circle {
-  stroke: #5fc6f5;
-  fill: #5fc6f5; }
-
-#offense_allocation-group circle {
-  stroke: #f55f68;
-  fill: #f55f68; }
-
-#short_term_money-group circle {
-  stroke: #ffa26c;
-  fill: #ffa26c; }
-
-#mid_term_money-group circle {
-  stroke: #84e494;
-  fill: #84e494; }
-
-#long_term_money-group circle {
-  stroke: #c35977;
-  fill: #c35977; }
-
 .radialDialog > div {
   width: 450px;
   height: 450px;
@@ -294,8 +274,11 @@ caption,
     .radialDialog > div > footer > button {
       margin: 0 !important; }
 
-.circlenode {
-  transition: stroke-width 0.15s; }
+.circlenode.ellipse {
+  transition: rx 0.15s, ry 0.15s !important; }
+
+.circlenode.rectangle {
+  transition: width 0.15s, height 0.15s !important; }
 
 .circle-group.parent-node {
   animation: initShowUp 1s; }
@@ -309,12 +292,12 @@ caption,
     opacity: 1;
     pointer-events: auto; }
     .circle-group.child-node.shown .circlenode {
-      transition: cx 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), cy 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), stroke-width 0.15s; }
+      transition: cx 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), cy 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), r 0.15s, stroke-width 0.15s; }
   .circle-group.child-node.hidden {
     animation: hideAway 0.25s;
     opacity: 0; }
     .circle-group.child-node.hidden .circlenode {
-      transition: cx 1s cubic-bezier(0.19, 1, 0.22, 1), cy 1s cubic-bezier(0.19, 1, 0.22, 1), stroke-width 0.15s; }
+      transition: cx 1s cubic-bezier(0.19, 1, 0.22, 1), cy 1s cubic-bezier(0.19, 1, 0.22, 1), r 0.15s, stroke-width 0.15s; }
   .circle-group.child-node.afterHidden {
     display: none; }
 
@@ -322,7 +305,7 @@ caption,
   opacity: 0;
   transition: opacity 0.5s; }
   .circletext tspan {
-    line-height: .75pt;
+    line-height: 1pt;
     font-weight: bold; }
   .circletext.shown {
     opacity: 1; }

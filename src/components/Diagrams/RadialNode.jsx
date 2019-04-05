@@ -2,11 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Mutation } from 'react-apollo';
 import { setCurrentFocus } from '../../graphql';
+import { FontIcon } from 'react-md';
 
 /**
  * Radial Nodes are functional components that represent parent circle nodes.
  * They simply check the node data and will iteratively call itself if there are children.
  */
+
+const ellipseGroup = ['ellipse'];
+const rectGroup = ['rectangle', 'labelGroup', 'radialGroup'];
+const circleGroup = ['circle'];
+
 class RadialNode extends React.Component {
   constructor(props) {
     super(props);
@@ -27,6 +33,7 @@ class RadialNode extends React.Component {
     this.handleFocusChange = this.handleFocusChange.bind(this);
 
     this.handleTransitionEnd = this.handleTransitionEnd.bind(this);
+    this.getExtendedValue = this.getExtendedValue.bind(this);
 
     this.elCircleNode = React.createRef();
     this.elCircleGroup = React.createRef();
@@ -119,20 +126,21 @@ class RadialNode extends React.Component {
   getAdditionalCircleProps() { return null };
    
   getInsideElements(name, centerX, centerY, focusCircle, shape) {
-    const { textX, textY, color, scaleFactor } = this.props;
+    let { textX, textY, color, scaleFactor, textSize, ratio } = this.props;
     let textColor = color && color.text ? color.text : '#515359';
-    const textSize = (shape === 'rectangle' ? 0.7 : 0.4 * scaleFactor) + 'pt';
+    textSize = ratio ? ratio * textSize * 0.9 : textSize;
+    const fontSize = (textSize ? textSize : 0.5 * scaleFactor) + 'pt';
     return <text
       ref={this.elCircleText}
       x={textX ? textX : centerX}
       y={textY ? textY : centerY}
       textAnchor="middle"
-      className={'circletext ' + (!this.hasParent() ? 'shown' : '') + ' ' + (!this.props.isShown ? ' hidden' : '') }
+      className={'circletext ' + (!this.hasParent() ? 'shown' : '') + ' ' + (!this.props.isShown ? ' hidden' : 'shown') }
       onClick={focusCircle}
     >
-      <tspan x={textX ? textX : centerX} fill={textColor} style={{ fontSize: textSize }} dy="0em">{name}</tspan>
-      <tspan x={textX ? textX : centerX} fill={textColor} style={{ fontSize: textSize }} dy="1.6em">
-        { shape === 'rectangle' ? '$280000' : 'Data: Value' }
+      <tspan x={textX ? textX : centerX} fill={textColor} style={{ fontSize }} dy="0em">{name}</tspan>
+      <tspan x={textX ? textX : centerX} fill={textColor} style={{ fontSize }} dy="1.6em">
+        { rectGroup.indexOf(shape) > -1 ? '' : 'Data: Value' }
       </tspan>
     </text>
   }
@@ -158,9 +166,14 @@ class RadialNode extends React.Component {
     return this.state.nodes;
   }
 
+  getExtendedValue(value) {
+    return this.state.isMouseInside ? value * 1.1 : value;
+  }
+
   renderShape(shownClass) {
     const id = this.props.nodeID;
-    let { shape, centerX, centerY, radiusX, radiusY, radius, name, scaleFactor, color } = this.props;
+    let { shape, centerX, centerY, radiusX, radiusY, radius, name, scaleFactor, color, width, height, rotate, ratio } = this.props;
+    radius = ratio ? ratio * radius : radius;
 
     if (shownClass === 'hidden') {
       centerX = this.props.parentCenterX;
@@ -174,53 +187,57 @@ class RadialNode extends React.Component {
       <Mutation mutation={setCurrentFocus} variables={{ id, centerX, centerY }} onCompleted={this.handleClick} awaitRefetchQueries={true}>
         {focusCircle => {
           const circleColor = {
-            stroke: color && color.bg ? color.bg : 'grey',
+            stroke: color && color.stroke ? color.stroke : 'grey',
             fill: color && color.bg ? color.bg : 'grey'
           };
           return (
             <React.Fragment>
               {
-                shape === 'ellipse' &&
+                ellipseGroup.indexOf(shape) > -1 &&
                 <ellipse
                   ref={this.elCircleNode}
                   id={id}
-                  className="circlenode"
+                  className="circlenode ellipse"
                   cx={centerX}
                   cy={centerY}
-                  rx={radiusX}
-                  ry={radiusY}
-                  strokeWidth={(this.state.isMouseInside ? radius * 1.35 : radius) * scaleFactor}
+                  rx={this.getExtendedValue(radiusX)}
+                  ry={this.getExtendedValue(radiusY)}
+                  strokeWidth={radius * scaleFactor / 40}
                   onClick={focusCircle}
                   {...this.getAdditionalCircleProps()}
                   {...circleColor}
-                />
+                >
+                </ellipse>
               }
               {
-                shape === 'rectangle' &&
+                rectGroup.indexOf(shape) > -1 &&
                 <rect
                   ref={this.elCircleNode}
                   id={id}
-                  className="circlenode"
+                  className="circlenode rectangle"
                   x={centerX}
                   y={centerY}
-                  width={10}
-                  height={5}
-                  strokeWidth={(this.state.isMouseInside ? radius * 1.35 : radius) * scaleFactor}
+                  width={width}
+                  height={height}
+                  transform={`rotate(${rotate ? rotate : 0})`}
+                  rx={`${radiusX ? radiusX : radiusX}`}
+                  ry={`${radiusY ? radiusY : radiusY}`}
+                  strokeWidth={0.2}
                   onClick={focusCircle}
                   {...this.getAdditionalCircleProps()}
                   {...circleColor}
                 />
               }
               {
-                shape !== 'ellipse' && shape !== 'rectangle' &&
+                circleGroup.indexOf(shape) > -1 &&
                 <circle
                   ref={this.elCircleNode}
                   id={id}
                   className="circlenode"
                   cx={centerX}
                   cy={centerY}
-                  r={radius * scaleFactor}
-                  strokeWidth={(this.state.isMouseInside ? radius * 1.35 : radius) * scaleFactor}
+                  r={this.getExtendedValue(radius) * scaleFactor}
+                  strokeWidth={radius * scaleFactor / 20}
                   onClick={focusCircle}
                   {...this.getAdditionalCircleProps()}
                   {...circleColor}
