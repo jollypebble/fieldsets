@@ -143,7 +143,7 @@ class RadialNode extends React.Component {
           <tspan x={textX ? textX : centerX} fill={textColor} style={{ fontSize }} dy="1.6em">
             { rectGroup.indexOf(shape) > -1 ? '' : 'Data: Value' }
           </tspan>
-          { id === 'long_term_money' && <tspan fill={color.stroke} y={textY ? textY + 0.2 : centerY + 0.2 } className="refresh-icon">&#xf021;</tspan>}
+          { id === 'long_term_money' && <tspan fill={color.stroke} y={textY ? textY + 0.2 : centerY + 0.2 } className="refresh-icon">&#xf0e2;</tspan>}
         </text>
       </React.Fragment>
     );

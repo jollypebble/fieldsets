@@ -315,7 +315,7 @@ class CircleDiagram extends Component {
 
   getStandardRadius(depth = 0) {
     // Scale our SVG based on our desired width height based on a 100 x 75 canvas.
-    const baseradius = 9;
+    const baseradius = 10;
     return (baseradius * 75) / 100 * (Math.pow(0.6, depth));
   }
 
