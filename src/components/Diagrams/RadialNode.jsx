@@ -12,6 +12,8 @@ const ellipseGroup = ['ellipse'];
 const rectGroup = ['rectangle', 'labelGroup', 'radialGroup'];
 const circleGroup = ['circle'];
 const noValueList = ['monthly_contribution', 'lump_sums', 'short_term_money', 'mid_term_money', 'long_term_money'];
+const offenseAllocation = 'offense_allocation';
+const longTermID = 'long_term_money';
 
 class RadialNode extends React.Component {
   constructor(props) {
@@ -22,7 +24,8 @@ class RadialNode extends React.Component {
       isRevealed: false, // the prop means whether the node is rendering its chilren nodes right now. All sub-nodes are hidden from the very beginning
       wasClickedAtLeastOnce: false, // whether the node was clicked at least once (is used for initial animations)
       containFocus: true,
-      initialFocus: undefined
+      initialFocus: undefined,
+      longTermData: []
     };
 
     this.handleMouseEnter = this.handleMouseEnter.bind(this);
@@ -34,6 +37,8 @@ class RadialNode extends React.Component {
 
     this.handleTransitionEnd = this.handleTransitionEnd.bind(this);
     this.getExtendedValue = this.getExtendedValue.bind(this);
+    this.getLongTermData = this.getLongTermData.bind(this);
+    this.updateLongTermData = this.updateLongTermData.bind(this);
 
     this.elCircleNode = React.createRef();
     this.elCircleGroup = React.createRef();
@@ -43,18 +48,27 @@ class RadialNode extends React.Component {
   componentDidMount() {
     this.updateNodeData();
     if (this.elCircleNode && this.elCircleNode.current) {
-    this.elCircleNode.current.removeEventListener('transitionend', this.handleTransitionEnd)
-    this.elCircleNode.current.addEventListener('transitionend', this.handleTransitionEnd)
+      this.elCircleNode.current.removeEventListener('transitionend', this.handleTransitionEnd)
+      this.elCircleNode.current.addEventListener('transitionend', this.handleTransitionEnd)
+    }
+    this.getLongTermData();
+  }
+
+  componentDidUpdate(prevProps) {
+    // here we want to hide all nodes down the tree if their parent is hidden
+    if (!this.props.isShown && this.state.isRevealed) this.setState({ isRevealed: false });
+    if (prevProps.nodeID !== this.props.nodeID) this.getLongTermData();
+  }
+
+  getLongTermData() {
+    const { nodeData, nodeID } = this.props;
+    if (nodeID === longTermID) {
+      this.setState({ longTermData: nodeData });
     }
   }
 
-  componentDidUpdate() {
-    // here we want to hide all nodes down the tree if their parent is hidden
-    if (!this.props.isShown && this.state.isRevealed) this.setState({ isRevealed: false })
-  }
-
   isHidden() {
-  return this.elCircleGroup && this.elCircleGroup.current && this.elCircleGroup.current.classList.contains('hidden')
+    return this.elCircleGroup && this.elCircleGroup.current && this.elCircleGroup.current.classList.contains('hidden');
   }
 
   hasParent() {
@@ -67,28 +81,28 @@ class RadialNode extends React.Component {
   if (this.elCircleGroup && this.elCircleGroup.current && e && (e.propertyName === 'cx' || e.propertyName === 'cy')) {
     // Show/hide circles after the circle appearing animation
     if (this.elCircleGroup.current.classList.contains('hidden')) {
-      this.elCircleGroup.current.classList.add('afterHidden')
+      this.elCircleGroup.current.classList.add('afterHidden');
     } else if (this.elCircleGroup.current.classList.contains('afterHidden')) {
-      this.elCircleGroup.current.remove('afterHidden')
+      this.elCircleGroup.current.remove('afterHidden');
     }
 
     // Show/hide text labels after the circle appearing animation
     if (this.elCircleText && this.elCircleGroup.current.classList.contains('shown')) {
-      if (!this.elCircleText.current.classList.contains('shown')) this.elCircleText.current.classList.add('shown')
+      if (!this.elCircleText.current.classList.contains('shown')) this.elCircleText.current.classList.add('shown');
     } else {
-      if (this.elCircleText.current.classList.contains('shown')) this.elCircleText.current.classList.remove('shown')
+      if (this.elCircleText.current.classList.contains('shown')) this.elCircleText.current.classList.remove('shown');
     }
   }
   }
 
   /** Is called when the cursor acrosses borders of the radial node getting inside of it */
   handleMouseEnter() {
-    this.setState({ isMouseInside: true});
+    this.setState({ isMouseInside: true });
   }
 
   /** Is called when the cursor acrosses borders of the radial node getting out of it */
   handleMouseLeave() {
-    this.setState({ isMouseInside: false});
+    this.setState({ isMouseInside: false });
   }
 
   /** Is called when we click on the radial node */
@@ -109,9 +123,9 @@ class RadialNode extends React.Component {
   handleDoubleClick = () => {
     // TODO: OPEN DIALOG AND SET FIELDS TO DISPLAY
     // this.props.openDialog(this.props.nodeID);
-    if (this.props.parent === 'offense_allocation') return;
+    if (this.props.parent === offenseAllocation) return;
     if (this.state.isRevealed) {
-    this.setState({ isRevealed: !this.state.isRevealed })
+      this.setState({ isRevealed: !this.state.isRevealed });
     }
   }
 
@@ -123,13 +137,25 @@ class RadialNode extends React.Component {
     this.setState({ containFocus: checked });
   };
 
+  updateLongTermData() {
+    let { longTermData } = this.state;
+    const temp = Object.assign([], longTermData);
+    const lastElement = longTermData.pop();
+    longTermData.unshift(lastElement);
+    this.setState({
+      longTermData: longTermData.map((item, index) => {
+        return { ...item, centerX: temp[index].centerX, centerY: temp[index].centerY, ratio: temp[index].ratio };
+      })
+    });
+  }
+
   /** Extra properties that will be passed into Circle instance. It's for beign overrided by sub-classes. */
   getAdditionalCircleProps() { return null };
    
   getInsideElements(name, centerX, centerY, focusCircle) {
     let { textX, textY, color, scaleFactor, textSize, ratio, id } = this.props;
     let textColor = color && color.text ? color.text : '#515359';
-    textSize = ratio ? ratio * textSize * 0.9 : textSize;
+    textSize = (ratio ? ratio * textSize : textSize) * 0.9;
     const fontSize = (textSize ? textSize : 0.5 * scaleFactor) + 'pt';
     return (
       <React.Fragment>
@@ -145,7 +171,7 @@ class RadialNode extends React.Component {
           <tspan x={textX ? textX : centerX} fill={textColor} style={{ fontSize }} dy="1.6em">
             { noValueList.indexOf(id) > -1 ? '' : 'Data: Value' }
           </tspan>
-          { id === 'long_term_money' && <tspan fill={color.stroke} y={textY ? textY + 0.2 : centerY + 0.2 } className="refresh-icon">&#xf0e2;</tspan>}
+          { id === 'long_term_money' && <tspan fill={color.stroke} y={textY ? textY + 0.2 : centerY + 0.2 } className="refresh-icon" onClick={this.updateLongTermData}>&#xf0e2;</tspan>}
         </text>
       </React.Fragment>
     );
@@ -173,13 +199,14 @@ class RadialNode extends React.Component {
   }
 
   getExtendedValue(value) {
-    return this.state.isMouseInside ? value * 1.1 : value;
+    return this.state.isMouseInside && this.props.parent !== offenseAllocation ? value * 1.1 : value;
   }
 
   renderShape(shownClass) {
     const id = this.props.nodeID;
     let { shape, centerX, centerY, radiusX, radiusY, radius, name, scaleFactor, color, width, height, rotate, ratio } = this.props;
     radius = ratio ? ratio * radius : radius;
+    const strokeWidth = radius * scaleFactor / 40;
 
     if (shownClass === 'hidden') {
       centerX = this.props.parentCenterX;
@@ -208,7 +235,7 @@ class RadialNode extends React.Component {
                   cy={centerY}
                   rx={this.getExtendedValue(radiusX)}
                   ry={this.getExtendedValue(radiusY)}
-                  strokeWidth={radius * scaleFactor / 40}
+                  strokeWidth={strokeWidth}
                   onClick={focusCircle}
                   {...this.getAdditionalCircleProps()}
                   {...circleColor}
@@ -218,6 +245,7 @@ class RadialNode extends React.Component {
               {
                 rectGroup.indexOf(shape) > -1 &&
                 <rect
+                  style={{ fill: `url(#Gradient${id === 'short_term_money' ? '' : id === 'long_term_money' ? '2' : 'none'})` }}
                   ref={this.elCircleNode}
                   id={id}
                   className="circlenode rectangle"
@@ -228,7 +256,7 @@ class RadialNode extends React.Component {
                   transform={`rotate(${rotate ? rotate : 0})`}
                   rx={`${radiusX ? radiusX : radiusX}`}
                   ry={`${radiusY ? radiusY : radiusY}`}
-                  strokeWidth={0.2}
+                  strokeWidth={0.1}
                   onClick={focusCircle}
                   {...this.getAdditionalCircleProps()}
                   {...circleColor}
@@ -243,7 +271,7 @@ class RadialNode extends React.Component {
                   cx={centerX}
                   cy={centerY}
                   r={this.getExtendedValue(radius) * scaleFactor}
-                  strokeWidth={radius * scaleFactor / 20}
+                  strokeWidth={strokeWidth}
                   onClick={focusCircle}
                   {...this.getAdditionalCircleProps()}
                   {...circleColor}
@@ -262,11 +290,16 @@ class RadialNode extends React.Component {
     let centerX = this.props.centerX, centerY = this.props.centerY;
 
     let parentNode = '';
+    let { nodeData } = this.props;
+    if (this.props.nodeID === longTermID) {
+      const { longTermData } = this.state;
+      nodeData = longTermData.length ? longTermData : nodeData;
+    };
     if (typeof(this.props.nodeData) !== undefined && this.props.nodeData.length > 0) {
       parentNode = <g
         id={ this.props.nodeID ? `${this.props.nodeID}-children` : '' }
       >
-        { this.props.nodeData.map(data => {
+        { nodeData.map(data => {
           return <RadialNode
             key={ data.id }
             nodeData={ typeof(data.children) === undefined ? [] : data.children }

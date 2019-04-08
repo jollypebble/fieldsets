@@ -199,7 +199,7 @@ let ret = [
     radiusX: 9,
     radiusY: 1.8,
     visible: true,
-    zoom: { scale: 1.5 },
+    zoom: { scale: zoomScaleChild1 },
     color: {
       bg: offenseColors.parent.bg
     },
@@ -212,27 +212,27 @@ let ret = [
         shape: 'labelGroup',
         parent: 'offense_allocation',
         fields: [],
-        centerX: -25,
-        centerY: 57,
+        centerX: 24,
+        centerY: 50,
+        textX: 32,
+        textY: 57,
         width: 18,
         height: 14,
-        textX: 33,
-        textY: 57,
         radiusX: 6.5,
         radiusY: 6.5,
-        rotate: -45,
+        rotate: '-45 33 57',
         color: {
           bg: offenseColors.shortTerm.bg,
           stroke: offenseColors.shortTerm.stroke
         },
         textSize: smTextSize,
-        zoom: { scale: 0.5 },
+        zoom: { scale: zoomScaleChild1 },
         children: [
           {
             name: 'Cash Equivalents',
             id: 'cash_equivalents',
             parent: 'short_term_money',
-            centerX: 33,
+            centerX: 32,
             centerY: 53,
             ...shortTermCommon
           },
@@ -240,7 +240,7 @@ let ret = [
             name: 'Mortgage',
             id: 'mortgage',
             parent: 'short_term_money',
-            centerX: 38.5,
+            centerX: 38,
             centerY: 56.5,
             ...shortTermCommon
           },
@@ -248,7 +248,7 @@ let ret = [
             name: 'Liabilities/Debt',
             id: 'liabilities_debt',
             parent: 'short_term_money',
-            centerX: 32,
+            centerX: 31,
             centerY: 60.5,
             ...shortTermCommon
           },
@@ -304,53 +304,53 @@ let ret = [
         parent: 'offense_allocation',
         shape: 'radialGroup',
         fields: [],
-        centerX: 79,
-        centerY: -16,
+        centerX: 60,
+        centerY: 49,
         width: 20,
         height: 17,
-        textX: 68,
-        textY: 58,
+        textX: 69,
+        textY: 57.5,
         radiusX: 7.5,
         radiusY: 7.5,
-        rotate: 45,
+        rotate: '45 70 57',
         visible: false,
         color: {
           bg: offenseColors.longTerm.bg,
           stroke: offenseColors.longTerm.stroke
         },
         textSize: smTextSize,
-        zoom: { scale: 1.5 },
+        zoom: { scale: zoomScaleChild1 },
         children: [
           {
             name: 'IRA ROTH',
             id: 'ira_roth',
             parent: 'long_term_money',
-            centerX: 65,
-            centerY: 52.5,
+            centerX: 66.5,
+            centerY: 51.5,
             ...longTermCommon
           },
           {
             name: 'Cash Value Life',
             id: 'cash_value_life',
             parent: 'long_term_money',
-            centerX: 62,
-            centerY: 58,
+            centerX: 63.5,
+            centerY: 57,
             ...longTermCommon
           },
           {
             name: '401_K',
             id: 'k_401',
             parent: 'long_term_money',
-            centerX: 66.5,
-            centerY: 62,
+            centerX: 67.5,
+            centerY: 61.5,
             ...longTermCommon
           },
           {
             name: 'Annuity',
             id: 'annuity',
             parent: 'long_term_money',
-            centerX: 72,
-            centerY: 64,
+            centerX: 73,
+            centerY: 63,
             ratio,
             ...longTermCommon
           },
@@ -358,8 +358,8 @@ let ret = [
             name: 'Stock option',
             id: 'stock_option',
             parent: 'long_term_money',
-            centerX: 75,
-            centerY: 60.5,
+            centerX: 76.5,
+            centerY: 60,
             ratio,
             ...longTermCommon
           },
@@ -367,8 +367,8 @@ let ret = [
             name: 'Investment Real Estate',
             id: 'investment_real_estate',
             parent: 'long_term_money',
-            centerX: 75,
-            centerY: 56,
+            centerX: 76,
+            centerY: 55.5,
             ratio,
             ...longTermCommon
           },
@@ -376,8 +376,8 @@ let ret = [
             name: 'Deffered Comp',
             id: 'deffered_comp',
             parent: 'long_term_money',
-            centerX: 71.75,
-            centerY: 52.75,
+            centerX: 73,
+            centerY: 52,
             ratio,
             ...longTermCommon
           }
