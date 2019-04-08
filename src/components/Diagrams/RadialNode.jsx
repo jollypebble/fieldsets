@@ -245,6 +245,7 @@ class RadialNode extends React.Component {
               {
                 rectGroup.indexOf(shape) > -1 &&
                 <rect
+                  style={{ fill: `url(#Gradient${id === 'short_term_money' ? '' : id === 'long_term_money' ? '2' : 'none'})` }}
                   ref={this.elCircleNode}
                   id={id}
                   className="circlenode rectangle"
@@ -255,7 +256,7 @@ class RadialNode extends React.Component {
                   transform={`rotate(${rotate ? rotate : 0})`}
                   rx={`${radiusX ? radiusX : radiusX}`}
                   ry={`${radiusY ? radiusY : radiusY}`}
-                  strokeWidth={0.2}
+                  strokeWidth={0.1}
                   onClick={focusCircle}
                   {...this.getAdditionalCircleProps()}
                   {...circleColor}

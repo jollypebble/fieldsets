@@ -353,6 +353,16 @@ class CircleDiagram extends Component {
             <svg
               id="circlediagram" width={this.props.width} height={this.props.height}
             >
+              <defs>
+                <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" id="Gradient" >
+                  <stop offset="10%" style={{stopColor: '#fff'}} />
+                  <stop offset="100%" style={{stopColor: '#9bff9b'}} />
+                </linearGradient>
+                <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" id="Gradient2" >
+                  <stop offset="0%" style={{stopColor: '#ccffff'}} />
+                  <stop offset="70%" style={{stopColor: '#fff'}} />
+                </linearGradient>
+              </defs>
               <g id="diagramGroup">
                 { DiagramData.map(diagram => {
                   let NodeClass = RadialNode;
