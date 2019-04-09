@@ -362,6 +362,10 @@ class CircleDiagram extends Component {
                   <stop offset="0%" style={{stopColor: '#ccffff'}} />
                   <stop offset="70%" style={{stopColor: '#fff'}} />
                 </linearGradient>
+                <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" id="Gradient3" >
+                  <stop offset="0%" style={{stopColor: '#d1d1ff'}} />
+                  <stop offset="70%" style={{stopColor: '#fff'}} />
+                </linearGradient>
               </defs>
               <g id="diagramGroup">
                 { DiagramData.map(diagram => {

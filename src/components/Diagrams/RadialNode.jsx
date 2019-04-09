@@ -11,9 +11,12 @@ import { setCurrentFocus } from '../../graphql';
 const ellipseGroup = ['ellipse'];
 const rectGroup = ['rectangle', 'labelGroup', 'radialGroup'];
 const circleGroup = ['circle'];
-const noValueList = ['monthly_contribution', 'lump_sums', 'short_term_money', 'mid_term_money', 'long_term_money'];
-const offenseAllocation = 'offense_allocation';
+const offenseAllocationID = 'offense_allocation';
 const longTermID = 'long_term_money';
+const shortTermID = 'short_term_money';
+const midTermId = 'mid_term_money';
+const offenseGroup = [longTermID, shortTermID, midTermId];
+const noValueList = ['monthly_contribution', 'lump_sums', ...offenseGroup];
 
 class RadialNode extends React.Component {
   constructor(props) {
@@ -107,13 +110,13 @@ class RadialNode extends React.Component {
 
   /** Is called when we click on the radial node */
   handleClick() {
-    if (this.isHidden()) return
+    if (this.isHidden()) return;
     if (this.state.isRevealed) {
-    if (this.hasParent()) this.props.openDialog(this.props.nodeID, this.props.parent);
-    else this.props.updateFocus(this.props.nodeID, this.props.centerX, this.props.centerY);
+      if (this.hasParent()) this.props.openDialog(this.props.nodeID, this.props.parent);
+      else this.props.updateFocus(this.props.nodeID, this.props.centerX, this.props.centerY);
     } else {
-    this.props.updateFocus(this.props.nodeID, this.props.centerX, this.props.centerY);
-    this.setState({ isRevealed: !this.state.isRevealed });
+      this.props.updateFocus(this.props.nodeID, this.props.centerX, this.props.centerY);
+      this.setState({ isRevealed: !this.state.isRevealed });
   }
 
     this.setState({ wasClickedAtLeastOnce: true });
@@ -123,7 +126,7 @@ class RadialNode extends React.Component {
   handleDoubleClick = () => {
     // TODO: OPEN DIALOG AND SET FIELDS TO DISPLAY
     // this.props.openDialog(this.props.nodeID);
-    if (this.props.parent === offenseAllocation) return;
+    if (this.props.parent === offenseAllocationID) return;
     if (this.state.isRevealed) {
       this.setState({ isRevealed: !this.state.isRevealed });
     }
@@ -169,9 +172,9 @@ class RadialNode extends React.Component {
         >
           <tspan x={textX ? textX : centerX} fill={textColor} style={{ fontSize }} dy="0em">{name}</tspan>
           <tspan x={textX ? textX : centerX} fill={textColor} style={{ fontSize }} dy="1.6em">
-            { noValueList.indexOf(id) > -1 ? '' : 'Data: Value' }
+            { noValueList.includes(id) ? '' : 'Data: Value' }
           </tspan>
-          { id === 'long_term_money' && <tspan fill={color.stroke} y={textY ? textY + 0.2 : centerY + 0.2 } className="refresh-icon" onClick={this.updateLongTermData}>&#xf0e2;</tspan>}
+          { id === longTermID && <tspan fill={color.stroke} y={textY ? textY + 0.2 : centerY + 0.2 } className="refresh-icon" onClick={this.updateLongTermData}>&#xf0e2;</tspan>}
         </text>
       </React.Fragment>
     );
@@ -199,7 +202,7 @@ class RadialNode extends React.Component {
   }
 
   getExtendedValue(value) {
-    return this.state.isMouseInside && this.props.parent !== offenseAllocation ? value * 1.1 : value;
+    return this.state.isMouseInside && this.props.parent !== offenseAllocationID ? value * 1.1 : value;
   }
 
   renderShape(shownClass) {
@@ -219,14 +222,24 @@ class RadialNode extends React.Component {
     return (
       <Mutation mutation={setCurrentFocus} variables={{ id, centerX, centerY }} onCompleted={this.handleClick} awaitRefetchQueries={true}>
         {focusCircle => {
+          let fill = 'grey';
+          if (id === midTermId) {
+            fill = 'url(#Gradient3)';
+          } else if (id === shortTermID) {
+            fill = 'url(#Gradient)';
+          } else if (id === longTermID) {
+            fill = 'url(#Gradient2)';
+          } else if (color && color.bg) {
+            fill = color.bg;
+          }
           const circleColor = {
             stroke: color && color.stroke ? color.stroke : 'grey',
-            fill: color && color.bg ? color.bg : 'grey'
+            fill
           };
           return (
             <React.Fragment>
               {
-                ellipseGroup.indexOf(shape) > -1 &&
+                ellipseGroup.includes(shape) &&
                 <ellipse
                   ref={this.elCircleNode}
                   id={id}
@@ -243,10 +256,9 @@ class RadialNode extends React.Component {
                 </ellipse>
               }
               {
-                rectGroup.indexOf(shape) > -1 &&
+                rectGroup.includes(shape) &&
                 <rect
-                  style={{ fill: `url(#Gradient${id === 'short_term_money' ? '' : id === 'long_term_money' ? '2' : 'none'})` }}
-                  ref={this.elCircleNode}
+                  ref={element => this._rectElement = element}
                   id={id}
                   className="circlenode rectangle"
                   x={centerX}
@@ -263,7 +275,7 @@ class RadialNode extends React.Component {
                 />
               }
               {
-                circleGroup.indexOf(shape) > -1 &&
+                circleGroup.includes(shape) &&
                 <circle
                   ref={this.elCircleNode}
                   id={id}
@@ -318,8 +330,9 @@ class RadialNode extends React.Component {
             radius={ this.props.radius }
             scaleFactor={ this.props.scaleFactor * 0.6 }
 
-            isShown={this.state.isRevealed /* The prop means whether the node is being rendered right now by its parent */}
+            isShown={offenseGroup.includes(this.props.nodeID) ? true : this.state.isRevealed /* The prop means whether the node is being rendered right now by its parent */}
             wasParentClickedAtLeastOnce={this.state.wasClickedAtLeastOnce /* Whether the parent of the node was clicked at least once (is used for initial animations) */}
+            wasOffenseClicked={this.props.wasParentClickedAtLeastOnce}
           />
         }) }
       </g>;
@@ -328,15 +341,19 @@ class RadialNode extends React.Component {
     /** "Immersion class" defines whether a node is a main (root node) or sub-node (has a parent) */
     const immersionClass = this.hasParent() ? 'child-node' : 'parent-node';
     /** "Shown class" exists only for those nodes that are able to show up and hide (child/sub nodes)  */
-    const shownClass = this.hasParent() && this.props.wasParentClickedAtLeastOnce ? (this.props.isShown ? 'shown' : 'hidden') : '';
+    let shownClass = this.hasParent() && this.props.wasParentClickedAtLeastOnce ? (this.props.isShown ? 'shown' : 'hidden') : '';
     /** We want to hide children at the start of the app */
-    const afterHiddenClass = this.hasParent() && shownClass === '' ? 'afterHidden' : '';
+    let afterHiddenClass = this.hasParent() && shownClass === '' ? 'afterHidden' : '';
+    if (offenseGroup.includes(this.props.parent) && this.props.wasOffenseClicked) {
+      shownClass = 'shown';
+      afterHiddenClass = '';
+    }
 
     // Child Node
     return (
         <g
           id={ this.props.nodeID ? `${this.props.nodeID}-group` : '' }
-          className='radial-group'
+          className="radial-group"
         >
           <g
             ref={this.elCircleGroup}
