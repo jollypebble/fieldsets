@@ -112,8 +112,11 @@ class RadialNode extends React.Component {
   handleClick() {
     if (this.isHidden()) return;
     if (this.state.isRevealed) {
-      if (this.hasParent()) this.props.openDialog(this.props.nodeID, this.props.parent);
-      else this.props.updateFocus(this.props.nodeID, this.props.centerX, this.props.centerY);
+      if (this.hasParent()) {
+        this.props.openDialog(this.props.nodeID, this.props.parent);
+      } else {
+        this.props.updateFocus(this.props.nodeID, this.props.centerX, this.props.centerY);
+      }
     } else {
       this.props.updateFocus(this.props.nodeID, this.props.centerX, this.props.centerY);
       this.setState({ isRevealed: !this.state.isRevealed });

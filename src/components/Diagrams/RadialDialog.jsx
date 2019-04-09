@@ -29,7 +29,7 @@ import PropTypes from 'prop-types';
 
    componentDidUpdate(prevProps, prevState) {
      // console.log('Updating dialog visibility');
-     if ( prevProps.nodeID !== this.props.nodeID ) {
+     if ( (prevProps.nodeID !== this.props.nodeID) && this.props.nodeID ) {
        this.show();
      }
 
@@ -41,6 +41,7 @@ import PropTypes from 'prop-types';
    };
 
    hide = () => {
+     this.props.closeDialog();
      this.setState({ visible: false });
    };
 
@@ -100,7 +101,8 @@ import PropTypes from 'prop-types';
   }
 }
 RadialDialog.propTypes = {
-  nodeID: PropTypes.string.isRequired
+  nodeID: PropTypes.string.isRequired,
+  closeDialog: PropTypes.func.isRequired
 };
 //export default withApollo(RadialDialog);
 //export default React.forwardRef((props, ref) => <RadialDialog updateFocus={ref} {...props}/>);

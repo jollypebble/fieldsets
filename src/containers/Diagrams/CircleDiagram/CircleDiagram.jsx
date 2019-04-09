@@ -381,7 +381,6 @@ class CircleDiagram extends Component {
                     updateFocus={ this.updateFocus }
                     resetFocus={ this.resetFocus }
                     openDialog={ this.openDialog }
-                    closeDialog={ this.closeDialog }
                     setNodeState={ this.setNodeState }
                     nodes={ this.state.nodes }
                     isShown={ true /* The prop means whether the node is being rendered right now by its parent */ }
@@ -397,6 +396,7 @@ class CircleDiagram extends Component {
           <RadialDialog
             name={ 'Dialog Box' }
             nodeID={ this.state.currentDialog }
+            closeDialog={ this.closeDialog }
           />
         </div>
       </div>
