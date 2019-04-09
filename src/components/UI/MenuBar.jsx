@@ -11,6 +11,17 @@ export default class MenuBar extends React.Component {
     };
   }
 
+  componentDidMount() {
+    window.addEventListener('mousemove', e => {
+      if (e.clientY <= 64 && this.state.isMouseOvered !== true) {
+      const target = e.target;
+      if (!target || target.classList.contains('block-header-over') === false) this.setState({ isMouseOvered: true });
+      return;
+      }
+      if (e.clientY > 64 && this.state.isMouseOvered === true) return this.setState({ isMouseOvered: false });
+    })
+  };
+
   render() {
     const {
       leftIconCallback,

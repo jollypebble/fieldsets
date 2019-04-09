@@ -4,6 +4,7 @@ export const nodes = `
     name
     centerX
     centerY
+    depth
     zoom {
       x
       y

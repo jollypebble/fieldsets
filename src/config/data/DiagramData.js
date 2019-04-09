@@ -33,7 +33,7 @@ const defaults = {
   ratio: ratio,
 }
 
-let ret = [
+let data = [
   {
     ...defaults,
     name: 'Monthly Contribution',
@@ -148,23 +148,25 @@ let ret = [
         id: 'short_term_money',
         shape: 'labelGroup',
         parent: 'offense_allocation',
-        centerX: -25,
-        centerY: 57,
+        fields: [],
+        centerX: 24,
+        centerY: 50,
+        textX: 32,
+        textY: 57,
         width: 18,
         height: 14,
-        textX: 33,
-        textY: 57,
         radiusX: 6.5,
         radiusY: 6.5,
-        rotate: -45,
-        zoom: { scale: 0.5 },
+        rotate: '-45 33 57',
+        textSize: textSize,
+        zoom: { scale: zoomScaleChild },
         children: [
           {
             ...defaults,
             name: 'Cash Equivalents',
             id: 'cash_equivalents',
             parent: 'short_term_money',
-            centerX: 33,
+            centerX: 32,
             centerY: 53,
           },
           {
@@ -172,7 +174,7 @@ let ret = [
             name: 'Mortgage',
             id: 'mortgage',
             parent: 'short_term_money',
-            centerX: 38.5,
+            centerX: 38,
             centerY: 56.5,
           },
           {
@@ -180,7 +182,7 @@ let ret = [
             name: 'Liabilities/Debt',
             id: 'liabilities_debt',
             parent: 'short_term_money',
-            centerX: 32,
+            centerX: 31,
             centerY: 60.5,
           },
         ]
@@ -231,72 +233,73 @@ let ret = [
         id: 'long_term_money',
         parent: 'offense_allocation',
         shape: 'radialGroup',
-        centerX: 79,
-        centerY: -16,
+        centerX: 60,
+        centerY: 49,
         width: 20,
         height: 17,
-        textX: 68,
-        textY: 58,
+        textX: 69,
+        textY: 57.5,
         radiusX: 7.5,
         radiusY: 7.5,
-        rotate: 45,
         zoom: { scale: 1.5 },
+        rotate: '45 70 57',
+        textSize: textSize,
         children: [
           {
             ...defaults,
             name: 'IRA ROTH',
             id: 'ira_roth',
             parent: 'long_term_money',
-            centerX: 65,
-            centerY: 52.5,
+            centerX: 66.5,
+            centerY: 51.5,
           },
           {
             ...defaults,
             name: 'Cash Value Life',
             id: 'cash_value_life',
             parent: 'long_term_money',
-            centerX: 62,
-            centerY: 58,
+            centerX: 63.5,
+            centerY: 57,
           },
           {
             ...defaults,
             name: '401_K',
             id: 'k_401',
             parent: 'long_term_money',
-            centerX: 66.5,
-            centerY: 62,
+            centerX: 67.5,
+            centerY: 61.5,
           },
           {
             ...defaults,
             name: 'Annuity',
             id: 'annuity',
             parent: 'long_term_money',
-            centerX: 72,
-            centerY: 64,
+            centerX: 73,
+            centerY: 63,
           },
           {
             ...defaults,
             name: 'Stock option',
             id: 'stock_option',
             parent: 'long_term_money',
-            centerX: 75,
-            centerY: 60.5,
+            centerX: 76.5,
+            centerY: 60,
           },
           {
             ...defaults,
             name: 'Investment Real Estate',
             id: 'investment_real_estate',
             parent: 'long_term_money',
-            centerX: 75,
-            centerY: 56,
+            centerX: 76,
+            centerY: 55.5,
           },
           {
             ...defaults,
             name: 'Deffered Comp',
             id: 'deffered_comp',
             parent: 'long_term_money',
-            centerX: 71.75,
-            centerY: 52.75,
+            centerX: 73,
+            centerY: 52,
           }
         ]
       }
@@ -305,24 +308,28 @@ let ret = [
 ];
 
 // Put values that weren't specified in JSON
-const handle = function (obj, depth = 0) {
-    let value
+const addDepth = function (obj, depth = 0) {
     for (let key in obj) {
-        value = obj[key]
-        value.depth = depth
-        handleZoomProperty(value)
-        if (!value.children) value.children = []
-        if (value.children.length > 0) handle(value.children, depth + 1)
+      let value = obj[key];
+      value.depth = depth;
+      value = addZoom(value);
+      if (value.children.length > 0) {
+        value.children = addDepth(value.children, depth + 1);
+      } else {
+        value.children = [];
+      }
+      obj[key] = value;
     }
+
+    return obj;
 }
 
-const handleZoomProperty = function (value) {
-    if (!value.zoom) value.zoom = {}
-    if (!value.zoom.x) value.zoom.x = 0.5
-    if (!value.zoom.y) value.zoom.y = 0.5
-    if (!value.zoom.scale) value.zoom.scale = 1
+const addZoom = function (value) {
+    if (!value.zoom) value.zoom = {};
+    if (!value.zoom.x) value.zoom.x = 0.5;
+    if (!value.zoom.y) value.zoom.y = 0.5;
+    if (!value.zoom.scale) value.zoom.scale = 1;
+    return value;
 }
-
-handle(ret)
-
-export default ret;
+const diagram = addDepth(data, 0);
+export default diagram;

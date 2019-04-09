@@ -10,6 +10,7 @@ import { getFields, getFieldList, getCurrentFocus, getNodes, getNodeList, defaul
 /**
  * This is the container for our main diagram. It has direct access to the apollo cache so it can track foucs of it's child nodes.
  */
+
 class CircleDiagram extends Component {
   constructor(props) {
     super(props);
@@ -133,27 +134,27 @@ class CircleDiagram extends Component {
     let zoom = this.props.zoom * current.zoom.scale;
 
     let xs = [], ys = [];
-    xs.push(current.centerX - this.getStandardRadius(current.depth) - this.getStandardStrokeWidth(current.depth))
-    xs.push(current.centerX + this.getStandardRadius(current.depth) + this.getStandardStrokeWidth(current.depth))
-    ys.push(current.centerY - this.getStandardRadius(current.depth) - this.getStandardStrokeWidth(current.depth))
-    ys.push(current.centerY + this.getStandardRadius(current.depth) + this.getStandardStrokeWidth(current.depth))
+    xs.push(current.centerX - this.getStandardRadius(current.depth) - this.getStandardStrokeWidth(current.depth));
+    xs.push(current.centerX + this.getStandardRadius(current.depth) + this.getStandardStrokeWidth(current.depth));
+    ys.push(current.centerY - this.getStandardRadius(current.depth) - this.getStandardStrokeWidth(current.depth));
+    ys.push(current.centerY + this.getStandardRadius(current.depth) + this.getStandardStrokeWidth(current.depth));
 
     const children = DataUtils.getChildrenOf(current.id);
-    const hasChildren = children && children.length > 0
+    const hasChildren = children && children.length > 0;
     if (hasChildren) {
       children.forEach(child => {
-        xs.push(child.centerX - this.getStandardRadius(child.depth) - this.getStandardStrokeWidth(child.depth))
-        xs.push(child.centerX + this.getStandardRadius(child.depth) + this.getStandardStrokeWidth(child.depth))
-        ys.push(child.centerY - this.getStandardRadius(child.depth) - this.getStandardStrokeWidth(child.depth))
-        ys.push(child.centerY + this.getStandardRadius(child.depth) + this.getStandardStrokeWidth(child.depth))
+        xs.push(child.centerX - this.getStandardRadius(child.depth) - this.getStandardStrokeWidth(child.depth));
+        xs.push(child.centerX + this.getStandardRadius(child.depth) + this.getStandardStrokeWidth(child.depth));
+        ys.push(child.centerY - this.getStandardRadius(child.depth) - this.getStandardStrokeWidth(child.depth));
+        ys.push(child.centerY + this.getStandardRadius(child.depth) + this.getStandardStrokeWidth(child.depth));
       })
     }
-    const minX = Math.min.apply(null, xs)
-    const maxX = Math.max.apply(null, xs)
-    const minY = Math.min.apply(null, ys)
-    const maxY = Math.max.apply(null, ys)
-    let k = (window.innerHeight / this.props.zoom) / (maxY - minY)
-    zoom = zoom * k * 0.8
+    const minX = Math.min.apply(null, xs);
+    const maxX = Math.max.apply(null, xs);
+    const minY = Math.min.apply(null, ys);
+    const maxY = Math.max.apply(null, ys);
+    let k = (window.innerHeight / this.props.zoom) / (maxY - minY);
+    zoom = zoom * k * 0.8;
     /* Next two lines are needed to calculate the point that is the center of a client's screen
      * As long as ReactSVGPanZoom lib calculates the center relatively to its own sizes we always got wrong numbers so
      * here we including into the calculations our sizes of the screen.
@@ -242,12 +243,12 @@ class CircleDiagram extends Component {
   setNodeState = (nodes) => {
     // console.log('Setting Node state.');
     // Do something to update a node state.
-    this.setState({nodes: nodes});
+    this.setState({ nodes });
   }
 
   setFieldState = (fields) => {
     // Do something to update a node state.
-    this.setState({fields: fields});
+    this.setState({ fields });
   }
 
   /**
@@ -402,26 +403,37 @@ class CircleDiagram extends Component {
             <svg
               id="circlediagram" width={this.props.width} height={this.props.height}
             >
+              <defs>
+                <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" id="Gradient" >
+                  <stop offset="10%" style={{stopColor: '#fff'}} />
+                  <stop offset="100%" style={{stopColor: '#9bff9b'}} />
+                </linearGradient>
+                <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" id="Gradient2" >
+                  <stop offset="0%" style={{stopColor: '#ccffff'}} />
+                  <stop offset="70%" style={{stopColor: '#fff'}} />
+                </linearGradient>
+              </defs>
               <g id="diagramGroup">
                 { DiagramData.map(diagram => {
-                  let NodeClass = RadialNode;
-                  if (diagram.id === 'net_worth') NodeClass = NetWorthNode;
-                  return <NodeClass
-                    key={ diagram.id }
-                    nodeData={ typeof(diagram.children) === undefined ? [] : diagram.children }
-                    nodeID={ diagram.id }
-                    scaleFactor={ 1 }
-                    {...diagram}
-                    radius={ this.getStandardRadius() }
-                    updateFocus={ this.updateFocus }
-                    resetFocus={ this.resetFocus }
-                    openDialog={ this.openDialog }
-                    closeDialog={ this.closeDialog }
-                    setNodeState={ this.setNodeState }
-                    nodes={ this.state.nodes }
-                    isShown={ true /* The prop means whether the node is being rendered right now by its parent */ }
-                  />
-                }) }
+                    let NodeClass = RadialNode;
+                    if (diagram.id === 'net_worth') NodeClass = NetWorthNode;
+                    return <NodeClass
+                      key={ diagram.id }
+                      nodeData={ typeof(diagram.children) === undefined ? [] : diagram.children }
+                      nodeID={ diagram.id }
+                      scaleFactor={ 1 }
+                      {...diagram}
+                      radius={ this.getStandardRadius() }
+                      updateFocus={ this.updateFocus }
+                      resetFocus={ this.resetFocus }
+                      openDialog={ this.openDialog }
+                      closeDialog={ this.closeDialog }
+                      setNodeState={ this.setNodeState }
+                      nodes={ this.state.nodes }
+                      isShown={ true /* The prop means whether the node is being rendered right now by its parent */ }
+                    />
+                  })
+                }
               </g>
             </svg>
           </ReactSVGPanZoom>
