@@ -3,8 +3,7 @@ import { withApollo } from "react-apollo";
 import { DiagramData, FieldData, OwnerData, DataUtils } from '../../../config';
 import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
 
-//import { Diagram, DiagramCache } from 'containers/Diagrams/Diagram';
-import { NetWorthNode, RadialNode, RadialDialog } from '../../../components/Diagrams';
+import { Node, Dialog } from '../../../components/Diagrams';
 import { getFields, getFieldList, getCurrentFocus, getNodes, getNodeList, defaults } from '../../../graphql';
 
 /**
@@ -415,9 +414,7 @@ class CircleDiagram extends Component {
               </defs>
               <g id="diagramGroup">
                 { DiagramData.map(diagram => {
-                    let NodeClass = RadialNode;
-                    if (diagram.id === 'net_worth') NodeClass = NetWorthNode;
-                    return <NodeClass
+                    return <Node
                       key={ diagram.id }
                       nodeData={ typeof(diagram.children) === undefined ? [] : diagram.children }
                       nodeID={ diagram.id }
@@ -441,7 +438,7 @@ class CircleDiagram extends Component {
         <div className="diagramSheet">
         </div>
         <div className="diagramDialogs">
-          <RadialDialog
+          <Dialog
             name={ 'Dialog Box' }
             nodeID={ this.state.currentDialog }
           />

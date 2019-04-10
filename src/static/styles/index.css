@@ -252,6 +252,68 @@ caption,
   font-weight: 100;
   src: url("/assets/fonts/OpenSans-Light.ttf"); }
 
+#defense_allocation-group .circle-group ellipse {
+  fill: #ccc;
+  stroke: #888; }
+
+#defense_allocation-group .circle-group circle {
+  fill: #ccc;
+  stroke: #888; }
+
+#defense_allocation-group .circle-group tspan {
+  fill: #515359; }
+
+#offense_allocation-group .circle-group ellipse {
+  fill: #ccc;
+  stroke: #888; }
+
+#offense_allocation-group .circle-group tspan {
+  fill: #515359; }
+
+#net_worth-group .circle-group ellipse {
+  fill: #ccc;
+  stroke: #888; }
+
+#net_worth-group .circle-group tspan {
+  fill: #515359; }
+
+#short_term_money-group .circle-group circle {
+  fill: #ccc;
+  stroke: #888; }
+
+#short_term_money-group .circle-group rect {
+  fill: url(#Gradient); }
+
+#short_term_money-group .circle-group tspan {
+  fill: #515359; }
+
+#mid_term_money-group .circle-group circle {
+  fill: #ccc;
+  stroke: #888; }
+
+#mid_term_money-group .circle-group rect {
+  fill: url(#Gradient); }
+
+#mid_term_money-group .circle-group tspan {
+  fill: #515359; }
+
+#long_term_money-group .circle-group circle {
+  fill: #ccc;
+  stroke: #888; }
+
+#long_term_money-group .circle-group rect {
+  fill: url(#Gradient); }
+
+#long_term_money-group .circle-group tspan {
+  fill: #515359; }
+
+#monthly_contribution-group .circle-group rect, #lump_sums-group .circle-group rect {
+  fill: #ccc;
+  stroke: #888; }
+
+#monthly_contribution-group .circle-group tspan, #lump_sums-group .circle-group tspan {
+  fill: #515359; }
+
 .radialDialog > div {
   width: 450px;
   height: 450px;
@@ -340,24 +402,6 @@ caption,
     opacity: 0; }
   100% {
     opacity: 1; } }
-
-#net_worth-group .circlenode {
-  fill: #ffe7a7;
-  stroke: #fde08c;
-  stroke-width: 0.1;
-  stroke-dasharray: 0.4;
-  transition: stroke-dasharray 0.15s; }
-
-#net_worth-group .circle-group:hover .circlenode {
-  stroke-dasharray: 0.2; }
-
-#net_worth-group .circletext .amount {
-  font-weight: bold;
-  fill: #ff4f00; }
-
-#net_worth-group .circletext .label {
-  font-size: .45pt;
-  fill: #6b4f00; }
 
 #tabs-wrapper {
   text-align: center;
@@ -567,7 +611,7 @@ text.nodeNameBase {
   transform: translate(-75px, 0); }
 
 text.nodeAttributesBase {
-  fill: #212121;
+  fill: #ccc;
   stroke: transparent;
   font-family: "OpenSans", Roboto, sans-serif;
   transform: translate(-75px, 0); }
