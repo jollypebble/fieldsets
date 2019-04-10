@@ -7,7 +7,7 @@ import { CircleDiagram } from './containers/Diagrams/CircleDiagram';
 
 // import { BalanceSheet, ClientSheet } from '/components/Sheets';
 
-import Definder from './utils/Definder'
+import DiagramEvents from './utils/DiagramEvents'
 
 /**
  * The basic UI components and all visualization areas are added here
@@ -26,7 +26,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    Definder.init()
+    DiagramEvents.init()
   }
 
   render() {
