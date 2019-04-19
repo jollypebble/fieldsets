@@ -123,7 +123,7 @@ class Diagram extends Component {
         return field;
       });
 
-      node.__typename = 'Circle';
+      node.__typename = 'Node';
       nodes.push(node);
       this.props.client.writeData({
         data: {nodes, fields}

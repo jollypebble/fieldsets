@@ -281,9 +281,6 @@ caption,
   fill: #ccc;
   stroke: #888; }
 
-#short_term_money-group .circle-group rect {
-  fill: url(#Gradient); }
-
 #short_term_money-group .circle-group tspan {
   fill: #515359; }
 
@@ -291,18 +288,12 @@ caption,
   fill: #ccc;
   stroke: #888; }
 
-#mid_term_money-group .circle-group rect {
-  fill: url(#Gradient); }
-
 #mid_term_money-group .circle-group tspan {
   fill: #515359; }
 
 #long_term_money-group .circle-group circle {
   fill: #ccc;
   stroke: #888; }
-
-#long_term_money-group .circle-group rect {
-  fill: url(#Gradient); }
 
 #long_term_money-group .circle-group tspan {
   fill: #515359; }
@@ -402,6 +393,15 @@ caption,
     opacity: 0; }
   100% {
     opacity: 1; } }
+
+#short_term_money-group .circle-group rect {
+  fill: url(#Gradient); }
+
+#mid_term_money-group .circle-group rect {
+  fill: url(#Gradient); }
+
+#long_term_money-group .circle-group rect {
+  fill: url(#Gradient); }
 
 #tabs-wrapper {
   text-align: center;

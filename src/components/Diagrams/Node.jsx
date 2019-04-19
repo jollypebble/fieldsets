@@ -16,7 +16,7 @@ class Node extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      attributes: this.props, // Attributes are properties of node shapes that can change depending on node data and state.
+      display: this.props.display, // display node shapes that can change depending on node data and state.
       isMouseInside: false,
       visible: this.props.visible,
       wasClickedAtLeastOnce: false, // whether the node was clicked at least once (is used for initial animations)
@@ -37,16 +37,16 @@ class Node extends React.Component {
     this.getLongTermData = this.getLongTermData.bind(this);
     this.updateLongTermData = this.updateLongTermData.bind(this);
 
-    this.elCircleNode = React.createRef();
-    this.elCircleGroup = React.createRef();
-    this.elCircleText = React.createRef();
+    this.nodeElement = React.createRef();
+    this.nodeGroupElement = React.createRef();
+    this.nodeTextElement = React.createRef();
   }
 
   componentDidMount() {
     this.updateNodeData();
-    if (this.elCircleNode && this.elCircleNode.current) {
-      this.elCircleNode.current.removeEventListener('transitionend', this.handleTransitionEnd)
-      this.elCircleNode.current.addEventListener('transitionend', this.handleTransitionEnd)
+    if (this.nodeElement && this.nodeElement.current) {
+      this.nodeElement.current.removeEventListener('transitionend', this.handleTransitionEnd)
+      this.nodeElement.current.addEventListener('transitionend', this.handleTransitionEnd)
     }
     this.getLongTermData();
   }
@@ -65,7 +65,7 @@ class Node extends React.Component {
   }
 
   isHidden() {
-    return this.elCircleGroup && this.elCircleGroup.current && this.elCircleGroup.current.classList.contains('hidden');
+    return this.nodeGroupElement && this.nodeGroupElement.current && this.nodeGroupElement.current.classList.contains('hidden');
   }
 
   hasParent = () => {
@@ -75,19 +75,19 @@ class Node extends React.Component {
   // Called when the css transition ends
   handleTransitionEnd(e) {
     // checks whether the transition was on a position property
-    if (this.elCircleGroup && this.elCircleGroup.current && e && (e.propertyName === 'cx' || e.propertyName === 'cy')) {
+    if (this.nodeGroupElement && this.nodeGroupElement.current && e && (e.propertyName === 'cx' || e.propertyName === 'cy')) {
       // Show/hide circles after the circle appearing animation
-      if (this.elCircleGroup.current.classList.contains('hidden')) {
-        this.elCircleGroup.current.classList.add('afterHidden');
-      } else if (this.elCircleGroup.current.classList.contains('afterHidden')) {
-        this.elCircleGroup.current.remove('afterHidden');
+      if (this.nodeGroupElement.current.classList.contains('hidden')) {
+        this.nodeGroupElement.current.classList.add('afterHidden');
+      } else if (this.nodeGroupElement.current.classList.contains('afterHidden')) {
+        this.nodeGroupElement.current.remove('afterHidden');
       }
 
       // Show/hide text labels after the circle appearing animation
-      if (this.elCircleText && this.elCircleGroup.current.classList.contains('shown')) {
-        if (!this.elCircleText.current.classList.contains('shown')) this.elCircleText.current.classList.add('shown');
+      if (this.nodeTextElement && this.nodeGroupElement.current.classList.contains('shown')) {
+        if (!this.nodeTextElement.current.classList.contains('shown')) this.nodeTextElement.current.classList.add('shown');
       } else {
-        if (this.elCircleText.current.classList.contains('shown')) this.elCircleText.current.classList.remove('shown');
+        if (this.nodeTextElement.current.classList.contains('shown')) this.nodeTextElement.current.classList.remove('shown');
       }
     }
   }
@@ -155,7 +155,7 @@ class Node extends React.Component {
     return (
       <React.Fragment>
         <text
-          ref={this.elCircleText}
+          ref={this.nodeTextElement}
           x={textX ? textX : centerX}
           y={textY ? textY : centerY}
           textAnchor="middle"
@@ -199,8 +199,9 @@ class Node extends React.Component {
 
   render() {
     const id = this.props.nodeID;
-    const { shape, name } = this.props;
-    let { centerX, centerY, nodeData } = this.props;
+    let display = this.state.display;
+
+    let { name, centerX, centerY, nodeData } = this.props;
 
     let parentNode = '';
 
@@ -213,11 +214,13 @@ class Node extends React.Component {
       parentNode =
       <g id={ this.props.nodeID ? `${this.props.nodeID}-children` : '' }>
         { nodeData.map(data => {
+
           return (
             <Node
               key={ data.id }
               nodeData={ typeof(data.children) === undefined ? [] : data.children }
               nodeID={ data.id }
+              shape={display.shape}
               {...data}
 
               parentInstance={ this }
@@ -249,8 +252,6 @@ class Node extends React.Component {
     /** We want to hide children at the start of the app */
     const afterHiddenClass = this.hasParent() && shownClass === '' ? 'afterHidden' : '';
 
-    let attributes = this.state.attributes;
-
     // Child Node
     return (
       <Mutation mutation={setCurrentFocus} variables={{ id, centerX, centerY }} onCompleted={this.handleClick} awaitRefetchQueries={true}>
@@ -259,7 +260,7 @@ class Node extends React.Component {
             <g
               id={ this.props.nodeID ? `${this.props.nodeID}-group` : '' }
               className='radial-group'
-              ref={this.elCircleGroup}
+              ref={this.nodeGroupElement}
               onDoubleClick={this.handleDoubleClick}
               onClick={focusCircle}
             >
@@ -271,10 +272,15 @@ class Node extends React.Component {
               >
                 <Shape
                   id={id}
-                  shape={shape}
+                  shape={display.shape}
                   active={this.state.isMouseInside}
                   visibility={shownClass}
-                  attributes={attributes}
+                  attributes={{
+                    centerX,
+                    centerY,
+                    ...display.attributes
+                  }}
+                  scaleFactor={ this.props.scaleFactor * 0.6 }
                 />
                 {this.getInsideElements(name, centerX, centerY, focusCircle)}
               </g>
@@ -291,10 +297,9 @@ Node.propTypes = {
   nodeID: PropTypes.string.isRequired,
   nodeData: PropTypes.array.isRequired,
   name: PropTypes.string.isRequired,
-  shape: PropTypes.string,
+  shape: PropTypes.string.isRequired,
   centerX: PropTypes.node.isRequired,
   centerY: PropTypes.node.isRequired,
-  fields: PropTypes.array.isRequired
 };
 
 //export default withApollo(RadialNode);

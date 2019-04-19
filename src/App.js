@@ -5,8 +5,6 @@ import { withApollo } from 'react-apollo';
 import { Dashboard } from './containers/UI'
 import { CircleDiagram } from './containers/Diagrams/CircleDiagram';
 
-// import { BalanceSheet, ClientSheet } from '/components/Sheets';
-
 import DiagramEvents from './utils/DiagramEvents'
 
 /**

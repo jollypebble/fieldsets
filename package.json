@@ -9,6 +9,7 @@
     "build": "run-p build:**",
     "build:css": "node-sass-chokidar --include-path ./src/styles --include-path ./node_modules src/ -o ./src/static/",
     "build:js": "react-scripts build",
+    "fetch:schema": "node ./src/fetchSchema.js",
     "test": "react-scripts test --env=jsdom"
   },
   "dependencies": {
@@ -25,6 +26,7 @@
     "graphql": "^14.0.2",
     "graphql-tag": "^2.10.0",
     "gsap": "^1.20.6",
+    "lodash": "^4.17.11",
     "node-fetch": "^2.3.0",
     "prop-types": "^15.6.2",
     "react": "^16.6.3",

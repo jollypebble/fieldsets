@@ -44,9 +44,6 @@
       fill: $shortterm-fill;
       stroke: $shortterm-stroke;
     }
-    rect {
-      fill: url(#Gradient);
-    }
     tspan {
       fill: $shortterm-text;
     }
@@ -59,9 +56,6 @@
       fill: $midterm-fill;
       stroke: $midterm-stroke;
     }
-    rect {
-      fill: url(#Gradient);
-    }
     tspan {
       fill: $midterm-text;
     }
@@ -73,9 +67,6 @@
     circle {
       fill: $longterm-fill;
       stroke: $longterm-stroke;
-    }
-    rect {
-      fill: url(#Gradient);
     }
     tspan {
       fill: $longterm-text;
