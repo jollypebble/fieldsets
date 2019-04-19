@@ -9,12 +9,8 @@ export const typeDefs = `
     list: [Entity!]
   }
 
-  interface Node {
+  interface Data {
     id: ID!
-    list: [Entity!]
-    name: String!
-    children: NodeList!
-    parent: Node
   }
 
   type DataType {
@@ -40,7 +36,7 @@ export const typeDefs = `
   type Field implements Entity {
     id: ID!
     name: String!
-    parent: Circle!
+    parent: Node!
     value: String!
     alwaysDisplay: Boolean!
     datatype: DataType!
@@ -55,26 +51,44 @@ export const typeDefs = `
     list: [Field!]
   }
 
-  type Circle implements Node {
+  type Node implements Entity {
     id: ID!
     name: String!
     children: NodeList!
-    parent: Circle
+    parent: Node
     centerX: Float!
     centerY: Float!
+    display: DisplayData!
+    depth: Int!
+  }
+
+  type DisplayData implements Data {
+    id: ID!
+    shape: String!
+    attributes: [String]
+    zoom: ZoomData!
+    visible: Boolean!
+    className: String!
+  }
+
+  type ZoomData implements Data {
+    id: ID!
+    scale: Float!
+    x: Float!
+    y: Float!
   }
 
   type NodeList implements List {
     id: ID!
-    list: [Circle!]
+    list: [Node!]
   }
 
   type Mutation {
-    setCurrentFocus(id: ID!): Circle
+    setCurrentFocus(id: ID!): Node
   }
 
   type Query {
-    currentFocus: Circle!
+    currentFocus: Node!
     fields: FieldList!
     nodes: NodeList!
     owners: OwnerList!

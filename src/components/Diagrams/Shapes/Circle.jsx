@@ -1,7 +1,7 @@
 import React from 'react';
 
-const Circle = ({id, active, visibility, attributes}) => {
-  const {ratio, parentCenterX, parentCenterY, scaleFactor, parent} = attributes;
+const Circle = ({id, active, visibility, attributes, scaleFactor}) => {
+  const {ratio, parentCenterX, parentCenterY, parent} = attributes;
   let radius = ((active) ? attributes.radius * 1.1 : attributes.radius) * scaleFactor;
   const hasParent = (parent && parent !== '') ? true : false;
   let {centerX, centerY, strokeWidth} = attributes;
@@ -11,13 +11,10 @@ const Circle = ({id, active, visibility, attributes}) => {
     centerX = parentCenterX;
     centerY = parentCenterY;
   }
-
   radius = ratio ? ratio * radius : radius;
-
   if ( ! strokeWidth ) {
-    strokeWidth = radius * scaleFactor / 40;
+    strokeWidth = radius / 40;
   }
-
 
   return (
     <React.Fragment>

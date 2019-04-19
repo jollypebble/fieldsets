@@ -5,7 +5,23 @@ export const defaults = {
     name: '',
     centerX: 0,
     centerY: 0,
+    parent: '',
     depth: 0,
+    display: {
+      id: 'default',
+      shape: '',
+      attributes: [],
+      visible: false,
+      className: '',
+      zoom: {
+        id: 'default',
+        x: 0,
+        y: 0,
+        scale: 1,
+        __typename: 'ZoomData'
+      },
+      __typename: 'DisplayData'
+    },
     fields: {
       id: 'default',
       list: [{
@@ -23,13 +39,7 @@ export const defaults = {
       }],
       __typename: 'FieldList'
     },
-    zoom: {
-        x: 0.5,
-        y: 0.5,
-        scale: 1,
-        __typename: 'ZoomScale'
-    },
-    __typename: 'Circle'
+    __typename: 'Node'
   },
   fields: {
     id: 'default',
@@ -53,16 +63,26 @@ export const defaults = {
     list: [{
       id: 'default',
       name: '',
+      parent: '',
       centerX: 0,
       centerY: 0,
       depth: 0,
-      zoom: {
-          x: 0.5,
-          y: 0.5,
+      display: {
+        id: 'default',
+        shape: '',
+        attributes: [],
+        visible: false,
+        className: '',
+        zoom: {
+          id: 'default',
+          x: 0,
+          y: 0,
           scale: 1,
-          __typename: 'ZoomScale'
+          __typename: 'ZoomData'
+        },
+        __typename: 'DisplayData'
       },
-      __typename: 'Circle'
+      __typename: 'Node'
     }],
     __typename: 'NodeList'
   }

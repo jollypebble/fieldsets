@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withApollo } from "react-apollo";
-import { DiagramData, FieldData, OwnerData, DataUtils } from '../../../config';
+import { DiagramData, FieldData, OwnerData } from '../../../config';
 import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
 
 import { Node, Dialog } from '../../../components/Diagrams';
@@ -26,7 +26,6 @@ class CircleDiagram extends Component {
       currentDialog: '',
       isZoomed: false,
       isDblClick: false,
-      mouseInCircle: false
     };
 
     this.timeouts = [];
@@ -43,6 +42,7 @@ class CircleDiagram extends Component {
     this.setDataCache = this.setDataCache.bind(this);
     this.setNodeState = this.setNodeState.bind(this);
     this.getNodesData = this.getNodesData.bind(this);
+    this.getNode = this.getNode.bind(this);
     this.getAllNodes = this.getAllNodes.bind(this);
     this.setFieldState = this.setFieldState.bind(this);
     this.getFieldData = this.getFieldData.bind(this);
@@ -127,10 +127,10 @@ class CircleDiagram extends Component {
   setFocus = () => {
     const focus = this.getFocus();
     const current = focus.currentFocus;
-    // console.log(`Moving Focus to ${x}, ${y}:`, focus);
-
+    const currentNode = this.getNode({ id: current.id });
+    
     /** Our desired zoom for the current node that was clicked */
-    let zoom = this.props.zoom * current.zoom.scale;
+    let zoom = this.props.zoom * currentNode.display.zoom.scale;
 
     let xs = [], ys = [];
     xs.push(current.centerX - this.getStandardRadius(current.depth) - this.getStandardStrokeWidth(current.depth));
@@ -138,7 +138,10 @@ class CircleDiagram extends Component {
     ys.push(current.centerY - this.getStandardRadius(current.depth) - this.getStandardStrokeWidth(current.depth));
     ys.push(current.centerY + this.getStandardRadius(current.depth) + this.getStandardStrokeWidth(current.depth));
 
-    const children = DataUtils.getChildrenOf(current.id);
+
+    const childList = this.getNodesData({ id: current.id });
+    const children = (childList && childList.list) ? childList.list : false;
+
     const hasChildren = children && children.length > 0;
     if (hasChildren) {
       children.forEach(child => {
@@ -203,6 +206,16 @@ class CircleDiagram extends Component {
     return this.props.client.readQuery({ query: getNodes });
   }
 
+  getNode = (variables) => {
+    const id = `Node:${variables.id}`;
+    const node = this.props.client.readFragment({
+      id: id,
+      fragment: getNodeList,
+      fragmentName: 'node'
+    });
+    return node;
+  }
+
   getNodesData = (variables) => {
     // console.log('Getting cached Nodes', variables);
     const id = `NodeList:${variables.id}`;
@@ -216,6 +229,7 @@ class CircleDiagram extends Component {
 
   updateFocus = (id, focusX, focusY) => {
     const current = this.getFocus();
+    console.log(current);
 
     this.setState({
       currentID: current.currentFocus.id,
@@ -315,12 +329,12 @@ class CircleDiagram extends Component {
   // Caching nodes
   setDataCache = (data=[]) => {
     if (!data.length) return false;
-    let allNodes = this.getAllNodes();
-
-    let nodes = (allNodes.nodes.list) ? allNodes.nodes.list : [];
+    const allNodes = this.getAllNodes();
+    const nodes = (allNodes.nodes.list) ? allNodes.nodes.list : [];
 
     data.map(node => {
-      node.__typename = 'Circle';
+      const nodeID = node.id;
+      node.__typename = 'Node';
 
       const children = typeof(node.children) === undefined ? [] : node.children;
 
@@ -328,11 +342,26 @@ class CircleDiagram extends Component {
         this.setDataCache(children);
       }
 
+      // Set generic cache identifiers here so we can cache the display data.
+      if (!node.display) {
+        node.display = {}
+      }
 
-      if (node.zoom) node.zoom.__typename = 'ZoomScale';
+      node.display.id = nodeID;
+      node.display.__typename = 'DisplayData';
+      if ( node.display.attributes ) {
+        node.display.attributes.id = nodeID;
+        node.display.attributes.__typename = 'ShapeData';
+      }
+      if (node.display.zoom) {
+        node.display.zoom.id = nodeID;
+        node.display.zoom.__typename = 'ZoomData';
+      }
+
+      nodes.push(node);
 
       // If are a child node, let's write to our parent node list cache.
-      if ( node.parent.length ) {
+      if ( node.parent && node.parent.length ) {
         const id = `NodeList:${node.parent}`;
         let nodeList = this.props.client.readFragment({
           id: id,
@@ -352,13 +381,13 @@ class CircleDiagram extends Component {
           data: nodeList
         });
       }
-
-      nodes.push(node);
-      this.props.client.writeData({
-        data: {nodes}
-      });
       return true;
     });
+
+    this.props.client.writeData({
+      data: {nodes}
+    });
+
     this.setNodeState(nodes);
 
     return true;
@@ -402,33 +431,26 @@ class CircleDiagram extends Component {
             <svg
               id="circlediagram" width={this.props.width} height={this.props.height}
             >
-              <defs>
-                <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" id="Gradient" >
-                  <stop offset="10%" style={{stopColor: '#fff'}} />
-                  <stop offset="100%" style={{stopColor: '#9bff9b'}} />
-                </linearGradient>
-                <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" id="Gradient2" >
-                  <stop offset="0%" style={{stopColor: '#ccffff'}} />
-                  <stop offset="70%" style={{stopColor: '#fff'}} />
-                </linearGradient>
-              </defs>
               <g id="diagramGroup">
                 { DiagramData.map(diagram => {
-                    return <Node
-                      key={ diagram.id }
-                      nodeData={ typeof(diagram.children) === undefined ? [] : diagram.children }
-                      nodeID={ diagram.id }
-                      scaleFactor={ 1 }
-                      {...diagram}
-                      radius={ this.getStandardRadius() }
-                      updateFocus={ this.updateFocus }
-                      resetFocus={ this.resetFocus }
-                      openDialog={ this.openDialog }
-                      closeDialog={ this.closeDialog }
-                      setNodeState={ this.setNodeState }
-                      nodes={ this.state.nodes }
-                      isShown={ true /* The prop means whether the node is being rendered right now by its parent */ }
-                    />
+                    return (
+                      <Node
+                        key={ diagram.id }
+                        nodeData={ typeof(diagram.children) === undefined ? [] : diagram.children }
+                        nodeID={ diagram.id }
+                        scaleFactor={ 1 }
+                        shape={diagram.display.shape}
+                        {...diagram}
+                        radius={ this.getStandardRadius() }
+                        updateFocus={ this.updateFocus }
+                        resetFocus={ this.resetFocus }
+                        openDialog={ this.openDialog }
+                        closeDialog={ this.closeDialog }
+                        setNodeState={ this.setNodeState }
+                        nodes={ this.state.nodes }
+                        isShown={ true /* The prop means whether the node is being rendered right now by its parent */ }
+                      />
+                    );
                   })
                 }
               </g>

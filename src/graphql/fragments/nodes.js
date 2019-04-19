@@ -1,14 +1,13 @@
 export const nodes = `
-  fragment node on Circle @client {
+  fragment node on Node @client {
     id
     name
     centerX
     centerY
     depth
-    zoom {
-      x
-      y
-      scale
+    parent
+    display {
+      ...display
     }
   }
   fragment nodes on NodeList @client {
@@ -16,5 +15,19 @@ export const nodes = `
     list {
       ...node
     }
+  }
+  fragment display on DisplayData @client {
+    id
+    shape
+    visible
+    zoom {
+      ...zoom
+    }
+  }
+  fragment zoom on ZoomData @client {
+    id
+    x
+    y
+    scale
   }
 `;

@@ -2,17 +2,13 @@ import gql from 'graphql-tag';
 
 export const getCurrentFocus = gql`
   query getCurrentFocus @client {
-    currentFocus {
+    currentFocus @client {
       id
       name
       centerX
       centerY
       depth
-      zoom {
-        x
-        y
-        scale
-      }
+      parent
     }
   }
 `;
