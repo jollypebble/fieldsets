@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Mutation } from 'react-apollo';
 import { setCurrentFocus } from '../../graphql';
 import Shape from './Shape';
+import Label from './Label';
 
 /**
  * Nodes are state data components that represent groupings of field data and a users interactions with that data.
@@ -53,7 +54,7 @@ class Node extends React.Component {
 
   componentDidUpdate(prevProps) {
     // here we want to hide all nodes down the tree if their parent is hidden
-    if (!this.props.isShown && this.state.visible) this.setState({ visible: false });
+    if (!this.props.visible && this.state.visible) this.setState({ visible: false });
     if (prevProps.nodeID !== this.props.nodeID) this.getLongTermData();
   }
 
@@ -148,26 +149,18 @@ class Node extends React.Component {
     });
   }
 
-  getInsideElements(name, centerX, centerY, focusCircle) {
-    let { textX, textY, scaleFactor, textSize, ratio, id } = this.props;
-    textSize = (ratio ? ratio * textSize : textSize) * 0.9;
-    const fontSize = (textSize ? textSize : 0.5 * scaleFactor) + 'pt';
+  getLabel(name, centerX, centerY, focusCircle) {
     return (
       <React.Fragment>
-        <text
-          ref={this.nodeTextElement}
-          x={textX ? textX : centerX}
-          y={textY ? textY : centerY}
-          textAnchor="middle"
-          className={'circletext ' + (!this.hasParent() ? 'shown' : '') + ' ' + (!this.props.isShown ? ' hidden' : 'shown') }
-          onClick={focusCircle}
-        >
-          <tspan x={textX ? textX : centerX} style={{ fontSize }} dy="0em">{name}</tspan>
-          <tspan x={textX ? textX : centerX} style={{ fontSize }} dy="1.6em">
-            { 'Data: Value' }
-          </tspan>
-          { id === 'long_term_money' && <tspan y={textY ? textY + 0.2 : centerY + 0.2 } className="refresh-icon">&#xf0e2;</tspan>}
-        </text>
+        <Label
+          {...this.props}
+          name={name}
+          centerX={centerX}
+          centerY={centerY}
+          focusCircle={focusCircle}
+          hasParent={ this.hasParent() }
+          nodeTextElement={ this.nodeTextElement }
+        />
       </React.Fragment>
     );
   }
@@ -201,7 +194,7 @@ class Node extends React.Component {
     const id = this.props.nodeID;
     let display = this.state.display;
 
-    let { name, centerX, centerY, nodeData } = this.props;
+    let { name, centerX, centerY, nodeData, parentCenterX, parentCenterY } = this.props;
 
     let parentNode = '';
 
@@ -235,7 +228,7 @@ class Node extends React.Component {
               radius={ this.props.radius }
               scaleFactor={ this.props.scaleFactor * 0.6 }
 
-              isShown={this.state.visible /* The prop means whether the node is being rendered right now by its parent */}
+              visible={this.state.visible /* The prop means whether the node is being rendered right now by its parent */}
               wasParentClickedAtLeastOnce={this.state.wasClickedAtLeastOnce /* Whether the parent of the node was clicked at least once (is used for initial animations) */}
             />
           );
@@ -247,7 +240,7 @@ class Node extends React.Component {
     const immersionClass = this.hasParent() ? 'child-node' : 'parent-node';
 
     /** "Shown class" exists only for those nodes that are able to show up and hide (child/sub nodes)  */
-    const shownClass = this.hasParent() && this.props.wasParentClickedAtLeastOnce ? (this.props.isShown ? 'shown' : 'hidden') : '';
+    const shownClass = this.hasParent() && this.props.wasParentClickedAtLeastOnce ? (this.props.visible ? 'shown' : 'hidden') : '';
 
     /** We want to hide children at the start of the app */
     const afterHiddenClass = this.hasParent() && shownClass === '' ? 'afterHidden' : '';
@@ -278,11 +271,13 @@ class Node extends React.Component {
                   attributes={{
                     centerX,
                     centerY,
+                    parentCenterX,
+                    parentCenterY,
                     ...display.attributes
                   }}
                   scaleFactor={ this.props.scaleFactor * 0.6 }
                 />
-                {this.getInsideElements(name, centerX, centerY, focusCircle)}
+                {this.getLabel(name, centerX, centerY, focusCircle)}
               </g>
               {parentNode}
             </g>

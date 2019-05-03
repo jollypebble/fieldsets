@@ -128,7 +128,7 @@ class CircleDiagram extends Component {
     const focus = this.getFocus();
     const current = focus.currentFocus;
     const currentNode = this.getNode({ id: current.id });
-    
+
     /** Our desired zoom for the current node that was clicked */
     let zoom = this.props.zoom * currentNode.display.zoom.scale;
 
@@ -448,7 +448,7 @@ class CircleDiagram extends Component {
                         closeDialog={ this.closeDialog }
                         setNodeState={ this.setNodeState }
                         nodes={ this.state.nodes }
-                        isShown={ true /* The prop means whether the node is being rendered right now by its parent */ }
+                        visible={ true /* The prop means whether the node is being rendered right now by its parent */ }
                       />
                     );
                   })
