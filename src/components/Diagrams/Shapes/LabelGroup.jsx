@@ -12,7 +12,7 @@ const LabelGroup = ({id, active, visibility, attributes}) => {
       </defs>
       <Shape
         id={id}
-        shape="Rectangle"
+        shape="Triangle"
         active={active}
         visibility={visibility}
         attributes={attributes}
