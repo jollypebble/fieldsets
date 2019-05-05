@@ -253,18 +253,18 @@ caption,
   src: url("/assets/fonts/OpenSans-Light.ttf"); }
 
 #defense_allocation-group .circle-group ellipse {
-  fill: #ccc;
-  stroke: #888; }
+  fill: #f55f68;
+  stroke: #f00; }
 
 #defense_allocation-group .circle-group circle {
-  fill: #ccc;
-  stroke: #888; }
+  fill: #f55f68;
+  stroke: #f00; }
 
 #defense_allocation-group .circle-group tspan {
   fill: #515359; }
 
 #offense_allocation-group .circle-group ellipse {
-  fill: #ccc;
+  fill: #5fc6f5;
   stroke: #888; }
 
 #offense_allocation-group .circle-group tspan {
@@ -277,23 +277,23 @@ caption,
 #net_worth-group .circle-group tspan {
   fill: #515359; }
 
-#short_term_money-group .circle-group circle {
-  fill: #ccc;
-  stroke: #888; }
+#short_term_money-group .circle-group circle, #short_term_money-group .circle-group rect {
+  fill: #9cff9c;
+  stroke: #66cccc; }
 
 #short_term_money-group .circle-group tspan {
   fill: #515359; }
 
-#mid_term_money-group .circle-group circle {
-  fill: #ccc;
-  stroke: #888; }
+#mid_term_money-group .circle-group circle, #mid_term_money-group .circle-group ellipse {
+  fill: #ccccff;
+  stroke: #73cbd2; }
 
 #mid_term_money-group .circle-group tspan {
   fill: #515359; }
 
-#long_term_money-group .circle-group circle {
-  fill: #ccc;
-  stroke: #888; }
+#long_term_money-group .circle-group circle, #long_term_money-group .circle-group rect {
+  fill: #ccffff;
+  stroke: #6ccfcf; }
 
 #long_term_money-group .circle-group tspan {
   fill: #515359; }

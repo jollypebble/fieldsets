@@ -1,5 +1,7 @@
 import React from 'react';
 
+const noValueList = ['monthly_contribution', 'lump_sums', 'short_term_money', 'mid_term_money', 'long_term_money'];
+
 const Label = (props) => {
   let { textX, textY, textSize, ratio } = props.display.attributes;
   const {id, name, centerX, centerY, focusCircle, nodeTextElement, hasParent, scaleFactor} = props;
@@ -17,9 +19,9 @@ const Label = (props) => {
       >
         <tspan x={textX ? textX : centerX} style={{ fontSize }} dy="0em">{name}</tspan>
         <tspan x={textX ? textX : centerX} style={{ fontSize }} dy="1.6em">
-          { 'Data: Value' }
+          { !noValueList.includes(id) && 'Data: Value' }
         </tspan>
-        { id === 'long_term_money' && <tspan y={textY ? textY + 0.2 : centerY + 0.2 } className="refresh-icon">&#xf0e2;</tspan>}
+        { id === 'long_term_money' && <tspan y={textY ? textY + 0.2 : centerY + 0.2 } dx="-1em" className="refresh-icon">&#xf0e2;</tspan>}
       </text>
     </React.Fragment>
   );
