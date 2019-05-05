@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Rectangle = ({id, visibility, attributes}) => {
+const Rectangle = ({id, visibility, attributes, gradient}) => {
   const {radiusX, radiusY, width, height, parentCenterX, parentCenterY, parent, rotate} = attributes;
   let {centerX, centerY, strokeWidth} = attributes;
   const hasParent = (parent && parent !== '') ? true : false;
@@ -15,6 +15,7 @@ const Rectangle = ({id, visibility, attributes}) => {
     <React.Fragment>
       <rect
         id={id}
+        style={{ fill: `url(#${gradient}` }}
         className="circlenode rectangle"
         x={centerX}
         y={centerY}

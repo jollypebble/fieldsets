@@ -17,7 +17,6 @@ class Node extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      display: this.props.display, // display node shapes that can change depending on node data and state.
       isMouseInside: false,
       visible: this.props.visible,
       wasClickedAtLeastOnce: false, // whether the node was clicked at least once (is used for initial animations)
@@ -95,6 +94,7 @@ class Node extends React.Component {
 
   /** Is called when the cursor acrosses borders of the radial node getting inside of it */
   handleMouseEnter() {
+    if (this.props.id === 'mid_term_money') return;
     this.setState({ isMouseInside: true });
   }
 
@@ -192,9 +192,8 @@ class Node extends React.Component {
 
   render() {
     const id = this.props.nodeID;
-    let display = this.state.display;
 
-    let { name, centerX, centerY, nodeData, parentCenterX, parentCenterY } = this.props;
+    let { name, centerX, centerY, nodeData, parentCenterX, parentCenterY, display } = this.props;
 
     let parentNode = '';
 
@@ -213,7 +212,6 @@ class Node extends React.Component {
               key={ data.id }
               nodeData={ typeof(data.children) === undefined ? [] : data.children }
               nodeID={ data.id }
-              shape={display.shape}
               {...data}
 
               parentInstance={ this }
@@ -292,7 +290,6 @@ Node.propTypes = {
   nodeID: PropTypes.string.isRequired,
   nodeData: PropTypes.array.isRequired,
   name: PropTypes.string.isRequired,
-  shape: PropTypes.string.isRequired,
   centerX: PropTypes.node.isRequired,
   centerY: PropTypes.node.isRequired,
 };

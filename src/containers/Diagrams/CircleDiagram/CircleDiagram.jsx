@@ -439,7 +439,6 @@ class CircleDiagram extends Component {
                         nodeData={ typeof(diagram.children) === undefined ? [] : diagram.children }
                         nodeID={ diagram.id }
                         scaleFactor={ 1 }
-                        shape={diagram.display.shape}
                         {...diagram}
                         radius={ this.getStandardRadius() }
                         updateFocus={ this.updateFocus }

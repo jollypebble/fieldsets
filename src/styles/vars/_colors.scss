@@ -12,11 +12,11 @@ $circle-stroke: #888;
 $circle-text: #515359;
 
 // Descriptive variable names for easier assignment
-$defense-fill: $circle-fill;
-$defense-stroke: $circle-stroke;
+$defense-fill: #f55f68;
+$defense-stroke: #f00;
 $defense-text: $circle-text;
 
-$offense-fill: $circle-fill;
+$offense-fill: #5fc6f5;
 $offense-stroke: $circle-stroke;
 $offense-text: $circle-text;
 
@@ -24,16 +24,16 @@ $networth-fill: $circle-fill;
 $networth-stroke: $circle-stroke;
 $networth-text: $circle-text;
 
-$shortterm-fill: $circle-fill;
-$shortterm-stroke: $circle-stroke;
+$shortterm-fill: #9cff9c;
+$shortterm-stroke: #66cccc;
 $shortterm-text: $circle-text;
 
-$midterm-fill: $circle-fill;
-$midterm-stroke: $circle-stroke;
+$midterm-fill: #ccccff;
+$midterm-stroke: #73cbd2;
 $midterm-text: $circle-text;
 
-$longterm-fill: $circle-fill;
-$longterm-stroke: $circle-stroke;
+$longterm-fill: #ccffff;
+$longterm-stroke: #6ccfcf;
 $longterm-text: $circle-text;
 
 $contribution-fill: $circle-fill;

@@ -40,7 +40,7 @@
 
 #short_term_money-group {
   .circle-group {
-    circle {
+    circle, rect {
       fill: $shortterm-fill;
       stroke: $shortterm-stroke;
     }
@@ -52,7 +52,7 @@
 
 #mid_term_money-group {
   .circle-group {
-    circle {
+    circle, ellipse {
       fill: $midterm-fill;
       stroke: $midterm-stroke;
     }
@@ -64,7 +64,7 @@
 
 #long_term_money-group {
   .circle-group {
-    circle {
+    circle, rect {
       fill: $longterm-fill;
       stroke: $longterm-stroke;
     }
