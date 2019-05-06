@@ -144,7 +144,7 @@ class Node extends React.Component {
     longTermData.unshift(lastElement);
     this.setState({
       longTermData: longTermData.map((item, index) => {
-        return { ...item, centerX: temp[index].centerX, centerY: temp[index].centerY, ratio: temp[index].ratio };
+        return { ...item, centerX: temp[index].centerX, centerY: temp[index].centerY, display: temp[index].display };
       })
     });
   }
@@ -160,6 +160,7 @@ class Node extends React.Component {
           focusCircle={focusCircle}
           hasParent={ this.hasParent() }
           nodeTextElement={ this.nodeTextElement }
+          updateData={this.updateLongTermData}
         />
       </React.Fragment>
     );
@@ -226,8 +227,10 @@ class Node extends React.Component {
               radius={ this.props.radius }
               scaleFactor={ this.props.scaleFactor * 0.6 }
 
-              visible={this.state.visible /* The prop means whether the node is being rendered right now by its parent */}
-              wasParentClickedAtLeastOnce={this.state.wasClickedAtLeastOnce /* Whether the parent of the node was clicked at least once (is used for initial animations) */}
+              // visible={this.state.visible /* The prop means whether the node is being rendered right now by its parent */}
+              // wasParentClickedAtLeastOnce={this.state.wasClickedAtLeastOnce /* Whether the parent of the node was clicked at least once (is used for initial animations) */}
+              visible={true}
+              wasParentClickedAtLeastOnce={true}
             />
           );
         }) }
