@@ -22,7 +22,7 @@ const valueDefaults = {
     shape: 'Circle', // The shape Component
     attributes: {
       textSize: 0.6,
-      ratio: 0.8
+      ratio: 1
     }, // Shape attributes
     className: '', // Additional classnames
     visible: true, // Visibility
@@ -37,8 +37,8 @@ const valueDefaults = {
 const defenseDefault = {
   display: {
     attributes: {
-      ratio: 1.1,
-      textSize: 0.45
+      ratio: 1.4,
+      textSize: 0.4
     }
   }
 };
@@ -46,7 +46,7 @@ const defenseDefault = {
 const offenseDefault = {
   display: {
     attributes: {
-      ratio: 1.6,
+      ratio: 1.8,
       textSize: 0.28,
     }
   }
@@ -55,7 +55,7 @@ const offenseDefault = {
 const offenseSmall = {
   display: {
     attributes: {
-      ratio: 1.2,
+      ratio: 1.3,
       textSize: 0.3
     }
   }
@@ -76,7 +76,7 @@ const data = [
       attributes: {
         textX: 42.5,
         textY: 30.5,
-        textSize: 0.8
+        textSize: 0.6
       }
     }
   },
@@ -90,7 +90,7 @@ const data = [
       attributes: {
         textX: 59,
         textY: 30.5,
-        textSize: 0.8
+        textSize: 0.6
       }
     }
   },
@@ -117,7 +117,7 @@ const data = [
         id: 'will',
         name: 'Will',
         parent: 'defense_allocation',
-        centerX: 28,
+        centerX: 25,
         centerY: 35,
         ...defenseDefault
       },
@@ -125,7 +125,7 @@ const data = [
         id: 'disability_insurance',
         name: 'Disabilty Insurance',
         parent: 'defense_allocation',
-        centerX: 36,
+        centerX: 35,
         centerY: 38.5,
         ...defenseDefault
       },
@@ -133,7 +133,7 @@ const data = [
         id: 'long_term_care',
         name: 'Long Term Care',
         parent: 'defense_allocation',
-        centerX: 66,
+        centerX: 67,
         centerY: 38.5,
         ...defenseDefault
       },
@@ -141,7 +141,7 @@ const data = [
         id: 'term_insurance',
         name: 'Term Insurance',
         parent: 'defense_allocation',
-        centerX: 74,
+        centerX: 77,
         centerY: 35,
         ...defenseDefault
       }
@@ -160,19 +160,19 @@ const data = [
         id: 'short_term_money',
         name: 'Short Term Money',
         parent: 'offense_allocation',
-        centerX: 24,
-        centerY: 50,
+        centerX: 22,
+        centerY: 50.5,
         display: {
           shape: 'labelGroup',
           attributes: {
-            textX: 32,
-            textY: 57,
-            width: 18,
-            height: 14,
+            textX: 31.5,
+            textY: 58,
+            width: 20,
+            height: 15,
             radiusX: 6.5,
             radiusY: 6.5,
-            rotate: '-45 33 57',
-            textSize: 0.7
+            rotate: '-45 32 58',
+            textSize: 0.5
           },
         },
         children: [
@@ -180,24 +180,24 @@ const data = [
             id: 'cash_equivalents',
             name: 'Cash Equivalents',
             parent: 'short_term_money',
-            centerX: 32,
-            centerY: 53,
+            centerX: 31,
+            centerY: 53.5,
             ...offenseDefault
           },
           {
             id: 'mortgage',
             name: 'Mortgage',
             parent: 'short_term_money',
-            centerX: 38,
-            centerY: 56.5,
+            centerX: 37.5,
+            centerY: 57,
             ...offenseDefault
           },
           {
             id: 'liabilities_debt',
             name: 'Liabilities/Debt',
             parent: 'short_term_money',
-            centerX: 31,
-            centerY: 60.5,
+            centerX: 30,
+            centerY: 61.5,
             ...offenseDefault
           },
         ]
@@ -207,13 +207,13 @@ const data = [
         name: 'Mid Term Money',
         parent: 'offense_allocation',
         centerX: 50.5,
-        centerY: 60,
+        centerY: 61.5,
         display: {
           shape: 'ellipse',
           attributes: {
-            radiusX: 7,
-            radiusY: 8.5,
-            textSize: 0.7
+            radiusX: 8,
+            radiusY: 9,
+            textSize: 0.5
           }
         },
         children: [
@@ -221,8 +221,8 @@ const data = [
             id: 'utmas',
             name: 'UTMA\'s',
             parent: 'mid_term_money',
-            centerX: 47.5,
-            centerY: 63,
+            centerX: 47,
+            centerY: 65,
             ...offenseDefault
           },
           {
@@ -230,15 +230,15 @@ const data = [
             name: '529 Plan',
             parent: 'mid_term_money',
             centerX: 50.5,
-            centerY: 56.5,
+            centerY: 57.5,
             ...offenseDefault
           },
           {
             id: 'investment_account',
             name: 'Investment Account',
             parent: 'mid_term_money',
-            centerX: 53.5,
-            centerY: 63,
+            centerX: 54,
+            centerY: 65,
             ...offenseDefault
           },
         ]
@@ -252,14 +252,14 @@ const data = [
         display: {
           shape: 'radialGroup',
           attributes: {
-            width: 20,
-            height: 17,
-            textX: 69,
-            textY: 57.5,
+            width: 22,
+            height: 18,
+            textX: 70,
+            textY: 58,
             radiusX: 7.5,
             radiusY: 7.5,
-            rotate: '45 70 57',
-            textSize: 0.7
+            rotate: '45 71 58',
+            textSize: 0.5
           },
           zoom: { scale: 1.5 },
         },
@@ -268,55 +268,55 @@ const data = [
             id: 'ira_roth',
             name: 'IRA ROTH',
             parent: 'long_term_money',
-            centerX: 66.5,
-            centerY: 51.5,
+            centerX: 67,
+            centerY: 52,
             ...offenseDefault
           },
           {
             id: 'cash_value_life',
             name: 'Cash Value Life',
             parent: 'long_term_money',
-            centerX: 63,
-            centerY: 57,
+            centerX: 64.2,
+            centerY: 58.8,
             ...offenseDefault
           },
           {
             id: 'k_401',
             name: '401_K',
             parent: 'long_term_money',
-            centerX: 67,
-            centerY: 62,
+            centerX: 69.5,
+            centerY: 64,
             ...offenseDefault
           },
           {
             id: 'annuity',
             name: 'Annuity',
             parent: 'long_term_money',
-            centerX: 73,
-            centerY: 63,
+            centerX: 76.5,
+            centerY: 63.5,
             ...offenseSmall
           },
           {
             id: 'stock_option',
             name: 'Stock option',
             parent: 'long_term_money',
-            centerX: 76.5,
-            centerY: 60,
+            centerX: 79,
+            centerY: 59.5,
             ...offenseSmall
           },
           {
             id: 'investment_real_estate',
             name: 'Real Estate',
             parent: 'long_term_money',
-            centerX: 76,
-            centerY: 55.5,
+            centerX: 77,
+            centerY: 55,
             ...offenseSmall
           },
           {
             id: 'deffered_comp',
             name: 'Deffered Comp',
             parent: 'long_term_money',
-            centerX: 72.5,
+            centerX: 73.5,
             centerY: 52,
             ...offenseSmall
           }

@@ -21,7 +21,16 @@ const Label = (props) => {
         <tspan x={textX ? textX : centerX} style={{ fontSize }} dy="1.6em">
           { !noValueList.includes(id) && 'Data: Value' }
         </tspan>
-        { id === 'long_term_money' && <tspan y={textY ? textY + 0.2 : centerY + 0.2 } dx="-1em" className="refresh-icon">&#xf0e2;</tspan>}
+        { id === 'long_term_money' &&
+          <tspan
+            className="refresh-icon"
+            dx="-1em"
+            y={textY ? textY + 0.2 : centerY + 0.2 }
+            onClick={props.updateData}
+          >
+            &#xf0e2;
+          </tspan>
+        }
       </text>
     </React.Fragment>
   );
