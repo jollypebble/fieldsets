@@ -80,7 +80,6 @@ class Node extends React.Component {
 
   /** Is called when the cursor acrosses borders of the radial node getting inside of it */
   handleMouseEnter() {
-    if (this.props.id === 'mid_term_money') return;
     this.setState({ isMouseInside: true });
   }
 
