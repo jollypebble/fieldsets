@@ -20,6 +20,14 @@
       fill: $offense-fill;
       stroke: $offense-stroke;
     }
+    #defense_parent {
+      fill: $defense_parent-fill;
+      stroke: $defense_parent-stroke;
+    }
+    #offense_parent {
+      fill: $offense_parent-fill;
+      stroke: $offense_parent-stroke;
+    }
     tspan {
       fill: $offense-text;
     }
@@ -28,9 +36,9 @@
 
 #net_worth-group {
   .circle-group {
-    ellipse {
-      fill: $networth-fill;
-      stroke: $networth-stroke;
+    #net_worth {
+      fill: $net_worth-fill;
+      stroke: $net_worth-stroke;
     }
     tspan {
       fill: $networth-text;

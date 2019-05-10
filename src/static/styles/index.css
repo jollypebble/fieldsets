@@ -253,54 +253,62 @@ caption,
   src: url("/assets/fonts/OpenSans-Light.ttf"); }
 
 #defense_allocation-group .circle-group ellipse {
-  fill: #f55f68;
-  stroke: #f00; }
+  fill: #f9bcc0;
+  stroke: #f44647; }
 
 #defense_allocation-group .circle-group circle {
-  fill: #f55f68;
-  stroke: #f00; }
+  fill: #f9bcc0;
+  stroke: #f44647; }
 
 #defense_allocation-group .circle-group tspan {
   fill: #515359; }
 
 #offense_allocation-group .circle-group ellipse {
   fill: #5fc6f5;
-  stroke: #888; }
+  stroke: #efef41; }
+
+#offense_allocation-group .circle-group #defense_parent {
+  fill: #f9bcc0;
+  stroke: #f44647; }
+
+#offense_allocation-group .circle-group #offense_parent {
+  fill: #b3e7ff;
+  stroke: #63b2ff; }
 
 #offense_allocation-group .circle-group tspan {
   fill: #515359; }
 
-#net_worth-group .circle-group ellipse {
-  fill: #ccc;
-  stroke: #888; }
+#net_worth-group .circle-group #net_worth {
+  fill: #82db83;
+  stroke: #42ac09; }
 
 #net_worth-group .circle-group tspan {
   fill: #515359; }
 
 #short_term_money-group .circle-group circle, #short_term_money-group .circle-group rect {
-  fill: #9cff9c;
-  stroke: #66cccc; }
+  fill: #b3e7ff;
+  stroke: #6db8fe; }
 
 #short_term_money-group .circle-group tspan {
   fill: #515359; }
 
 #mid_term_money-group .circle-group circle, #mid_term_money-group .circle-group ellipse {
-  fill: #ccccff;
-  stroke: #73cbd2; }
+  fill: #83c5e4;
+  stroke: #6bb6f8; }
 
 #mid_term_money-group .circle-group tspan {
   fill: #515359; }
 
 #long_term_money-group .circle-group circle, #long_term_money-group .circle-group rect {
-  fill: #ccffff;
-  stroke: #6ccfcf; }
+  fill: #44c1ff;
+  stroke: #6db8fe; }
 
 #long_term_money-group .circle-group tspan {
   fill: #515359; }
 
 #monthly_contribution-group .circle-group rect, #lump_sums-group .circle-group rect {
-  fill: #ccc;
-  stroke: #888; }
+  fill: #ffffad;
+  stroke: #efef41; }
 
 #monthly_contribution-group .circle-group tspan, #lump_sums-group .circle-group tspan {
   fill: #515359; }
@@ -611,7 +619,7 @@ text.nodeNameBase {
   transform: translate(-75px, 0); }
 
 text.nodeAttributesBase {
-  fill: #ccc;
+  fill: #ffffad;
   stroke: transparent;
   font-family: "OpenSans", Roboto, sans-serif;
   transform: translate(-75px, 0); }

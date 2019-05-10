@@ -3,16 +3,16 @@ import React from 'react';
 export const netWorth = () => (
   <radialGradient
     id="netWorth"
-    cx="51.215698"
-    cy="42.350674"
+    gradientUnits="userSpaceOnUse"
+    gradientTransform="matrix(1,0,0,0.26313832, 0, 31.206589)"
+    r="25.523741"
     fx="51.215698"
     fy="42.350674"
-    r="25.523741"
-    gradientTransform="matrix(1,0,0,0.26313832,0,31.206589)"
-    gradientUnits="userSpaceOnUse"
+    cx="51.215698"
+    cy="42.350674"
   >
-    <stop offset="0%" stopColor="#dbdc99" />
-    <stop offset="0%" stopColor="#fdfdf9" />
+    <stop offset="0%" stopColor="#cecf76" />
+    <stop offset="100%" stopColor="#fdfdf9" />
   </radialGradient>
 );
 
@@ -24,8 +24,8 @@ export const defenceAllocation = () => (
     r="25.435919"
     fy="6.1103106"
     fx="52.520226"
-    cy="6.1103106"
     cx="52.520226"
+    cy="6.1103106"
   >
     <stop offset="0%" stopColor="#f17372" />
     <stop offset="100%" stopColor="#fdeaeb" />
