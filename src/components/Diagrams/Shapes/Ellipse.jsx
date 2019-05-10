@@ -10,7 +10,7 @@ const Ellipse = ({id, active, visibility, attributes}) => {
   let radius = (active) ? defaultRadius * 1.1 : defaultRadius;
 
   const hasParent = (parent && parent !== '') ? true : false;
-  let {centerX, centerY, strokeWidth, gradientId} = attributes;
+  let {centerX, centerY, strokeWidth} = attributes;
 
   // Ensure centers are set to parent in proper instances.
   if (visibility === 'hidden' || (hasParent && visibility === '')) {
@@ -21,7 +21,7 @@ const Ellipse = ({id, active, visibility, attributes}) => {
   radius = ratio ? ratio * radius : radius;
 
   if ( ! strokeWidth ) {
-    strokeWidth = radius / 40;
+    strokeWidth = radius / 60;
   }
 
   return (
@@ -35,7 +35,6 @@ const Ellipse = ({id, active, visibility, attributes}) => {
         ry={radiusY}
         strokeWidth={strokeWidth}
         onClick={attributes.focusCircle}
-        // style={{ fill: `url(#${gradientId}` }}
       >
       </ellipse>
     </React.Fragment>

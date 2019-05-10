@@ -7,13 +7,13 @@ $app-white: #FFF;
 $app-blue: $md-primary-color;
 
 // Circle defaults
-$circle-fill: #ccc;
-$circle-stroke: #888;
+$circle-fill: #ffffad;
+$circle-stroke: #efef41;
 $circle-text: #515359;
 
 // Descriptive variable names for easier assignment
-$defense-fill: #f55f68;
-$defense-stroke: #f00;
+$defense-fill: #f9bcc0;
+$defense-stroke: #f44647;
 $defense-text: $circle-text;
 
 $offense-fill: #5fc6f5;
@@ -24,17 +24,26 @@ $networth-fill: $circle-fill;
 $networth-stroke: $circle-stroke;
 $networth-text: $circle-text;
 
-$shortterm-fill: #9cff9c;
-$shortterm-stroke: #66cccc;
+$shortterm-fill: #b3e7ff;
+$shortterm-stroke: #6db8fe;
 $shortterm-text: $circle-text;
 
-$midterm-fill: #ccccff;
-$midterm-stroke: #73cbd2;
+$midterm-fill: #83c5e4;
+$midterm-stroke: #6bb6f8;
 $midterm-text: $circle-text;
 
-$longterm-fill: #ccffff;
-$longterm-stroke: #6ccfcf;
+$longterm-fill: #44c1ff;
+$longterm-stroke: #6db8fe;
 $longterm-text: $circle-text;
+
+$defense_parent-fill: #f9bcc0;
+$defense_parent-stroke: #f44647;
+
+$offense_parent-fill: #b3e7ff;
+$offense_parent-stroke: #63b2ff;
+
+$net_worth-fill: #82db83;
+$net_worth-stroke: #42ac09;
 
 $contribution-fill: $circle-fill;
 $contribution-stroke: $circle-stroke;

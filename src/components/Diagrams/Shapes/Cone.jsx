@@ -10,8 +10,8 @@ const Cone = ({attributes}) => {
         <g transform={transform2}>
           <path
             d={attributes.path}
-            // style={{ fill: `url(#${gradientId}` }}
-            style={{ fill: attributes.gradientId ? `url(#${attributes.gradientId}` : null }}
+            style={{ fill: `url(#${attributes.gradientId}` }}
+            // style={{ fill: attributes.gradientId ? `url(#${attributes.gradientId}` : null }}
           />
         </g>
       </g>

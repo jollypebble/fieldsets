@@ -37,8 +37,8 @@ const valueDefaults = {
 const defenseDefault = {
   display: {
     attributes: {
-      ratio: 1.4,
-      textSize: 0.4
+      ratio: 1.2,
+      textSize: 0.45
     }
   }
 };
@@ -69,13 +69,13 @@ const data = [
   {
     id: 'monthly_contribution',
     name: 'Monthly Contribution',
-    centerX: 37.5,
-    centerY: 20,
+    centerX: 39,
+    centerY: 21.5,
     display: {
       shape: 'Rectangle',
       attributes: {
-        textX: 42.5,
-        textY: 22.5,
+        textX: 44,
+        textY: 24,
         textSize: 0.6
       }
     }
@@ -83,13 +83,13 @@ const data = [
   {
     id: 'lump_sums',
     name: 'Lump Sums',
-    centerX: 54,
-    centerY: 20,
+    centerX: 52.5,
+    centerY: 21.5,
     display: {
       shape: 'Rectangle',
       attributes: {
-        textX: 59,
-        textY: 22.5,
+        textX: 57.5,
+        textY: 24,
         textSize: 0.6
       }
     }
@@ -100,11 +100,13 @@ const data = [
     centerX: 51,
     centerY: 42.5,
     display: {
-      shape: 'ellipse',
+      shape: 'radialGroup',
       attributes: {
         rx: '25.523741',
         ry: '6.7162743',
-        gradientId: 'netWorth'
+        path: 'm 26.016496, 40.303542 l 25.42892 -3 l 25.41842 2.9548 l -25.42892 4 z',
+        transform1: 'translate(0, 1.3789058)',
+        gradientId: 'netWorth',
       }
     }
   },
@@ -112,7 +114,7 @@ const data = [
     id: 'defense_allocation',
     name: 'Defense Allocation',
     centerX: 51, // X,Y represent points on a plane to map the current data to. If we wanted to get fancy we could rework this to include Z coordinates, but I don't see that showing a need for any time soon. If it does tracking down how these guys are used is a good place to start.
-    centerY: 37,
+    centerY: 37.5,
     display: {
       shape: 'radialGroup',
       attributes: {
@@ -127,33 +129,46 @@ const data = [
         id: 'will',
         name: 'Will',
         parent: 'defense_allocation',
-        centerX: 25,
-        centerY: 35,
+        centerX: 36,
+        centerY: 36.5,
         ...defenseDefault
       },
       {
         id: 'disability_insurance',
         name: 'Disabilty Insurance',
         parent: 'defense_allocation',
-        centerX: 35,
-        centerY: 38.5,
+        centerX: 45,
+        centerY: 32.2,
         ...defenseDefault
       },
       {
         id: 'long_term_care',
         name: 'Long Term Care',
         parent: 'defense_allocation',
-        centerX: 67,
-        centerY: 38.5,
+        centerX: 57,
+        centerY: 32.2,
         ...defenseDefault
       },
       {
         id: 'term_insurance',
         name: 'Term Insurance',
         parent: 'defense_allocation',
-        centerX: 77,
-        centerY: 35,
+        centerX: 66,
+        centerY: 36.5,
         ...defenseDefault
+      },
+      {
+        id: 'net_worth',
+        name: 'Net Worth',
+        centerX: 51,
+        centerY: 42.5,
+        display: {
+          shape: 'ellipse',
+          attributes: {
+            rx: '25.523741',
+            ry: '6.7162743',
+          }
+        }
       }
     ]
   },
@@ -337,7 +352,7 @@ const data = [
         id: 'defense_parent',
         name: 'Defense Allocation',
         centerX: 51,
-        centerY: 37,
+        centerY: 37.5,
         display: {
           shape: 'ellipse'
         }
