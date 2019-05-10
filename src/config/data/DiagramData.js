@@ -70,12 +70,12 @@ const data = [
     id: 'monthly_contribution',
     name: 'Monthly Contribution',
     centerX: 37.5,
-    centerY: 28,
+    centerY: 20,
     display: {
       shape: 'Rectangle',
       attributes: {
         textX: 42.5,
-        textY: 30.5,
+        textY: 22.5,
         textSize: 0.6
       }
     }
@@ -84,12 +84,12 @@ const data = [
     id: 'lump_sums',
     name: 'Lump Sums',
     centerX: 54,
-    centerY: 28,
+    centerY: 20,
     display: {
       shape: 'Rectangle',
       attributes: {
         textX: 59,
-        textY: 30.5,
+        textY: 22.5,
         textSize: 0.6
       }
     }
@@ -100,7 +100,12 @@ const data = [
     centerX: 51,
     centerY: 42.5,
     display: {
-      shape: 'Ellipse'
+      shape: 'ellipse',
+      attributes: {
+        rx: '25.523741',
+        ry: '6.7162743',
+        gradientId: 'netWorth'
+      }
     }
   },
   {
@@ -109,8 +114,13 @@ const data = [
     centerX: 51, // X,Y represent points on a plane to map the current data to. If we wanted to get fancy we could rework this to include Z coordinates, but I don't see that showing a need for any time soon. If it does tracking down how these guys are used is a good place to start.
     centerY: 37,
     display: {
-      shape: 'Ellipse',
-      zoom: { y: 0.75 }
+      shape: 'radialGroup',
+      attributes: {
+        path: 'm 26.016496,40.303542 c 4.068473,-10.475491 11.191298,-13.886702 25.163429,-13.60235 13.877543,0.282427 18.056874,3.033919 25.683293,13.557226 l -25.45783,-1.578967 z',
+        gradientId: 'defenceAllocation',
+        textSize: 0.8,
+        transform1: 'translate(0, 1.3789058)'
+      }
     },
     children: [ // Should `children` be thought of as `data`. The `chldren` field name is used to imply this can be eith a series of liner data points or a series of relationally nested data objects.
       {
@@ -153,26 +163,23 @@ const data = [
     centerX: 51,
     centerY: 48,
     display: {
-      shape: 'Ellipse'
+      shape: 'ellipse'
     },
     children: [
       {
         id: 'short_term_money',
         name: 'Short Term Money',
         parent: 'offense_allocation',
-        centerX: 22,
-        centerY: 50.5,
+        centerX: 35,
+        centerY: 46,
         display: {
-          shape: 'labelGroup',
+          shape: 'radialGroup',
           attributes: {
-            textX: 31.5,
-            textY: 58,
-            width: 20,
-            height: 15,
-            radiusX: 6.5,
-            radiusY: 6.5,
-            rotate: '-45 32 58',
-            textSize: 0.5
+            path: 'm 36.054562,68.020023 c -10.690411,-6.069771 -12.243127,-16.573239 -12.05339,-26.125436 l 24.941407,3.509427 z',
+            transform1: 'translate(1.6971147, -0.53034835)',
+            transform2: 'translate(0.31820901, 0.31820901)',
+            textSize: 1,
+            gradientId: 'shortTermMoney'
           },
         },
         children: [
@@ -180,24 +187,24 @@ const data = [
             id: 'cash_equivalents',
             name: 'Cash Equivalents',
             parent: 'short_term_money',
-            centerX: 31,
-            centerY: 53.5,
+            centerX: 35,
+            centerY: 50,
             ...offenseDefault
           },
           {
             id: 'mortgage',
             name: 'Mortgage',
             parent: 'short_term_money',
-            centerX: 37.5,
-            centerY: 57,
+            centerX: 41,
+            centerY: 55,
             ...offenseDefault
           },
           {
             id: 'liabilities_debt',
             name: 'Liabilities/Debt',
             parent: 'short_term_money',
-            centerX: 30,
-            centerY: 61.5,
+            centerX: 33,
+            centerY: 57,
             ...offenseDefault
           },
         ]
@@ -206,14 +213,15 @@ const data = [
         id: 'mid_term_money',
         name: 'Mid Term Money',
         parent: 'offense_allocation',
-        centerX: 50.5,
-        centerY: 61.5,
+        centerX: 52,
+        centerY: 67,
         display: {
-          shape: 'ellipse',
+          shape: 'radialGroup',
           attributes: {
-            radiusX: 8,
-            radiusY: 9,
-            textSize: 0.5
+            path: 'm 63.407889,72.395269 c -10.413617,1.854723 -18.378931,1.75268 -26.362922,-3.625809 l 13.865735,-20.749448 z',
+            transform1: 'matrix(1.1132952,-0.11912427,0.12282923,1.0103528,-11.618998,2.7394215)',
+            textSize: 1,
+            gradientId: 'midTermMoney'
           }
         },
         children: [
@@ -221,24 +229,24 @@ const data = [
             id: 'utmas',
             name: 'UTMA\'s',
             parent: 'mid_term_money',
-            centerX: 47,
-            centerY: 65,
+            centerX: 48,
+            centerY: 62,
             ...offenseDefault
           },
           {
             id: 'plan_529',
             name: '529 Plan',
             parent: 'mid_term_money',
-            centerX: 50.5,
-            centerY: 57.5,
+            centerX: 52,
+            centerY: 55,
             ...offenseDefault
           },
           {
             id: 'investment_account',
             name: 'Investment Account',
             parent: 'mid_term_money',
-            centerX: 54,
-            centerY: 65,
+            centerX: 56,
+            centerY: 62,
             ...offenseDefault
           },
         ]
@@ -247,80 +255,92 @@ const data = [
         id: 'long_term_money',
         name: 'Long Term Money',
         parent: 'offense_allocation',
-        centerX: 60,
-        centerY: 49,
+        centerX: 67,
+        centerY: 46,
         display: {
           shape: 'radialGroup',
           attributes: {
-            width: 22,
-            height: 18,
-            textX: 70,
-            textY: 58,
-            radiusX: 7.5,
-            radiusY: 7.5,
-            rotate: '45 71 58',
-            textSize: 0.5
+            path: 'm 76.863218,41.637324 c 4.308247,10.504108 3.533958,18.77825 -8.998262,26.693442 l -16.907053,-23.138891 z',
+            textSize: 1,
+            gradientId: 'longTermMoney'
           },
-          zoom: { scale: 1.5 },
         },
         children: [
           {
             id: 'ira_roth',
             name: 'IRA ROTH',
             parent: 'long_term_money',
-            centerX: 67,
-            centerY: 52,
+            centerX: 69,
+            centerY: 50,
             ...offenseDefault
           },
           {
             id: 'cash_value_life',
             name: 'Cash Value Life',
             parent: 'long_term_money',
-            centerX: 64.2,
-            centerY: 58.8,
+            centerX: 62,
+            centerY: 52,
             ...offenseDefault
           },
           {
             id: 'k_401',
             name: '401_K',
             parent: 'long_term_money',
-            centerX: 69.5,
-            centerY: 64,
+            centerX: 66,
+            centerY: 58,
             ...offenseDefault
           },
           {
             id: 'annuity',
             name: 'Annuity',
             parent: 'long_term_money',
-            centerX: 76.5,
-            centerY: 63.5,
+            centerX: 70,
+            centerY: 63,
             ...offenseSmall
           },
           {
             id: 'stock_option',
             name: 'Stock option',
             parent: 'long_term_money',
-            centerX: 79,
-            centerY: 59.5,
+            centerX: 74,
+            centerY: 59,
             ...offenseSmall
           },
           {
             id: 'investment_real_estate',
             name: 'Real Estate',
             parent: 'long_term_money',
-            centerX: 77,
-            centerY: 55,
+            centerX: 75.5,
+            centerY: 53.5,
             ...offenseSmall
           },
           {
             id: 'deffered_comp',
             name: 'Deffered Comp',
             parent: 'long_term_money',
-            centerX: 73.5,
-            centerY: 52,
+            centerX: 75,
+            centerY: 48,
             ...offenseSmall
           }
         ]
+      },
+      {
+        id: 'offense_parent',
+        name: 'Offese Allocation',
+        centerX: 51,
+        centerY: 48,
+        display: {
+          shape: 'ellipse'
+        }
+      },
+      {
+        id: 'defense_parent',
+        name: 'Defense Allocation',
+        centerX: 51,
+        centerY: 37,
+        display: {
+          shape: 'ellipse'
+        }
       }
     ]
   }

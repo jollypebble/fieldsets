@@ -35,7 +35,6 @@ class Node extends React.Component {
     this.handleTransitionEnd = this.handleTransitionEnd.bind(this);
     this.setRadius = this.setRadius.bind(this);
     this.getLongTermData = this.getLongTermData.bind(this);
-    this.updateLongTermData = this.updateLongTermData.bind(this);
 
     this.nodeElement = React.createRef();
     this.nodeGroupElement = React.createRef();
@@ -137,18 +136,6 @@ class Node extends React.Component {
     this.setState({ containFocus: checked });
   };
 
-  updateLongTermData() {
-    let { longTermData } = this.state;
-    const temp = Object.assign([], longTermData);
-    const lastElement = longTermData.pop();
-    longTermData.unshift(lastElement);
-    this.setState({
-      longTermData: longTermData.map((item, index) => {
-        return { ...item, centerX: temp[index].centerX, centerY: temp[index].centerY, display: temp[index].display };
-      })
-    });
-  }
-
   getLabel(name, centerX, centerY, focusCircle) {
     return (
       <React.Fragment>
@@ -160,7 +147,6 @@ class Node extends React.Component {
           focusCircle={focusCircle}
           hasParent={ this.hasParent() }
           nodeTextElement={ this.nodeTextElement }
-          updateData={this.updateLongTermData}
         />
       </React.Fragment>
     );
