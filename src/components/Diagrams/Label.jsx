@@ -5,8 +5,8 @@ const noValueList = ['monthly_contribution', 'lump_sums', 'short_term_money', 'm
 const Label = (props) => {
   let { textX, textY, textSize, ratio } = props.display.attributes;
   const {id, name, centerX, centerY, focusCircle, nodeTextElement, hasParent, scaleFactor} = props;
-  textSize = (ratio ? ratio * textSize : textSize) * 0.9;
-  const fontSize = (textSize ? textSize : 0.5 * scaleFactor) + 'pt';
+  textSize = (ratio ? ratio * textSize : textSize) * 9;
+  const fontSize = (textSize ? textSize : 5 * scaleFactor) + 'pt';
   return (
     <React.Fragment>
       <text

@@ -34,6 +34,11 @@ const valueDefaults = {
   }
 }
 
+const parentDefaultAttrs = {
+  radiusX: 80,
+  radiusY: 15,
+}
+
 const defenseDefault = {
   display: {
     attributes: {
@@ -97,13 +102,11 @@ const data = [
   {
     id: 'net_worth',
     name: 'Net Worth',
-    centerX: 51,
-    centerY: 42.5,
+    centerX: 340,
+    centerY: 218,
     display: {
       shape: 'radialGroup',
       attributes: {
-        rx: '25.523741',
-        ry: '6.7162743',
         path: 'm 26.016496, 40.303542 l 25.42892 -3 l 25.41842 2.9548 l -25.42892 4 z',
         transform1: 'translate(0, 1.3789058)',
         gradientId: 'netWorth',
@@ -113,15 +116,15 @@ const data = [
   {
     id: 'defense_allocation',
     name: 'Defense Allocation',
-    centerX: 51, // X,Y represent points on a plane to map the current data to. If we wanted to get fancy we could rework this to include Z coordinates, but I don't see that showing a need for any time soon. If it does tracking down how these guys are used is a good place to start.
-    centerY: 37.5,
+    centerX: 340, // X,Y represent points on a plane to map the current data to. If we wanted to get fancy we could rework this to include Z coordinates, but I don't see that showing a need for any time soon. If it does tracking down how these guys are used is a good place to start.
+    centerY: 173,
     display: {
       shape: 'radialGroup',
       attributes: {
-        path: 'm 26.016496,40.303542 c 4.068473,-10.475491 11.191298,-13.886702 25.163429,-13.60235 13.877543,0.282427 18.056874,3.033919 25.683293,13.557226 l -25.45783,-1.578967 z',
+        path: 'M89,220.638262 L338.611509,189.411159 L586.163759,215.812255 C673.57272,225.134296 614.090589,296.664739 586.313801,216.146136 C558.537014,135.627533 458.302104,76 338.905688,76 C217.089207,76 115.21888,138.069231 89.8982885,221.067696',
         gradientId: 'defenceAllocation',
         textSize: 0.8,
-        transform1: 'translate(0, 1.3789058)'
+        // transform1: 'translate(0, 1.3789058)'
       }
     },
     children: [ // Should `children` be thought of as `data`. The `chldren` field name is used to imply this can be eith a series of liner data points or a series of relationally nested data objects.
@@ -156,27 +159,14 @@ const data = [
         centerX: 66,
         centerY: 36.5,
         ...defenseDefault
-      },
-      {
-        id: 'net_worth',
-        name: 'Net Worth',
-        centerX: 51,
-        centerY: 42.5,
-        display: {
-          shape: 'ellipse',
-          attributes: {
-            rx: '25.523741',
-            ry: '6.7162743',
-          }
-        }
       }
     ]
   },
   {
     id: 'offense_allocation',
     name: 'Offense Allocation',
-    centerX: 51,
-    centerY: 48,
+    centerX: 340,
+    centerY: 260,
     display: {
       shape: 'ellipse'
     },
@@ -190,9 +180,9 @@ const data = [
         display: {
           shape: 'radialGroup',
           attributes: {
-            path: 'm 36.054562,68.020023 c -10.690411,-6.069771 -12.243127,-16.573239 -12.05339,-26.125436 l 24.941407,3.509427 z',
-            transform1: 'translate(1.6971147, -0.53034835)',
-            transform2: 'translate(0.31820901, 0.31820901)',
+            path: 'M221.003055,424 C198.033876,415.238795 177.128139,404.002703 158.954648,390.77872 C112.83742,357.221412 84.3143912,310.863156 84.3143912,259.661898 C84.3143912,246.029381 86.3364159,232.740188 90.1741842,219.944527 C94.0119524,207.148866 75.3619486,218.791811 89.1725559,220.118997 L339,244.127187 L221.079091,423.200035',
+            // transform1: 'translate(1.6971147, -0.53034835)',
+            // transform2: 'translate(0.31820901, 0.31820901)',
             textSize: 1,
             gradientId: 'shortTermMoney'
           },
@@ -233,8 +223,8 @@ const data = [
         display: {
           shape: 'radialGroup',
           attributes: {
-            path: 'm 63.407889,72.395269 c -10.413617,1.854723 -18.378931,1.75268 -26.362922,-3.625809 l 13.865735,-20.749448 z',
-            transform1: 'matrix(1.1132952,-0.11912427,0.12282923,1.0103528,-11.618998,2.7394215)',
+            path: 'M219.882797,424.106114 L339,245 L473.002006,418.173577 C499.037273,451.510959 512.720187,400.1111 473.47324,417.909784 C434.226293,435.708467 387.802732,446 338.054149,446 C295.05672,446 254.5431,438.312173 219,424.734206',
+            // transform1: 'matrix(1.1132952,-0.11912427,0.12282923,1.0103528,-11.618998,2.7394215)',
             textSize: 1,
             gradientId: 'midTermMoney'
           }
@@ -275,7 +265,7 @@ const data = [
         display: {
           shape: 'radialGroup',
           attributes: {
-            path: 'm 76.863218,41.637324 c 4.308247,10.504108 3.533958,18.77825 -8.998262,26.693442 l -16.907053,-23.138891 z',
+            path: 'M586.214862,215 L339,244.061867 L473.991359,418.717987 C521.763908,480.527632 401.872803,451.542717 473.955869,418.683133 C546.038934,385.823548 594,327.367903 594,260.729702 C594,245.17425 591.38659,230.064667 586.462996,215.622449',
             textSize: 1,
             gradientId: 'longTermMoney'
           },
@@ -342,19 +332,37 @@ const data = [
       {
         id: 'offense_parent',
         name: 'Offese Allocation',
-        centerX: 51,
-        centerY: 48,
+        centerX: 340,
+        centerY: 175,
         display: {
-          shape: 'ellipse'
+          shape: 'ellipse',
+          attributes: {
+            ...parentDefaultAttrs,
+          }
         }
       },
       {
         id: 'defense_parent',
         name: 'Defense Allocation',
-        centerX: 51,
-        centerY: 37.5,
+        centerX: 340,
+        centerY: 260,
         display: {
-          shape: 'ellipse'
+          shape: 'ellipse',
+          attributes: {
+            ...parentDefaultAttrs,
+          }
+        }
+      },
+      {
+        id: 'net_worth',
+        name: 'Net Worth',
+        centerX: 340,
+        centerY: 218,
+        display: {
+          shape: 'ellipse',
+          attributes: {
+            ...parentDefaultAttrs,
+          }
         }
       }
     ]
