@@ -107,7 +107,7 @@ class Node extends React.Component {
     if (this.isHidden()) return;
     if (this.state.visible) {
       if (this.hasParent()) {
-        this.props.openDialog(this.props.nodeID, this.props.parent);
+        this.props.openDialog(this.props.nodeID);
       } else {
         this.props.updateFocus(this.props.nodeID, this.props.centerX, this.props.centerY);
       }

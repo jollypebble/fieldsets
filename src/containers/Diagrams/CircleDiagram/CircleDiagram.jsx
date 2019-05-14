@@ -244,8 +244,8 @@ class CircleDiagram extends Component {
     this.setState({ isZoomed: true });
   }
 
-  openDialog = (nodeID, parent = '') => {
-    if (parent === 'offense_allocation') return;
+  openDialog = (nodeID) => {
+    // if (parent === 'offense_allocation') return;
     this.setState({ currentDialog: nodeID });
   }
 
@@ -431,24 +431,24 @@ class CircleDiagram extends Component {
             <svg
               id="circlediagram" width={this.props.width} height={this.props.height}
             >
-              {/* <defs>
+              <defs>
                 <clipPath id="clippath">
                   <ellipse
                     id='mask ellipse'
-                    cx={51}
-                    cy={50}
-                    rx={27}
-                    ry={22}
+                    cx={339}
+                    cy={261}
+                    rx={255}
+                    ry={185}
                   />
                   <rect
                     id="mask rectangle"
-                    x="30"
-                    y="20"
-                    width="60"
-                    height="8"
+                    x="180"
+                    y="30"
+                    width="360"
+                    height="30"
                   />
                 </clipPath>
-              </defs> */}
+              </defs>
               <g style={{ clipPath: "url(#clippath)" }} id="diagramGroup">
                 { DiagramData.map(diagram => {
                     return (

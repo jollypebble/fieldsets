@@ -13,7 +13,7 @@ const Circle = ({id, active, visibility, attributes, scaleFactor}) => {
   }
   radius = ratio ? ratio * radius : radius;
   if ( ! strokeWidth ) {
-    strokeWidth = radius / 35;
+    strokeWidth = radius / 30;
   }
 
   return (
