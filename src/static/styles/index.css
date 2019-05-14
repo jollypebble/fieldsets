@@ -286,22 +286,22 @@ caption,
   fill: #515359; }
 
 #short_term_money-group .circle-group circle, #short_term_money-group .circle-group rect {
-  fill: #b3e7ff;
-  stroke: #6db8fe; }
+  fill: #83c5e4;
+  stroke: #6bb6f8; }
 
 #short_term_money-group .circle-group tspan {
   fill: #515359; }
 
 #mid_term_money-group .circle-group circle, #mid_term_money-group .circle-group ellipse {
-  fill: #83c5e4;
-  stroke: #6bb6f8; }
+  fill: #b3e7ff;
+  stroke: #6db8fe; }
 
 #mid_term_money-group .circle-group tspan {
   fill: #515359; }
 
 #long_term_money-group .circle-group circle, #long_term_money-group .circle-group rect {
-  fill: #44c1ff;
-  stroke: #6db8fe; }
+  fill: #90c5f5;
+  stroke: #44c1ff; }
 
 #long_term_money-group .circle-group tspan {
   fill: #515359; }

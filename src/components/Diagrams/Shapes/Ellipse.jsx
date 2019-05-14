@@ -21,7 +21,7 @@ const Ellipse = ({id, active, visibility, attributes}) => {
   radius = ratio ? ratio * radius : radius;
 
   if ( ! strokeWidth ) {
-    strokeWidth = radius / 60;
+    strokeWidth = radius / 6;
   }
 
   return (

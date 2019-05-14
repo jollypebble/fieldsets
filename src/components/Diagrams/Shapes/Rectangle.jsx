@@ -23,7 +23,7 @@ const Rectangle = ({id, visibility, attributes, gradient}) => {
         transform={`rotate(${rotate ? rotate : 0})`}
         rx={radiusX}
         ry={radiusY}
-        strokeWidth={strokeWidth ? strokeWidth : 0.1}
+        strokeWidth={strokeWidth ? strokeWidth : 1}
         onClick={attributes.focusCircle}
       />
     </React.Fragment>
