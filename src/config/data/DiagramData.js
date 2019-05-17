@@ -334,7 +334,7 @@ const data = [
             name: 'Deffered Comp',
             parent: 'long_term_money',
             centerX: 565,
-            centerY: 265,
+            centerY: 262,
             ...offenseSmall
           }
         ]
