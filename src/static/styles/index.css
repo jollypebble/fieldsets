@@ -252,6 +252,67 @@ caption,
   font-weight: 100;
   src: url("/assets/fonts/OpenSans-Light.ttf"); }
 
+#defense_allocation-group .circle-group ellipse {
+  fill: #f9bcc0;
+  stroke: #f44647; }
+
+#defense_allocation-group .circle-group circle {
+  fill: #f9bcc0;
+  stroke: #f44647; }
+
+#defense_allocation-group .circle-group tspan {
+  fill: #515359; }
+
+#offense_allocation-group .circle-group ellipse {
+  fill: #5fc6f5;
+  stroke: #efef41; }
+
+#offense_allocation-group .circle-group #defense_parent {
+  fill: #f9bcc0;
+  stroke: #f44647; }
+
+#offense_allocation-group .circle-group #offense_parent {
+  fill: #b3e7ff;
+  stroke: #63b2ff; }
+
+#offense_allocation-group .circle-group tspan {
+  fill: #515359; }
+
+#net_worth-group .circle-group #net_worth {
+  fill: #82db83;
+  stroke: #42ac09; }
+
+#net_worth-group .circle-group tspan {
+  fill: #515359; }
+
+#short_term_money-group .circle-group circle, #short_term_money-group .circle-group rect {
+  fill: #83c5e4;
+  stroke: #6bb6f8; }
+
+#short_term_money-group .circle-group tspan {
+  fill: #515359; }
+
+#mid_term_money-group .circle-group circle, #mid_term_money-group .circle-group ellipse {
+  fill: #b3e7ff;
+  stroke: #6db8fe; }
+
+#mid_term_money-group .circle-group tspan {
+  fill: #515359; }
+
+#long_term_money-group .circle-group circle, #long_term_money-group .circle-group rect {
+  fill: #90c5f5;
+  stroke: #44c1ff; }
+
+#long_term_money-group .circle-group tspan {
+  fill: #515359; }
+
+#monthly_contribution-group .circle-group rect, #lump_sums-group .circle-group rect {
+  fill: #ffffad;
+  stroke: #efef41; }
+
+#monthly_contribution-group .circle-group tspan, #lump_sums-group .circle-group tspan {
+  fill: #515359; }
+
 .radialDialog > div {
   width: 450px;
   height: 450px;
@@ -341,23 +402,14 @@ caption,
   100% {
     opacity: 1; } }
 
-#net_worth-group .circlenode {
-  fill: #ffe7a7;
-  stroke: #fde08c;
-  stroke-width: 0.1;
-  stroke-dasharray: 0.4;
-  transition: stroke-dasharray 0.15s; }
+#short_term_money-group .circle-group rect {
+  fill: url(#Gradient); }
 
-#net_worth-group .circle-group:hover .circlenode {
-  stroke-dasharray: 0.2; }
+#mid_term_money-group .circle-group rect {
+  fill: url(#Gradient); }
 
-#net_worth-group .circletext .amount {
-  font-weight: bold;
-  fill: #ff4f00; }
-
-#net_worth-group .circletext .label {
-  font-size: .45pt;
-  fill: #6b4f00; }
+#long_term_money-group .circle-group rect {
+  fill: url(#Gradient); }
 
 #tabs-wrapper {
   text-align: center;
@@ -567,7 +619,7 @@ text.nodeNameBase {
   transform: translate(-75px, 0); }
 
 text.nodeAttributesBase {
-  fill: #212121;
+  fill: #ffffad;
   stroke: transparent;
   font-family: "OpenSans", Roboto, sans-serif;
   transform: translate(-75px, 0); }

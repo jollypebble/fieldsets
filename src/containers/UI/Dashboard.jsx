@@ -87,7 +87,7 @@ export default class Dashboard extends Component {
         </div>
         <div id="menu-wrapper">
           <MenuDrawer
-            title={ 'My Awesome Drawer' }
+            title={ '' }
             isVisible={ this.state.isMDVisible }
             toggleDrawer={ this.toggleDrawer }
           />

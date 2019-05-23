@@ -1,15 +1,13 @@
 import gql from 'graphql-tag';
+import { fields } from '../../fragments'
 
 export const getFields = gql`
   query getFields @client {
     fields {
-      ...field
+      ...fields
     }
   }
-  fragment field on Field @client {
-      id
-      name
-      value
-      parent
-  }
+  ${fields}
 `;
+
+export const getFieldList = gql`${fields}`;

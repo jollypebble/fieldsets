@@ -1,3 +1,102 @@
+#defense_allocation-group {
+  .circle-group {
+    ellipse {
+      fill: $defense-fill;
+      stroke: $defense-stroke;
+    }
+    circle {
+      fill: $defense-fill;
+      stroke: $defense-stroke;
+    }
+    tspan {
+      fill: $defense-text;
+    }
+  }
+}
+
+#offense_allocation-group {
+  .circle-group {
+    ellipse {
+      fill: $offense-fill;
+      stroke: $offense-stroke;
+    }
+    #defense_parent {
+      fill: $defense_parent-fill;
+      stroke: $defense_parent-stroke;
+    }
+    #offense_parent {
+      fill: $offense_parent-fill;
+      stroke: $offense_parent-stroke;
+    }
+    tspan {
+      fill: $offense-text;
+    }
+  }
+}
+
+#net_worth-group {
+  .circle-group {
+    #net_worth {
+      fill: $net_worth-fill;
+      stroke: $net_worth-stroke;
+    }
+    tspan {
+      fill: $networth-text;
+    }
+  }
+}
+
+#short_term_money-group {
+  .circle-group {
+    circle, rect {
+      fill: $shortterm-fill;
+      stroke: $shortterm-stroke;
+    }
+    tspan {
+      fill: $shortterm-text;
+    }
+  }
+}
+
+#mid_term_money-group {
+  .circle-group {
+    circle, ellipse {
+      fill: $midterm-fill;
+      stroke: $midterm-stroke;
+    }
+    tspan {
+      fill: $midterm-text;
+    }
+  }
+}
+
+#long_term_money-group {
+  .circle-group {
+    circle, rect {
+      fill: $longterm-fill;
+      stroke: $longterm-stroke;
+    }
+    tspan {
+      fill: $longterm-text;
+    }
+  }
+}
+
+#monthly_contribution-group, #lump_sums-group {
+  .circle-group {
+    rect {
+      fill: $contribution-fill;
+      stroke: $contribution-stroke;
+    }
+    tspan {
+      fill: $contribution-text;
+    }
+  }
+}
+
+
+
+
 .radialDialog > div {
   width: 450px;
   height: 450px;

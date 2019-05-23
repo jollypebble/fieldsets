@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { withApollo } from "react-apollo";
-import { DiagramData, FieldData, OwnerData, DataUtils } from '../../../config';
+import { DiagramData, FieldData, OwnerData } from '../../../config';
 import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
 
-//import { Diagram, DiagramCache } from 'containers/Diagrams/Diagram';
-import { NetWorthNode, RadialNode, RadialDialog } from '../../../components/Diagrams';
-import { getFields, getCurrentFocus, getNodes, defaults } from '../../../graphql';
+import { Node, Dialog } from '../../../components/Diagrams';
+import { getFields, getFieldList, getCurrentFocus, getNodes, getNodeList, defaults } from '../../../graphql';
 
 /**
  * This is the container for our main diagram. It has direct access to the apollo cache so it can track foucs of it's child nodes.
@@ -27,7 +26,6 @@ class CircleDiagram extends Component {
       currentDialog: '',
       isZoomed: false,
       isDblClick: false,
-      mouseInCircle: false
     };
 
     this.timeouts = [];
@@ -43,8 +41,12 @@ class CircleDiagram extends Component {
     this.setFieldCache = this.setFieldCache.bind(this);
     this.setDataCache = this.setDataCache.bind(this);
     this.setNodeState = this.setNodeState.bind(this);
+    this.getNodesData = this.getNodesData.bind(this);
+    this.getNode = this.getNode.bind(this);
+    this.getAllNodes = this.getAllNodes.bind(this);
     this.setFieldState = this.setFieldState.bind(this);
-    this.getFields = this.getFields.bind(this);
+    this.getFieldData = this.getFieldData.bind(this);
+    this.getAllFields = this.getAllFields.bind(this);
     this.handleDoubleClick = this.handleDoubleClick.bind(this);
 
     this.Viewer = React.createRef();
@@ -125,10 +127,10 @@ class CircleDiagram extends Component {
   setFocus = () => {
     const focus = this.getFocus();
     const current = focus.currentFocus;
-    // console.log(`Moving Focus to ${x}, ${y}:`, focus);
+    const currentNode = this.getNode({ id: current.id });
 
     /** Our desired zoom for the current node that was clicked */
-    let zoom = this.props.zoom * current.zoom.scale;
+    let zoom = this.props.zoom * currentNode.display.zoom.scale;
 
     let xs = [], ys = [];
     xs.push(current.centerX - this.getStandardRadius(current.depth) - this.getStandardStrokeWidth(current.depth));
@@ -136,7 +138,10 @@ class CircleDiagram extends Component {
     ys.push(current.centerY - this.getStandardRadius(current.depth) - this.getStandardStrokeWidth(current.depth));
     ys.push(current.centerY + this.getStandardRadius(current.depth) + this.getStandardStrokeWidth(current.depth));
 
-    const children = DataUtils.getChildrenOf(current.id);
+
+    const childList = this.getNodesData({ id: current.id });
+    const children = (childList && childList.list) ? childList.list : false;
+
     const hasChildren = children && children.length > 0;
     if (hasChildren) {
       children.forEach(child => {
@@ -183,21 +188,43 @@ class CircleDiagram extends Component {
     return this.props.client.readQuery({ query: getCurrentFocus });
   }
 
-  getFields = (variables) => {
-    // console.log('Getting cached fields');
-    // console.log(variables);
-    //if (variables.parent) {
-    //  console.log('Getting partial set of fields');
-    //  return this.props.client.readQuery({ query: getNodeFields, variables: variables });
-    //} else {
-    //  console.log('Getting all fields');
-      return this.props.client.readQuery({ query: getFields });
-    //}
+  getAllFields = () => {
+    return this.props.client.readQuery({ query: getFields });
   }
 
-  getNodes = (variables) => {
+  getFieldData = (variables) => {
+    const id = `FieldList:${variables.id}`;
+    const fields = this.props.client.readFragment({
+      id: id,
+      fragment: getFieldList,
+      fragmentName: 'fields'
+    });
+    return fields;
+  }
+
+  getAllNodes = () => {
+    return this.props.client.readQuery({ query: getNodes });
+  }
+
+  getNode = (variables) => {
+    const id = `Node:${variables.id}`;
+    const node = this.props.client.readFragment({
+      id: id,
+      fragment: getNodeList,
+      fragmentName: 'node'
+    });
+    return node;
+  }
+
+  getNodesData = (variables) => {
     // console.log('Getting cached Nodes', variables);
-    return this.props.client.readQuery({ query: getNodes, variables: variables });
+    const id = `NodeList:${variables.id}`;
+    const nodes = this.props.client.readFragment({
+      id: id,
+      fragment: getNodeList,
+      fragmentName: 'nodes'
+    });
+    return nodes;
   }
 
   updateFocus = (id, focusX, focusY) => {
@@ -216,8 +243,7 @@ class CircleDiagram extends Component {
     this.setState({ isZoomed: true });
   }
 
-  openDialog = (nodeID, parent = '') => {
-    if (parent === 'offense_allocation') return;
+  openDialog = (nodeID) => {
     this.setState({ currentDialog: nodeID });
   }
 
@@ -232,7 +258,6 @@ class CircleDiagram extends Component {
   }
 
   setFieldState = (fields) => {
-    // console.log('Setting Field state.');
     // Do something to update a node state.
     this.setState({ fields });
   }
@@ -242,7 +267,6 @@ class CircleDiagram extends Component {
    * Make you you consider the order which you data is primed. In this case, owners are part of fields which are part of the diagram.
    */
   primeCache = () => {
-    // console.log('Priming');
     // @TODO: REMOTE GRAPHQL CALLS GO HERE. FOR NOW WE PULL IN CONFIG BASED DATA.
     this.setOwnerCache(OwnerData);
     this.setFieldCache(FieldData);
@@ -253,63 +277,115 @@ class CircleDiagram extends Component {
 
   }
 
+  // Cache field values
   setFieldCache = (data=[]) => {
-    // console.log('Updating Field cache');
-    let previous = this.getFields({});
     if (!data.length) return false;
+    let allFields = this.getAllFields();
+    allFields.fields.list = (allFields.fields.list) ? allFields.fields.list : [];
 
     // Get your fields here. This is defined as a static json, but could be modified here to get remote field type definitions.
     data.map(currentField => {
-      // console.log('Current field:', currentField);
       currentField.__typename = 'Field';
-      previous.fields.push(currentField);
+
+      const id = `FieldList:${currentField.parent}`;
+
+      let fieldList = this.props.client.readFragment({
+        id: id,
+        fragment: getFieldList,
+        fragmentName: 'fields'
+      });
+
+      // Cache hasn't been written yet, so set it using default.
+      fieldList = ( fieldList === null ) ? { id: currentField.parent, list: [], __typename: 'FieldList' } : fieldList;
+      fieldList.list.push(currentField);
+
+      // Append the field to the complete set.
+      allFields.fields.list.push(currentField);
+
+
+      // Now append this field to the parent node field list
+      this.props.client.writeFragment({
+        fragment: getFieldList,
+        fragmentName: 'fields',
+        id: id,
+        data: fieldList
+      });
+
       return true;
     });
-    const fields = previous.fields;
+
+    const fields = allFields.fields.list;
     this.props.client.writeData({
       data: {fields}
     });
 
-    // console.log('Field cache updated');
     this.setFieldState(fields);
 
     return true;
   }
 
+  // Caching nodes
   setDataCache = (data=[]) => {
-    // console.log('Caching nodes: ');
-
-    let previous = this.getNodes({});
-    let nodes = previous.nodes;
-
-    if (! data.length) {
-      return false;
-    }
+    if (!data.length) return false;
+    const allNodes = this.getAllNodes();
+    const nodes = (allNodes.nodes.list) ? allNodes.nodes.list : [];
 
     data.map(node => {
-      // console.log('Node:', node);
+      const nodeID = node.id;
+      node.__typename = 'Node';
+
       const children = typeof(node.children) === undefined ? [] : node.children;
+
       if (children.length) {
-        // console.log('Caching child nodes....');
         this.setDataCache(children);
       }
 
-      const previous = this.getFields({parent: node.id});
-      // console.log('Previous fields:', previous.fields);
-      const fields = previous.fields.map(field => {
-        field.__typename = 'Field';
-        return field;
-      });
+      // Set generic cache identifiers here so we can cache the display data.
+      if (!node.display) {
+        node.display = {}
+      }
 
-      node.__typename = 'Circle';
-      if (node.zoom) node.zoom.__typename = 'ZoomScale';
+      node.display.id = nodeID;
+      node.display.__typename = 'DisplayData';
+      if ( node.display.attributes ) {
+        node.display.attributes.id = nodeID;
+        node.display.attributes.__typename = 'ShapeData';
+      }
+      if (node.display.zoom) {
+        node.display.zoom.id = nodeID;
+        node.display.zoom.__typename = 'ZoomData';
+      }
+
       nodes.push(node);
-      this.props.client.writeData({
-        data: {nodes, fields}
-      });
+
+      // If are a child node, let's write to our parent node list cache.
+      if ( node.parent && node.parent.length ) {
+        const id = `NodeList:${node.parent}`;
+        let nodeList = this.props.client.readFragment({
+          id: id,
+          fragment: getNodeList,
+          fragmentName: 'nodes'
+        });
+        // Child cache hasn't been written yet, so set it to defaults.
+        nodeList = ( nodeList === null ) ? { id: node.id, list: [], __typename: 'NodeList' } : nodeList;
+
+        nodeList.list.push(node);
+
+        // Now append this field to the parent node field list
+        this.props.client.writeFragment({
+          fragment: getNodeList,
+          fragmentName: 'nodes',
+          id: id,
+          data: nodeList
+        });
+      }
       return true;
     });
-    // console.log('Cache Updated');
+
+    this.props.client.writeData({
+      data: {nodes}
+    });
+
     this.setNodeState(nodes);
 
     return true;
@@ -354,35 +430,44 @@ class CircleDiagram extends Component {
               id="circlediagram" width={this.props.width} height={this.props.height}
             >
               <defs>
-                <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" id="Gradient" >
-                  <stop offset="10%" style={{stopColor: '#fff'}} />
-                  <stop offset="100%" style={{stopColor: '#9bff9b'}} />
-                </linearGradient>
-                <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" id="Gradient2" >
-                  <stop offset="0%" style={{stopColor: '#ccffff'}} />
-                  <stop offset="70%" style={{stopColor: '#fff'}} />
-                </linearGradient>
-              </defs>
-              <g id="diagramGroup">
-                { DiagramData.map(diagram => {
-                  let NodeClass = RadialNode;
-                  if (diagram.id === 'net_worth') NodeClass = NetWorthNode;
-                  return <NodeClass
-                    key={ diagram.id }
-                    nodeData={ typeof(diagram.children) === undefined ? [] : diagram.children }
-                    nodeID={ diagram.id }
-                    scaleFactor={ 1 }
-                    {...diagram}
-                    radius={ this.getStandardRadius() }
-                    updateFocus={ this.updateFocus }
-                    resetFocus={ this.resetFocus }
-                    openDialog={ this.openDialog }
-                    closeDialog={ this.closeDialog }
-                    setNodeState={ this.setNodeState }
-                    nodes={ this.state.nodes }
-                    isShown={ true /* The prop means whether the node is being rendered right now by its parent */ }
+                <clipPath id="clippath">
+                  <ellipse
+                    id='mask ellipse'
+                    cx={339}
+                    cy={261}
+                    rx={255}
+                    ry={185}
                   />
-                }) }
+                  <rect
+                    id="mask rectangle"
+                    x="180"
+                    y="30"
+                    width="360"
+                    height="30"
+                  />
+                </clipPath>
+              </defs>
+              <g style={{ clipPath: "url(#clippath)" }} id="diagramGroup">
+                { DiagramData.map(diagram => {
+                    return (
+                      <Node
+                        key={ diagram.id }
+                        nodeData={ typeof(diagram.children) === undefined ? [] : diagram.children }
+                        nodeID={ diagram.id }
+                        scaleFactor={ 1 }
+                        {...diagram}
+                        radius={ this.getStandardRadius() }
+                        updateFocus={ this.updateFocus }
+                        resetFocus={ this.resetFocus }
+                        openDialog={ this.openDialog }
+                        closeDialog={ this.closeDialog }
+                        setNodeState={ this.setNodeState }
+                        nodes={ this.state.nodes }
+                        visible={ true /* The prop means whether the node is being rendered right now by its parent */ }
+                      />
+                    );
+                  })
+                }
               </g>
             </svg>
           </ReactSVGPanZoom>
@@ -390,9 +475,10 @@ class CircleDiagram extends Component {
         <div className="diagramSheet">
         </div>
         <div className="diagramDialogs">
-          <RadialDialog
+          <Dialog
             name={ 'Dialog Box' }
             nodeID={ this.state.currentDialog }
+            onClose={this.closeDialog}
           />
         </div>
       </div>

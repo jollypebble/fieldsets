@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
  * Radial Nodes are functional components that represent parent circle nodes.
  * They simply check the node data and will iteratively call itself if there are children.
  */
- class RadialDialog extends React.Component {
+ class Dialog extends React.Component {
    constructor(props) {
      super(props);
      this.state = {
@@ -29,11 +29,9 @@ import PropTypes from 'prop-types';
 
    componentDidUpdate(prevProps, prevState) {
      // console.log('Updating dialog visibility');
-     if ( prevProps.nodeID !== this.props.nodeID ) {
+     if ( this.props.nodeID && prevProps.nodeID !== this.props.nodeID ) {
        this.show();
      }
-
-     return true;
    }
 
    show = () => {
@@ -41,8 +39,10 @@ import PropTypes from 'prop-types';
    };
 
    hide = () => {
-     this.setState({ visible: false });
-   };
+     this.setState({ visible: false }, () => {
+       this.props.onClose();
+     });
+    };
 
    render() {
      const {
@@ -99,9 +99,9 @@ import PropTypes from 'prop-types';
      );
   }
 }
-RadialDialog.propTypes = {
+Dialog.propTypes = {
   nodeID: PropTypes.string.isRequired
 };
 //export default withApollo(RadialDialog);
 //export default React.forwardRef((props, ref) => <RadialDialog updateFocus={ref} {...props}/>);
-export default RadialDialog;
+export default Dialog;

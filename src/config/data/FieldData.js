@@ -2,6 +2,19 @@
 // At some point we will move the hacky excel functions to react callbacks and push this json data to an official data store/relational db
 export default [
   {
+    id: 'net_worth',
+    name: 'Net Worth',
+    description: '',
+    value: '38742994',
+    type: 'currency',
+    callback: '',
+    notes:[],
+    owners:[],
+    parent: 'net_worth',
+    order: 0,
+    alwaysDisplay: true,
+  },
+  {
     id: 'monthly_contribution',
     name: 'Monthly Contribution',
     description: '',

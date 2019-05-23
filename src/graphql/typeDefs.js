@@ -4,7 +4,16 @@ export const typeDefs = `
     name: String!
   }
 
-  type DataType implements Entity {
+  interface List {
+    id: ID!
+    list: [Entity!]
+  }
+
+  interface Data {
+    id: ID!
+  }
+
+  type DataType {
     id: ID!
     name: String!
     format: String!
@@ -19,40 +28,72 @@ export const typeDefs = `
     dob: String!
   }
 
+  type OwnerList implements List {
+    id: ID!
+    list: [Owner!]
+  }
+
   type Field implements Entity {
     id: ID!
     name: String!
-    parent: Circle!
+    parent: Node!
     value: String!
     alwaysDisplay: Boolean!
-    datatype: DataType!,
-    callback: String!,
-    notes:[String!]!,
-    owners:[Owner!]!,
-    order: Int!,
+    datatype: DataType!
+    callback: String!
+    notes:[String!]!
+    owners: OwnerList!
+    order: Int!
   }
 
-  type Circle implements Entity {
+  type FieldList implements List {
+    id: ID!
+    list: [Field!]
+  }
+
+  type Node implements Entity {
     id: ID!
     name: String!
-    fields: [Field!]!
-    children: [NodeChild]
+    children: NodeList!
+    parent: Node
     centerX: Float!
     centerY: Float!
-    depth: Int!,
-    parent: Circle
+    display: DisplayData!
+    depth: Int!
   }
-  
+
+  type DisplayData implements Data {
+    id: ID!
+    shape: String!
+    attributes: [String]
+    zoom: ZoomData!
+    visible: Boolean!
+    className: String!
+  }
+
+  type ZoomData implements Data {
+    id: ID!
+    scale: Float!
+    x: Float!
+    y: Float!
+  }
+
+  type NodeList implements List {
+    id: ID!
+    list: [Node!]
+  }
+
   type Mutation {
-    setCurrentFocus(id: ID!): Circle
+    setCurrentFocus(id: ID!): Node
   }
 
   type Query {
-    currentFocus: Circle!
-    fields: [Field!]
-    nodefields(parent: String): [Field!]
-    nodes: [Circle!]
+    currentFocus: Node!
+    fields: FieldList!
+    nodes: NodeList!
+    owners: OwnerList!
   }
+
   enum FieldType {
     currency
     status
