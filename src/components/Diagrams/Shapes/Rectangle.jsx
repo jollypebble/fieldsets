@@ -15,7 +15,6 @@ const Rectangle = ({id, visibility, attributes, gradient}) => {
     <React.Fragment>
       <rect
         id={id}
-        style={{ fill: `url(#${gradient}` }}
         className="circlenode rectangle"
         x={centerX}
         y={centerY}
