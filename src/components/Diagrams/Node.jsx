@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Mutation } from 'react-apollo';
+import _ from 'lodash';
 import { setCurrentFocus } from '../../graphql';
 import Shape from './Shape';
 import Label from './Label';
@@ -10,31 +11,26 @@ import Label from './Label';
  * Each node will check its own node data and will iteratively call itself if there are children.
  */
 
-const offenseAllocation = 'offense_allocation';
-const longTermID = 'long_term_money';
-
 class Node extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       isMouseInside: false,
       visible: this.props.visible,
-      wasClickedAtLeastOnce: false, // whether the node was clicked at least once (is used for initial animations)
       containFocus: true,
-      initialFocus: undefined,
-      longTermData: []
+      initialFocus: undefined
     };
 
     this.handleMouseEnter = this.handleMouseEnter.bind(this);
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.handleSingleClick = this.handleSingleClick.bind(this);
+    this.handleDoubleClick = this.handleDoubleClick.bind(this);
 
     this.handleTargetChange = this.handleTargetChange.bind(this);
     this.handleFocusChange = this.handleFocusChange.bind(this);
 
     this.handleTransitionEnd = this.handleTransitionEnd.bind(this);
-    this.setRadius = this.setRadius.bind(this);
-    this.getLongTermData = this.getLongTermData.bind(this);
 
     this.nodeElement = React.createRef();
     this.nodeGroupElement = React.createRef();
@@ -47,20 +43,11 @@ class Node extends React.Component {
       this.nodeElement.current.removeEventListener('transitionend', this.handleTransitionEnd)
       this.nodeElement.current.addEventListener('transitionend', this.handleTransitionEnd)
     }
-    this.getLongTermData();
   }
 
   componentDidUpdate(prevProps) {
     // here we want to hide all nodes down the tree if their parent is hidden
     if (!this.props.visible && this.state.visible) this.setState({ visible: false });
-    if (prevProps.nodeID !== this.props.nodeID) this.getLongTermData();
-  }
-
-  getLongTermData() {
-    const { nodeData, nodeID } = this.props;
-    if (nodeID === longTermID) {
-      this.setState({ longTermData: nodeData });
-    }
   }
 
   isHidden() {
@@ -93,7 +80,6 @@ class Node extends React.Component {
 
   /** Is called when the cursor acrosses borders of the radial node getting inside of it */
   handleMouseEnter() {
-    if (this.props.id === 'mid_term_money') return;
     this.setState({ isMouseInside: true });
   }
 
@@ -102,30 +88,30 @@ class Node extends React.Component {
     this.setState({ isMouseInside: false });
   }
 
-  /** Is called when we click on the radial node */
-  handleClick() {
-    if (this.isHidden()) return;
-    if (this.state.visible) {
-      if (this.hasParent()) {
-        this.props.openDialog(this.props.nodeID);
-      } else {
-        this.props.updateFocus(this.props.nodeID, this.props.centerX, this.props.centerY);
-      }
-    } else {
-      this.props.updateFocus(this.props.nodeID, this.props.centerX, this.props.centerY);
-      this.setState({ visible: !this.state.visible });
+  handleClick(e) {
+    if (!this._delayedClick) {
+      this._delayedClick = _.debounce(this.handleSingleClick, 200);
     }
-    this.setState({ wasClickedAtLeastOnce: true });
+    if (this.clickedOnce) {
+      this._delayedClick.cancel();
+      this.clickedOnce = false;
+      this.handleDoubleClick();
+    } else {
+      this._delayedClick(e);
+      this.clickedOnce = true;
+    }
   }
 
-  /** Is called when we doubleclick on the radial node */
+  handleSingleClick() {
+    const { nodeID, centerX, centerY } = this.props;
+
+    this.clickedOnce = undefined;
+    this.props.updateFocus(nodeID, centerX, centerY);
+  }
+
   handleDoubleClick = () => {
-    // TODO: OPEN DIALOG AND SET FIELDS TO DISPLAY
-    // this.props.openDialog(this.props.nodeID);
-    if (this.props.parent === offenseAllocation) return;
-    if (this.state.visible) {
-      this.setState({ visible: !this.state.visible });
-    }
+    if (!this.props.parent) return;
+    this.props.openDialog(this.props.nodeID);
   }
 
   handleTargetChange = (value) => {
@@ -144,7 +130,7 @@ class Node extends React.Component {
           name={name}
           centerX={centerX}
           centerY={centerY}
-          focusCircle={focusCircle}
+          onClick={focusCircle}
           hasParent={ this.hasParent() }
           nodeTextElement={ this.nodeTextElement }
         />
@@ -173,21 +159,12 @@ class Node extends React.Component {
     return this.state.nodes;
   }
 
-  setRadius = (radius) => {
-    return this.state.isMouseInside && this.props.parent !== offenseAllocation ? radius * 1.1 : radius;
-  }
-
   render() {
     const id = this.props.nodeID;
 
     let { name, centerX, centerY, nodeData, parentCenterX, parentCenterY, display } = this.props;
 
     let parentNode = '';
-
-    if (id === longTermID) {
-      const { longTermData } = this.state;
-      nodeData = longTermData.length ? longTermData : nodeData;
-    };
 
     if (typeof(this.props.nodeData) !== undefined && this.props.nodeData.length > 0) {
       parentNode =
@@ -212,11 +189,7 @@ class Node extends React.Component {
               nodes={ this.props.nodes }
               radius={ this.props.radius }
               scaleFactor={ this.props.scaleFactor * 0.6 }
-
-              // visible={this.state.visible /* The prop means whether the node is being rendered right now by its parent */}
-              // wasParentClickedAtLeastOnce={this.state.wasClickedAtLeastOnce /* Whether the parent of the node was clicked at least once (is used for initial animations) */}
               visible={true}
-              wasParentClickedAtLeastOnce={true}
             />
           );
         }) }
@@ -227,7 +200,7 @@ class Node extends React.Component {
     const immersionClass = this.hasParent() ? 'child-node' : 'parent-node';
 
     /** "Shown class" exists only for those nodes that are able to show up and hide (child/sub nodes)  */
-    const shownClass = this.hasParent() && this.props.wasParentClickedAtLeastOnce ? (this.props.visible ? 'shown' : 'hidden') : '';
+    const shownClass = this.hasParent() ? (this.props.visible ? 'shown' : 'hidden') : '';
 
     /** We want to hide children at the start of the app */
     const afterHiddenClass = this.hasParent() && shownClass === '' ? 'afterHidden' : '';
@@ -241,8 +214,6 @@ class Node extends React.Component {
               id={ this.props.nodeID ? `${this.props.nodeID}-group` : '' }
               className='radial-group'
               ref={this.nodeGroupElement}
-              onDoubleClick={this.handleDoubleClick}
-              onClick={focusCircle}
             >
               <g
                 id={`${this.props.nodeID}-circle`}
@@ -255,6 +226,8 @@ class Node extends React.Component {
                   shape={display.shape}
                   active={this.state.isMouseInside}
                   visibility={shownClass}
+                  onClick={focusCircle}
+                  onDoubleClick={this.handleDoubleClick}
                   attributes={{
                     centerX,
                     centerY,

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Circle = ({id, active, visibility, attributes, scaleFactor}) => {
+const Circle = ({id, active, visibility, attributes, scaleFactor, onClick}) => {
   const {ratio, parentCenterX, parentCenterY, parent} = attributes;
   let radius = ((active) ? attributes.radius * 1.1 : attributes.radius) * scaleFactor;
   const hasParent = (parent && parent !== '') ? true : false;
@@ -25,7 +25,7 @@ const Circle = ({id, active, visibility, attributes, scaleFactor}) => {
         cy={centerY}
         r={radius}
         strokeWidth={strokeWidth}
-        onClick={attributes.focusCircle}
+        onClick={onClick}
       />
     </React.Fragment>
   );
