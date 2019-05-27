@@ -29,7 +29,7 @@ class App extends Component {
 
   render() {
     /** Zoom of the main diagram */
-    let diagramZoom = 2;
+    let diagramZoom = 2.5;
     // let diagramZoom = 30;
     /** Width of the main diagram */
     let diagramWidth = 1920;
@@ -43,8 +43,8 @@ class App extends Component {
             width={diagramWidth}
             height={1080}
             zoom={diagramZoom}
-            startX={400 + (diagramWidth - screenWidth) / diagramZoom * 0.5} // here we calculate the point which means the center of the screen (the first "magic number" is unknown shift which puts "0" of diagram to "0" of the screen)
-            startY={280}
+            startX={920 + (diagramWidth - screenWidth) / diagramZoom * 0.5} // here we calculate the point which means the center of the screen (the first "magic number" is unknown shift which puts "0" of diagram to "0" of the screen)
+            startY={490}
           />
         </div>
         <Dashboard />
