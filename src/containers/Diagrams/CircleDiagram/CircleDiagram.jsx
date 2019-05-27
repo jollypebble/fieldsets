@@ -429,7 +429,7 @@ class CircleDiagram extends Component {
             <svg
               id="circlediagram" width={this.props.width} height={this.props.height}
             >
-              {/* <defs>
+              <defs>
                 <clipPath id="clippath">
                   <ellipse
                     id='mask ellipse'
@@ -446,7 +446,7 @@ class CircleDiagram extends Component {
                     height="30"
                   />
                 </clipPath>
-              </defs> */}
+              </defs>
               <g style={{ clipPath: "url(#clippath)" }} id="diagramGroup">
                 { DiagramData.map(diagram => {
                     return (
