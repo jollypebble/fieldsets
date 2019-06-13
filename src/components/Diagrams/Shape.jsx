@@ -6,6 +6,7 @@ const Shape = ({id, shape, active, visibility, attributes, scaleFactor, gradient
     const shapeClassName = shape.charAt(0).toUpperCase() + shape.slice(1);
     return Shapes[shapeClassName]({id, active, visibility, attributes, scaleFactor, gradient});
   }
+  // @TODO: default shape
   return;
 }
 

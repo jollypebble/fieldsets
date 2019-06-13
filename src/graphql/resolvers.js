@@ -1,4 +1,4 @@
-import { getNodeList, getCurrentFocus } from './components/Diagrams';
+import { getNodeList, getCurrentFocus, getFieldList, getFields, updateField } from './components/Diagrams';
 
 export const resolvers = {
   Mutation: {
@@ -11,6 +11,13 @@ export const resolvers = {
         data: {currentFocus}
       });
       return currentFocus;
+    },
+    updateField: ( object, variables, { cache, getCacheKey } ) => {
+      const id = getCacheKey({__typename: 'Field', id: variables.id});
+      const updatedField = cache.readFragment({ id: id, fragment: getFieldList, fragmentName: 'field' });
+
+      
+      return updatedField;
     },
   },
 };

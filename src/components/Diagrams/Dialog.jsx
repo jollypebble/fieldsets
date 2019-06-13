@@ -1,8 +1,6 @@
 import React from 'react';
-import {
-  DialogContainer,
-  TextField
-} from 'react-md';
+import { DialogContainer } from 'react-md';
+import Field from '../Fields/Field';
 import PropTypes from 'prop-types';
 
 /**
@@ -92,8 +90,14 @@ import PropTypes from 'prop-types';
            containFocus={containFocus}
            contentClassName="md-grid"
          >
-           <TextField id="field-1" label="Field 1" placeholder={`Current Node Open: ${nodeID}`} className="md-cell md-cell--12" />
-           <TextField id="field-2" label="Field 2" placeholder="Value: " rows={2} className="md-cell md-cell--12" />
+          <Field
+            id={nodeID}
+            name={'$'}
+            fieldtype={'Currency'}
+            value={'VALUE'}
+            options={[]}
+            onChange={{}}
+          />
          </DialogContainer>
        </div>
      );

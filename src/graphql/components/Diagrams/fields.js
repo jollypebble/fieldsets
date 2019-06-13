@@ -11,3 +11,11 @@ export const getFields = gql`
 `;
 
 export const getFieldList = gql`${fields}`;
+
+
+export const updateField = gql`
+  mutation UpdateField($id: ID!) {
+    updateField(id: $id) @client
+  }
+  ${fields}
+`;
