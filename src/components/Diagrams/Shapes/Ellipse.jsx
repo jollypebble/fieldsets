@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Ellipse = ({id, active, visibility, attributes}) => {
+const Ellipse = ({id, active, visibility, attributes, onClick}) => {
   const {ratio, parentCenterX, parentCenterY, parent} = attributes;
   let radiusX = (active) ? attributes.radiusX * 1.1 : attributes.radiusX;
   let radiusY = (active) ? attributes.radiusY * 1.1 : attributes.radiusY;
@@ -34,7 +34,7 @@ const Ellipse = ({id, active, visibility, attributes}) => {
         rx={radiusX}
         ry={radiusY}
         strokeWidth={strokeWidth}
-        onClick={attributes.focusCircle}
+        onClick={onClick}
       >
       </ellipse>
     </React.Fragment>

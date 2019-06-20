@@ -4,7 +4,7 @@ const noValueList = ['monthly_contribution', 'lump_sums', 'short_term_money', 'm
 
 const Label = (props) => {
   let { textX, textY, textSize, ratio } = props.display.attributes;
-  const {id, name, centerX, centerY, focusCircle, nodeTextElement, hasParent, scaleFactor} = props;
+  const {id, name, centerX, centerY, onClick, nodeTextElement, hasParent, scaleFactor} = props;
   textSize = (ratio ? ratio * textSize : textSize) * 9;
   const fontSize = (textSize ? textSize : 5 * scaleFactor) + 'pt';
   return (
@@ -15,7 +15,7 @@ const Label = (props) => {
         y={textY ? textY : centerY}
         textAnchor="middle"
         className={'circletext ' + (! hasParent ? 'shown' : '') + ' ' + (!props.visible ? ' hidden' : 'shown') }
-        onClick={focusCircle}
+        onClick={onClick}
       >
         <tspan x={textX ? textX : centerX} style={{ fontSize }} dy="0em">{name}</tspan>
         <tspan x={textX ? textX : centerX} style={{ fontSize }} dy="1.6em">

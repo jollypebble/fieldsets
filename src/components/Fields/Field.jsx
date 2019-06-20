@@ -8,7 +8,6 @@ import { updateField } from '../../graphql';
  * A field is a single data value in a node.
  */
 
-
 class Field extends React.Component {
   constructor(props) {
     super(props);

@@ -67,7 +67,7 @@ const offenseDefault = {
 const offenseSmall = {
   display: {
     attributes: {
-      ratio: 1.3,
+      ratio: 1.4,
       textSize: 0.3,
       radius: 65
     }
@@ -82,13 +82,13 @@ const data = [
   {
     id: 'monthly_contribution',
     name: 'Monthly Contribution',
-    centerX: 180,
-    centerY: 30,
+    centerX: 720,
+    centerY: 240,
     display: {
       shape: 'Rectangle',
       attributes: {
-        textX: 240,
-        textY: 48,
+        textX: 780,
+        textY: 258,
         textSize: 0.6,
         width: 120,
         height: 30
@@ -98,13 +98,13 @@ const data = [
   {
     id: 'lump_sums',
     name: 'Lump Sums',
-    centerX: 360,
-    centerY: 30,
+    centerX: 900,
+    centerY: 240,
     display: {
       shape: 'Rectangle',
       attributes: {
-        textX: 420,
-        textY: 48,
+        textX: 960,
+        textY: 258,
         textSize: 0.6,
         width: 120,
         height: 30
@@ -114,12 +114,12 @@ const data = [
   {
     id: 'net_worth',
     name: 'Net Worth',
-    centerX: 340,
-    centerY: 218,
+    centerX: 880,
+    centerY: 428,
     display: {
       shape: 'radialGroup',
       attributes: {
-        path: 'M89,220.638262 L 338.611509,189.411159 L586.163759,215.812255 L 338.611509 251.865365 z',
+        path: 'M629,430.638262 L 878.611509,399.411159 L1126.163759,425.812255 L 878.611509 461.865365 z',
         gradientId: 'netWorth',
       }
     }
@@ -127,17 +127,17 @@ const data = [
   {
     id: 'defense_allocation',
     name: 'Defense Allocation',
-    centerX: 340, // X,Y represent points on a plane to map the current data to. If we wanted to get fancy we could rework this to include Z coordinates, but I don't see that showing a need for any time soon. If it does tracking down how these guys are used is a good place to start.
-    centerY: 173,
+    centerX: 880,
+    centerY: 383,
     display: {
       shape: 'radialGroup',
       attributes: {
-        path: 'M89,220.638262 L338.611509,189.411159 L586.163759,215.812255 C673.57272,225.134296 614.090589,296.664739 586.313801,216.146136 C558.537014,135.627533 458.302104,76 338.905688,76 C217.089207,76 115.21888,138.069231 89.8982885,221.067696',
+        path: 'M626,430.638262 L875.611509,399.411159 L1123.16376,425.812255 C1210.57272,435.134296 1151.09059,506.664739 1123.3138,426.146136 C1095.53701,345.627533 995.302104,286 875.905688,286 C754.089207,286 652.21888,348.069231 626.898289,431.067696',
         gradientId: 'defenceAllocation',
         textSize: 0.8
       },
       zoom: {
-        scale: 0.5
+        scale: 1
       }
     },
     children: [ // Should `children` be thought of as `data`. The `chldren` field name is used to imply this can be eith a series of liner data points or a series of relationally nested data objects.
@@ -145,32 +145,32 @@ const data = [
         id: 'will',
         name: 'Will',
         parent: 'defense_allocation',
-        centerX: 190,
-        centerY: 165,
+        centerX: 730,
+        centerY: 375,
         ...defenseDefault
       },
       {
         id: 'disability_insurance',
         name: 'Disabilty Insurance',
         parent: 'defense_allocation',
-        centerX: 278,
-        centerY: 122,
+        centerX: 818,
+        centerY: 332,
         ...defenseDefault
       },
       {
         id: 'long_term_care',
         name: 'Long Term Care',
         parent: 'defense_allocation',
-        centerX: 395,
-        centerY: 120,
+        centerX: 935,
+        centerY: 330,
         ...defenseDefault
       },
       {
         id: 'term_insurance',
         name: 'Term Insurance',
         parent: 'defense_allocation',
-        centerX: 490,
-        centerY: 165,
+        centerX: 1030,
+        centerY: 375,
         ...defenseDefault
       }
     ]
@@ -178,22 +178,19 @@ const data = [
   {
     id: 'offense_allocation',
     name: 'Offense Allocation',
-    centerX: 340,
-    centerY: 255,
-    display: {
-      shape: 'ellipse'
-    },
+    centerX: 880,
+    centerY: 465,
     children: [
       {
         id: 'short_term_money',
         name: 'Short Term Money',
         parent: 'offense_allocation',
-        centerX: 185,
-        centerY: 255,
+        centerX: 725,
+        centerY: 465,
         display: {
           shape: 'radialGroup',
           attributes: {
-            path: 'M221.003055,424 C198.033876,415.238795 177.128139,404.002703 158.954648,390.77872 C112.83742,357.221412 84.3143912,310.863156 84.3143912,259.661898 C84.3143912,246.029381 86.3364159,232.740188 90.1741842,219.944527 C94.0119524,207.148866 75.3619486,218.791811 89.1725559,220.118997 L339,244.127187 L221.079091,423.200035',
+            path: 'M758.003055,634 C735.033876,625.238795 714.128139,614.002703 695.954648,600.77872 C649.83742,567.221412 621.314391,520.863156 621.314391,469.661898 C621.314391,456.029381 623.336416,442.740188 627.174184,429.944527 C631.011952,417.148866 612.361949,428.791811 626.172556,430.118997 L876,454.127187 L758.079091,633.200035',
             textSize: 1,
             gradientId: 'shortTermMoney'
           },
@@ -203,24 +200,24 @@ const data = [
             id: 'cash_equivalents',
             name: 'Cash Equivalents',
             parent: 'short_term_money',
-            centerX: 150,
-            centerY: 300,
+            centerX: 690,
+            centerY: 510,
             ...offenseDefault
           },
           {
             id: 'mortgage',
             name: 'Mortgage',
             parent: 'short_term_money',
-            centerX: 230,
-            centerY: 290,
+            centerX: 770,
+            centerY: 500,
             ...offenseDefault
           },
           {
             id: 'liabilities_debt',
             name: 'Liabilities/Debt',
             parent: 'short_term_money',
-            centerX: 200,
-            centerY: 360,
+            centerX: 740,
+            centerY: 570,
             ...offenseDefault
           },
         ]
@@ -229,12 +226,12 @@ const data = [
         id: 'mid_term_money',
         name: 'Mid Term Money',
         parent: 'offense_allocation',
-        centerX: 350,
-        centerY: 420,
+        centerX: 890,
+        centerY: 630,
         display: {
           shape: 'radialGroup',
           attributes: {
-            path: 'M219.882797,424.106114 L339,245 L473.002006,418.173577 C499.037273,451.510959 512.720187,400.1111 473.47324,417.909784 C434.226293,435.708467 387.802732,446 338.054149,446 C295.05672,446 254.5431,438.312173 219,424.734206',
+            path: 'M756.882797,634.106114 L876,455 L1010.00201,628.173577 C1036.03727,661.510959 1049.72019,610.1111 1010.47324,627.909784 C971.226293,645.708467 924.802732,656 875.054149,656 C832.05672,656 791.5431,648.312173 756,634.734206',
             textSize: 1,
             gradientId: 'midTermMoney'
           }
@@ -244,24 +241,24 @@ const data = [
             id: 'utmas',
             name: 'UTMA\'s',
             parent: 'mid_term_money',
-            centerX: 345,
-            centerY: 315,
+            centerX: 885,
+            centerY: 525,
             ...offenseDefault
           },
           {
             id: 'plan_529',
             name: '529 Plan',
             parent: 'mid_term_money',
-            centerX: 305,
-            centerY: 370,
+            centerX: 845,
+            centerY: 580,
             ...offenseDefault
           },
           {
             id: 'investment_account',
             name: 'Investment Account',
             parent: 'mid_term_money',
-            centerX: 385,
-            centerY: 370,
+            centerX: 925,
+            centerY: 580,
             ...offenseDefault
           },
         ]
@@ -270,12 +267,12 @@ const data = [
         id: 'long_term_money',
         name: 'Long Term Money',
         parent: 'offense_allocation',
-        centerX: 500,
-        centerY: 245,
+        centerX: 1040,
+        centerY: 455,
         display: {
           shape: 'radialGroup',
           attributes: {
-            path: 'M586.214862,215 L339,244.061867 L473.991359,418.717987 C521.763908,480.527632 401.872803,451.542717 473.955869,418.683133 C546.038934,385.823548 594,327.367903 594,260.729702 C594,245.17425 591.38659,230.064667 586.462996,215.622449',
+            path: 'M1123.21486,425 L876,454.061867 L1010.99136,628.717987 C1058.76391,690.527632 938.872803,661.542717 1010.95587,628.683133 C1083.03893,595.823548 1131,537.367903 1131,470.729702 C1131,455.17425 1128.38659,440.064667 1123.463,425.622449',
             textSize: 1,
             gradientId: 'longTermMoney'
           },
@@ -285,56 +282,56 @@ const data = [
             id: 'cash_value_life',
             name: 'Cash Value Life',
             parent: 'long_term_money',
-            centerX: 440,
-            centerY: 280,
+            centerX: 980,
+            centerY: 490,
             ...offenseDefault
           },
           {
             id: 'ira_roth',
             name: 'IRA ROTH',
             parent: 'long_term_money',
-            centerX: 470,
-            centerY: 335,
+            centerX: 1010,
+            centerY: 545,
             ...offenseDefault
           },
           {
             id: 'k_401',
             name: '401_K',
             parent: 'long_term_money',
-            centerX: 505,
-            centerY: 280,
+            centerX: 1045,
+            centerY: 490,
             ...offenseDefault
           },
           {
             id: 'annuity',
             name: 'Annuity',
             parent: 'long_term_money',
-            centerX: 492,
-            centerY: 382,
+            centerX: 1032,
+            centerY: 592,
             ...offenseSmall
           },
           {
             id: 'stock_option',
             name: 'Stock option',
             parent: 'long_term_money',
-            centerX: 530,
-            centerY: 350,
+            centerX: 1070,
+            centerY: 560,
             ...offenseSmall
           },
           {
             id: 'investment_real_estate',
             name: 'Real Estate',
             parent: 'long_term_money',
-            centerX: 555,
-            centerY: 310,
+            centerX: 1095,
+            centerY: 520,
             ...offenseSmall
           },
           {
             id: 'deffered_comp',
             name: 'Deffered Comp',
             parent: 'long_term_money',
-            centerX: 565,
-            centerY: 262,
+            centerX: 1105,
+            centerY: 472,
             ...offenseSmall
           }
         ]
@@ -342,8 +339,8 @@ const data = [
       {
         id: 'offense_parent',
         name: 'Offese Allocation',
-        centerX: 340,
-        centerY: 255,
+        centerX: 880,
+        centerY: 465,
         display: {
           shape: 'ellipse',
           attributes: {
@@ -354,8 +351,8 @@ const data = [
       {
         id: 'defense_parent',
         name: 'Defense Allocation',
-        centerX: 340,
-        centerY: 180,
+        centerX: 880,
+        centerY: 390,
         display: {
           shape: 'ellipse',
           attributes: {
@@ -366,8 +363,8 @@ const data = [
       {
         id: 'net_worth',
         name: 'Net Worth',
-        centerX: 340,
-        centerY: 218,
+        centerX: 880,
+        centerY: 428,
         display: {
           shape: 'ellipse',
           attributes: {

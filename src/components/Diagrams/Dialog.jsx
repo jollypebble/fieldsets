@@ -27,11 +27,9 @@ import PropTypes from 'prop-types';
 
    componentDidUpdate(prevProps, prevState) {
      // console.log('Updating dialog visibility');
-     if ( prevProps.nodeID !== this.props.nodeID ) {
+     if ( this.props.nodeID && prevProps.nodeID !== this.props.nodeID ) {
        this.show();
      }
-
-     return true;
    }
 
    show = () => {
@@ -39,8 +37,10 @@ import PropTypes from 'prop-types';
    };
 
    hide = () => {
-     this.setState({ visible: false });
-   };
+     this.setState({ visible: false }, () => {
+       this.props.onClose();
+     });
+    };
 
    render() {
      const {
