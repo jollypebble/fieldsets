@@ -433,15 +433,15 @@ class CircleDiagram extends Component {
                 <clipPath id="clippath">
                   <ellipse
                     id='mask ellipse'
-                    cx={339}
-                    cy={261}
+                    cx={876}
+                    cy={471}
                     rx={255}
                     ry={185}
                   />
                   <rect
                     id="mask rectangle"
-                    x="180"
-                    y="30"
+                    x="720"
+                    y="240"
                     width="360"
                     height="30"
                   />
