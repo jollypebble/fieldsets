@@ -1,8 +1,15 @@
+/* Other peoples code */
 import React from 'react';
 import { DialogContainer } from 'react-md';
-import Field from '../Fields/Field';
+import { Query } from 'react-apollo';
 import PropTypes from 'prop-types';
 
+
+/* Our code */
+import { getNodeFields } from '../../graphql';
+import Field from '../Fields/Field';
+
+const _ = require('lodash');
 /**
  * Radial Nodes are functional components that represent parent circle nodes.
  * They simply check the node data and will iteratively call itself if there are children.
@@ -49,6 +56,7 @@ import PropTypes from 'prop-types';
      } = this.props;
 
      const { visible, initialFocus, focusOnMount, containFocus } = this.state;
+     const id = nodeID;
 
      const actions = [{
        id: 'dialog-cancel',
@@ -62,17 +70,6 @@ import PropTypes from 'prop-types';
        onClick: this.hide,
      }];
 
-     /*
-     if (typeof(nodeData) !== undefined && nodeData.length > 0) {
-       nodeData.map(node => (
-         <RadialDialog
-           key={ node.id }
-           nodeData={ typeof(node.children) === undefined ? [] : node.children }
-           nodeID={ node.id }
-         />
-       ));
-     }
-     */
      const divID = `${nodeID}-dialog`;
      const dialogID = `${nodeID}-control-dialog`;
 
@@ -90,14 +87,27 @@ import PropTypes from 'prop-types';
            containFocus={containFocus}
            contentClassName="md-grid"
          >
-          <Field
-            id={nodeID}
-            name={'$'}
-            fieldtype={'Currency'}
-            value={'VALUE'}
-            options={[]}
-            onChange={{}}
-          />
+         <Query query={getNodeFields} variables={{ id }} >
+          {({ loading, error, data }) => {
+            if (loading) return null;
+            if (error) return `Error! ${error}`;
+            console.log(data.getNodeFields)
+            let fieldlist = [];
+            for (let i=0; i<data.getNodeFields.length; i++) {
+              fieldlist.push(
+                <Field
+                  id={data.getNodeFields[i].id}
+                  name={data.getNodeFields[i].name}
+                  fieldtype={'Currency'}
+                  value={data.getNodeFields[i].value}
+                  options={[]}
+                  onChange={{}}
+                />
+              );
+            }
+            return(fieldlist);
+            }}
+          </Query>
          </DialogContainer>
        </div>
      );

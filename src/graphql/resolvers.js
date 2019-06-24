@@ -16,8 +16,14 @@ export const resolvers = {
       const id = getCacheKey({__typename: 'Field', id: variables.id});
       const updatedField = cache.readFragment({ id: id, fragment: getFieldList, fragmentName: 'field' });
 
-
       return updatedField;
+    },
+  },
+  Query: {
+    getNodeFields: (object, variables, { cache, getCacheKey }) => {
+      const id = getCacheKey({__typename: 'FieldList', id: variables.id});
+      const fields = cache.readFragment({ id: id, fragment: getFieldList, fragmentName: 'fields' });
+      return fields.list;
     },
   },
 };
