@@ -2,7 +2,7 @@
 // At some point we will move the hacky excel functions to react callbacks and push this json data to an official data store/relational db
 export default [
   {
-    id: 'net_worth',
+    id: 'net_worth_total',
     name: 'Net Worth',
     description: '',
     value: '38742994',
@@ -15,7 +15,7 @@ export default [
     alwaysDisplay: true,
   },
   {
-    id: 'monthly_contribution',
+    id: 'monthly_contribution_total',
     name: 'Monthly Contribution',
     description: '',
     value: '280000',
@@ -23,12 +23,12 @@ export default [
     callback: '',
     notes:[],
     owners:[],
-    parent: '',
+    parent: 'monthly_contribution',
     order: 0,
     alwaysDisplay: true,
   },
   {
-    id: 'lump_sums',
+    id: 'lump_sums_total',
     name: 'Lump Sums',
     description: '',
     value: '280000',
@@ -36,7 +36,7 @@ export default [
     callback: '',
     notes:[],
     owners:[],
-    parent: '',
+    parent: 'lump_sums',
     order: 0,
     alwaysDisplay: true,
   },

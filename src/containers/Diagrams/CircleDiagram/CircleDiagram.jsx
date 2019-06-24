@@ -229,6 +229,7 @@ class CircleDiagram extends Component {
 
   updateFocus = (id, focusX, focusY) => {
     const current = this.getFocus();
+    console.log(current);
 
     this.setState({
       currentID: current.currentFocus.id,
