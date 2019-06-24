@@ -83,13 +83,17 @@ export const typeDefs = `
     list: [Node!]
   }
 
+  scalar Value
+
   type Mutation {
     setCurrentFocus(id: ID!): Node
+    updateField(id: ID!, type: String!, value: Value!, formula: String): Field!
   }
 
   type Query {
     currentFocus: Node!
     fields: FieldList!
+    nodeFields(id: ID!): FieldList!
     nodes: NodeList!
     owners: OwnerList!
   }

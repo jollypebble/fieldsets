@@ -1,11 +1,13 @@
-# React Point
-React Point is a data visualization framework used to help develop react based data visualization components.
+# React Visual Fieldsets
+React Visual Fieldsets is a data visualization framework used to help develop react based data visualization applications.
 
-React Point is an both a UI and a Data abstraction layer. It will provide you [Material Design Components](https://react-md.mlaursen.com/) to wrap around your data visualization diagram as well as an abstraction data node which can be pulled into your data visualization framework of your choice. In this example, we rely on strict SVG standards when rendering our node in browser, but you could simply pass a SVG instead via d3, or simply use css and html5. As this a work in progress, many of these truths have not been tested as functional, let alone paid attention to. Most likely there are a bunch of place holders for the `@TODO: $DREAMING_BIG` thoughts.
+React Visual Fieldsets is both a UI and a data abstraction layer. It will provide you [Material Design Components](https://react-md.mlaursen.com/) to wrap around your data visualization diagram as well as a flexible abstract data layer which can be pulled into any data visualization framework of your choice. Originally funded by [Econ Circles](https://www.econcircles.com), this framework was built to be able to quickly generate a diverse set of data visualizations for non standardized data sets and sources.
 
+# Default Example
 As our proof of concept, we will draw a circle diagram that can render a visualization for how to best invest in the future. It is used as a sales tool and is used to help clients see how their income and savings are grouped and determine the best path forward with any additional resources.
 
-This framework was initially funded by [Econ Circles](https://www.econcircles.com)
+In this example, we rely on strict SVG standards when rendering our node in browser, but you could simply pass a SVG instead via d3, or simply use css and html5. As this a work in progress, many of these truths have not been tested as functional, let alone paid attention to. Most likely there are a bunch of place holders for the `@TODO: $DREAMING_BIG` thoughts.
+
 
 # Technical Components
 
@@ -33,6 +35,8 @@ For a final production build:
 
 + **UI**: The containers and components that a user interacts with. This does not include the data visualzation diagram.
 + **Diagram**: A SVG standards based data visualization that is displayed in the viewer aread of the UI
++ **Node**: (@TODO: Change name to Set) A grouping of data values
++ **Field**: A single data value
 
 ## React-MD and UI
 The UI components are pulled heavily from [react-md](https://react-md.mlaursen.com/components/autocompletes). The top level container for the UI can be found in `src/containers/UI` and you can trace down the corresponding components in the `src/components` directory.
@@ -56,7 +60,7 @@ A little about me, [Will Gladstone](https://will.gl@dst.one), the creator of thi
 
 This is my first true project in REACT. To be honest, there are many things about REACT that I can see what they want to do with it and it's super exciting. Imagine a world where components have been abstracted to the point where everything can work on every device everywhere as long as there is a custom API for those devices. As of the last update of this repo, it feels a long way away to me.
 
-React and ReactNative are still two different entities, have two different sets of resources and two different sets of core contributors.  Quite frankly I think REACT and DOM thinking can be overly abstract. I believe code can be too DRY. 
+React and ReactNative are still two different entities, have two different sets of resources and two different sets of core contributors.  Quite frankly I think REACT and DOM thinking can be overly abstract. I believe code can be too DRY.
 
 I think often DRYness is an excuse for making code as confusing as fuck. I have been guilty of this as well. But lessons learned.
 
