@@ -1,4 +1,8 @@
-import DataUtils from '../../utils/DataUtils'
+/**
+ * This file determines the visual layout of a diagram and established the ids that fields can be assigned to visually.
+ * It uses a backfill function so that you only need to fill in values that differ from the defined defaults.
+ */
+import DataUtils from 'utils/DataUtils'
 
 /**
  * Defaults will be merged with defined values in the data variable below.
@@ -296,7 +300,7 @@ const data = [
           },
           {
             id: 'k_401',
-            name: '401_K',
+            name: '401 K',
             parent: 'long_term_money',
             centerX: 1045,
             centerY: 490,

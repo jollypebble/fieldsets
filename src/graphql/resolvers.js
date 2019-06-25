@@ -25,5 +25,10 @@ export const resolvers = {
       const fields = cache.readFragment({ id: id, fragment: getFieldList, fragmentName: 'fields' });
       return fields.list;
     },
+    getNode: (object, variables, { cache, getCacheKey }) => {
+      const id = getCacheKey({__typename: 'Node', id: variables.id});
+      const node = cache.readFragment({ id: id, fragment: getNodeList, fragmentName: 'node' });
+      return node;
+    }
   },
 };
