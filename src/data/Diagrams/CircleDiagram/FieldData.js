@@ -16,7 +16,7 @@ export default [
   },
   {
     id: 'monthly_contribution_total',
-    name: 'Monthly Contribution',
+    name: '',
     description: '',
     value: 0,
     type: 'currency',
@@ -29,7 +29,7 @@ export default [
   },
   {
     id: 'lump_sums_total',
-    name: 'Lump Sums',
+    name: '',
     description: '',
     value: 0,
     type: 'currency',

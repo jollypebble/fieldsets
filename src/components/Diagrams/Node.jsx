@@ -122,22 +122,6 @@ class Node extends React.Component {
     this.setState({ containFocus: checked });
   };
 
-  getLabel(name, centerX, centerY, focusCircle) {
-    return (
-      <React.Fragment>
-        <Label
-          {...this.props}
-          name={name}
-          centerX={centerX}
-          centerY={centerY}
-          onClick={focusCircle}
-          hasParent={ this.hasParent() }
-          nodeTextElement={ this.nodeTextElement }
-        />
-      </React.Fragment>
-    );
-  }
-
   updateNodeData() {
     // TODO GET BOUNDING BOX HERE:
 
@@ -237,7 +221,18 @@ class Node extends React.Component {
                   }}
                   scaleFactor={ this.props.scaleFactor * 0.6 }
                 />
-                {this.getLabel(name, centerX, centerY, focusCircle)}
+                <React.Fragment>
+                  <Label
+                    {...this.props}
+                    name={name}
+                    centerX={centerX}
+                    centerY={centerY}
+                    onClick={focusCircle}
+                    hasParent={ this.hasParent() }
+                    nodeTextElement={ this.nodeTextElement }
+                  />
+                </React.Fragment>
+
               </g>
               {parentNode}
             </g>
