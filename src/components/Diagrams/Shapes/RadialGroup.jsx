@@ -1,6 +1,6 @@
 import React from 'react';
 import Cone from './Cone';
-import * as Gradients from 'config/data/Gradients';
+import * as Gradients from 'config/defaults/components/Gradients';
 
 const RadialGroup = ({ id, active, visibility, attributes }) => {
   return (

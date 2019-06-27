@@ -14,13 +14,6 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      addClass: false,
-      open: false,
-      totalcontributionsAmount: 500000,
-      dataSource: [],
-      sheetLoaded: false,
-    };
   }
 
   componentDidMount() {

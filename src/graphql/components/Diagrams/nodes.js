@@ -10,4 +10,11 @@ export const getNodes = gql`
   ${nodes}
 `;
 
+export const getNode = gql`
+  query GetNode($id: ID!) {
+    getNode(id: $id) @client
+  }
+  ${nodes}
+`;
+
 export const getNodeList = gql`${nodes}`;

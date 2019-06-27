@@ -36,7 +36,8 @@ For a final production build:
 + **UI**: The containers and components that a user interacts with. This does not include the data visualzation diagram.
 + **Diagram**: A SVG standards based data visualization that is displayed in the viewer aread of the UI
 + **Node**: (@TODO: Change name to Set) A grouping of data values
-+ **Field**: A single data value
++ **Field**: A single data point which can be a static value or the product of a callback function.
++ **Account**: A heirarchical owner of a field.
 
 ## React-MD and UI
 The UI components are pulled heavily from [react-md](https://react-md.mlaursen.com/components/autocompletes). The top level container for the UI can be found in `src/containers/UI` and you can trace down the corresponding components in the `src/components` directory.

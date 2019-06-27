@@ -1,6 +1,9 @@
 import React from 'react';
+import { Query } from 'react-apollo';
 
-const noValueList = ['monthly_contribution', 'lump_sums', 'short_term_money', 'mid_term_money', 'long_term_money'];
+/* Our code */
+import { getNodeFields } from '../../graphql';
+import Field from '../Fields/Field';
 
 const Label = (props) => {
   let { textX, textY, textSize, ratio } = props.display.attributes;
@@ -18,9 +21,34 @@ const Label = (props) => {
         onClick={onClick}
       >
         <tspan x={textX ? textX : centerX} style={{ fontSize }} dy="0em">{name}</tspan>
-        <tspan x={textX ? textX : centerX} style={{ fontSize }} dy="1.6em">
-          { !noValueList.includes(id) && 'Data: Value' }
-        </tspan>
+        <Query query={getNodeFields} variables={{ id }} >
+         {({ loading, error, data }) => {
+           if (loading) return null;
+           if (error) return `Error! ${error}`;
+           let fieldlist = [];
+           let order = 0;
+           console.log(data);
+           if (data.getNodeFields) {
+             for (let i=0; i<data.getNodeFields.length; i++) {
+               if ( data.getNodeFields[i].alwaysDisplay ) {
+                 order = data.getNodeFields[i].order;
+                 const fieldname = data.getNodeFields[i].name;
+                 const value = data.getNodeFields[i].value;
+
+                 fieldlist[order] =
+                  <tspan
+                    key={data.getNodeFields[i].id}
+                    x={textX ? textX : centerX}
+                    style={{ fontSize }}
+                    dy="1.6em">
+                    {(fieldname.length)?`${fieldname}: ${value}`: `${value}`}
+                   </tspan>;
+                }
+             }
+           }
+           return(fieldlist);
+          }}
+         </Query>
       </text>
     </React.Fragment>
   );

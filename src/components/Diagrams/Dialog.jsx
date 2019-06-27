@@ -6,10 +6,9 @@ import PropTypes from 'prop-types';
 
 
 /* Our code */
-import { getNodeFields } from '../../graphql';
+import { getNode, getNodeFields } from '../../graphql';
 import Field from '../Fields/Field';
 
-const _ = require('lodash');
 /**
  * Radial Nodes are functional components that represent parent circle nodes.
  * They simply check the node data and will iteratively call itself if there are children.
@@ -18,6 +17,7 @@ const _ = require('lodash');
    constructor(props) {
      super(props);
      this.state = {
+       name: '',
        visible: false,
        focusOnMount: true,
        containFocus: true,
@@ -52,7 +52,6 @@ const _ = require('lodash');
    render() {
      const {
        nodeID,
-       name
      } = this.props;
 
      const { visible, initialFocus, focusOnMount, containFocus } = this.state;
@@ -75,40 +74,49 @@ const _ = require('lodash');
 
      return (
        <div id={divID}>
-         <DialogContainer
-           id={dialogID}
-           className="radialDialog"
-           title={name}
-           visible={visible}
-           actions={actions}
-           onHide={this.hide}
-           initialFocus={initialFocus}
-           focusOnMount={focusOnMount}
-           containFocus={containFocus}
-           contentClassName="md-grid"
-         >
-         <Query query={getNodeFields} variables={{ id }} >
+        <Query query={getNode} variables={{ id }} >
           {({ loading, error, data }) => {
             if (loading) return null;
             if (error) return `Error! ${error}`;
-            console.log(data.getNodeFields)
-            let fieldlist = [];
-            for (let i=0; i<data.getNodeFields.length; i++) {
-              fieldlist.push(
-                <Field
-                  id={data.getNodeFields[i].id}
-                  name={data.getNodeFields[i].name}
-                  fieldtype={'Currency'}
-                  value={data.getNodeFields[i].value}
-                  options={[]}
-                  onChange={{}}
-                />
+            return (
+               <DialogContainer
+                 id={dialogID}
+                 className="radialDialog"
+                 title={data.getNode ? data.getNode.name : ''}
+                 visible={visible}
+                 actions={actions}
+                 onHide={this.hide}
+                 initialFocus={initialFocus}
+                 focusOnMount={focusOnMount}
+                 containFocus={containFocus}
+                 contentClassName="md-grid"
+               >
+                 <Query query={getNodeFields} variables={{ id }} >
+                  {({ loading, error, data }) => {
+                    if (loading) return null;
+                    if (error) return `Error! ${error}`;
+                    let fieldlist = [];
+                    let order = 0;
+                    for (let i=0; i<data.getNodeFields.length; i++) {
+                      order = data.getNodeFields[i].order
+                      fieldlist[order] =
+                        <Field
+                          key={data.getNodeFields[i].id}
+                          id={data.getNodeFields[i].id}
+                          name={data.getNodeFields[i].name}
+                          fieldtype={data.getNodeFields[i].type}
+                          value={data.getNodeFields[i].value}
+                          options={[]}
+                          onChange={{}}
+                        />;
+                    }
+                    return(fieldlist);
+                    }}
+                  </Query>
+                </DialogContainer>
               );
-            }
-            return(fieldlist);
             }}
           </Query>
-         </DialogContainer>
        </div>
      );
   }
