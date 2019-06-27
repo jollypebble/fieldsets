@@ -93,7 +93,8 @@ export const typeDefs = `
   type Query {
     currentFocus: Node!
     fields: FieldList!
-    nodeFields(id: ID!): FieldList!
+    getnodeFields(id: ID!): FieldList!
+    getNode(id: ID!): Node!
     nodes: NodeList!
     owners: OwnerList!
   }

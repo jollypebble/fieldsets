@@ -8,9 +8,9 @@ const Currency = ({id, name, value, options, onChange}) => {
     <React.Fragment>
       <TextField
         id={`field-${id}`}
-        label={name}
-        placeholder={`Current Node Open: ${value}`}
-        className={`field fieldtype-currency field-parent-`} 
+        label={`${name}`}
+        placeholder={`${value}`}
+        className={`field fieldtype-currency field-parent-${id}`}
       />
     </React.Fragment>
   );

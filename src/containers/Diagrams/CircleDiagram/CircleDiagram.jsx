@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withApollo } from "react-apollo";
-import { DiagramData, FieldData, OwnerData } from '../../../config';
+import { DiagramData, FieldData, AccountData } from '../../../data/Diagrams/CircleDiagram';
 import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
 
 import { Node, Dialog } from '../../../components/Diagrams';
@@ -37,7 +37,7 @@ class CircleDiagram extends Component {
     this.updateZoom = this.updateZoom.bind(this);
     this.updateFocus = this.updateFocus.bind(this);
     this.primeCache = this.primeCache.bind(this);
-    this.setOwnerCache = this.setOwnerCache.bind(this);
+    this.setAccountCache = this.setAccountCache.bind(this);
     this.setFieldCache = this.setFieldCache.bind(this);
     this.setDataCache = this.setDataCache.bind(this);
     this.setNodeState = this.setNodeState.bind(this);
@@ -229,7 +229,7 @@ class CircleDiagram extends Component {
 
   updateFocus = (id, focusX, focusY) => {
     const current = this.getFocus();
-    console.log(current);
+    // console.log(current);
 
     this.setState({
       currentID: current.currentFocus.id,
@@ -265,16 +265,16 @@ class CircleDiagram extends Component {
 
   /**
    * Set our data cache before we deal with User interactions.
-   * Make you you consider the order which you data is primed. In this case, owners are part of fields which are part of the diagram.
+   * Make you you consider the order which you data is primed. In this case, accounts are part of fields which are part of the diagram.
    */
   primeCache = () => {
     // @TODO: REMOTE GRAPHQL CALLS GO HERE. FOR NOW WE PULL IN CONFIG BASED DATA.
-    this.setOwnerCache(OwnerData);
+    this.setAccountCache(AccountData);
     this.setFieldCache(FieldData);
     this.setDataCache(DiagramData);
   }
 
-  setOwnerCache = (data=[]) => {
+  setAccountCache = (data=[]) => {
 
   }
 
@@ -477,7 +477,6 @@ class CircleDiagram extends Component {
         </div>
         <div className="diagramDialogs">
           <Dialog
-            name={ 'Dialog Box' }
             nodeID={ this.state.currentDialog }
             onClose={this.closeDialog}
           />

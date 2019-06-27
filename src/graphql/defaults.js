@@ -27,13 +27,14 @@ export const defaults = {
       list: [{
         id: 'default',
         name: '',
+        description: '',
         parent: '',
         value: '',
         alwaysDisplay: false,
-        datatype: 'currency',
+        type: 'currency',
         callback: '',
         notes:[],
-        owners:[],
+        accounts:[],
         order: 0,
         __typename: 'Field'
       }],
@@ -46,13 +47,14 @@ export const defaults = {
     list: [{
       id: 'default',
       name: '',
+      description: '',
       parent: '',
       value: '',
       alwaysDisplay: false,
-      datatype: 'currency',
+      type: 'currency',
       callback: '',
       notes:[],
-      owners:[],
+      accounts:[],
       order: 0,
       __typename: 'Field'
     }],
