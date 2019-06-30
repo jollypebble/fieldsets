@@ -10,7 +10,9 @@ const Currency = ({id, name, value, options, onChange}) => {
         id={`field-${id}`}
         label={`${name}`}
         placeholder={`${value}`}
+        defaultValue={`${value}`}
         className={`field fieldtype-currency field-parent-${id}`}
+        onChange={(inputValue) => onChange(inputValue, id)}
       />
     </React.Fragment>
   );

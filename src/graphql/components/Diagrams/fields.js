@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { fields } from '../../fragments'
+import { fields } from '../../fragments';
 
 export const getFields = gql`
   query GetFields @client {
@@ -18,10 +18,44 @@ export const getNodeFields = gql`
 `;
 
 export const updateField = gql`
-  mutation UpdateField($id: ID!) {
-    updateField(id: $id) @client
+  mutation UpdateField($data: Array) {
+    updateField(data: $data) @client {
+      id
+    }
   }
   ${fields}
 `;
 
 export const getFieldList = gql`${fields}`;
+
+export const getInitialFieldData = gql`
+  query {
+    allFieldData {
+      edges {
+        node {
+          fieldId
+          name
+          description
+          value
+          type
+          callback
+          notes
+          accounts
+          parent
+          order
+          alwaysDisplay
+        }
+      }
+    }
+  }
+`;
+
+export const updateAllFields = gql`
+  mutation updateAllFields($data: String!) {
+    createFieldData(data: $data) {
+      result {
+        status
+      }
+    }
+  }
+`;

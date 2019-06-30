@@ -95,7 +95,7 @@ const data = [
         textY: 258,
         textSize: 0.6,
         width: 120,
-        height: 30
+        height: 36
       }
     }
   },
@@ -111,7 +111,7 @@ const data = [
         textY: 258,
         textSize: 0.6,
         width: 120,
-        height: 30
+        height: 36
       }
     }
   },
@@ -159,15 +159,41 @@ const data = [
         parent: 'defense_allocation',
         centerX: 818,
         centerY: 332,
-        ...defenseDefault
+        ...defenseDefault,
+        display: {
+          attributes: {
+            ratio: 1.2,
+            textSize: 0.45,
+            radius: 75,
+            textY: 326
+          },
+          zoom: {
+            scale: 1,
+            x: 0.5,
+            y: 0.5
+          }
+        }
       },
       {
         id: 'long_term_care',
         name: 'Long Term Care',
         parent: 'defense_allocation',
-        centerX: 935,
-        centerY: 330,
-        ...defenseDefault
+        centerX: 940,
+        centerY: 332,
+        ...defenseDefault,
+        display: {
+          attributes: {
+            ratio: 1.2,
+            textSize: 0.45,
+            radius: 75,
+            textY: 326
+          },
+          zoom: {
+            scale: 1,
+            x: 0.5,
+            y: 0.5
+          }
+        }
       },
       {
         id: 'term_insurance',
@@ -175,7 +201,20 @@ const data = [
         parent: 'defense_allocation',
         centerX: 1030,
         centerY: 375,
-        ...defenseDefault
+        ...defenseDefault,
+        display: {
+          attributes: {
+            ratio: 1.2,
+            textSize: 0.45,
+            radius: 75,
+            textY: 370
+          },
+          zoom: {
+            scale: 1,
+            x: 0.5,
+            y: 0.5
+          }
+        }
       }
     ]
   },
@@ -349,6 +388,7 @@ const data = [
           shape: 'ellipse',
           attributes: {
             ...parentDefaultAttrs,
+            textY: 468
           }
         }
       },
@@ -361,6 +401,7 @@ const data = [
           shape: 'ellipse',
           attributes: {
             ...parentDefaultAttrs,
+            textY: 393
           }
         }
       },
@@ -372,7 +413,7 @@ const data = [
         display: {
           shape: 'ellipse',
           attributes: {
-            ...parentDefaultAttrs,
+            ...parentDefaultAttrs
           }
         }
       }

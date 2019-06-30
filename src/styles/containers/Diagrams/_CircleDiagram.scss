@@ -3,6 +3,14 @@
   width: 100vw;
   height: 98vh;
   z-index: -100;
+
+  .storeFieldData {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    font-weight: bold;
+    letter-spacing: 0.8;
+  }
 }
 #circlediagram {
   overflow: hidden;

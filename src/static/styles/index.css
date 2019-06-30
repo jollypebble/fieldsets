@@ -596,6 +596,12 @@ caption,
   width: 100vw;
   height: 98vh;
   z-index: -100; }
+  .diagramviewer .storeFieldData {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    font-weight: bold;
+    letter-spacing: 0.8; }
 
 #circlediagram {
   overflow: hidden;
@@ -660,7 +666,8 @@ text.nodeAttributesBase {
   transition: width 0.3s cubic-bezier(0.215, 0.61, 0.355, 1); }
 
 #econcircleapp {
-  float: left; }
+  float: left;
+  position: relative; }
 
 #econcircleapp.sideBarRef {
   width: 96%;

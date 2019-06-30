@@ -11,11 +11,6 @@ import DiagramEvents from './utils/DiagramEvents'
  * The basic UI components and all visualization areas are added here
  */
 class App extends Component {
-
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     DiagramEvents.init()
   }
