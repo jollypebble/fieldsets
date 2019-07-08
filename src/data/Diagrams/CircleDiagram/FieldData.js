@@ -218,7 +218,7 @@ export default [
   },
   {
     id: 'cash_equivalents_total',
-    name: 'Total Value',
+    name: 'Total',
     description: '',
     value: [],
     type: 'currency',
@@ -270,7 +270,7 @@ export default [
   },
   {
     id: 'mortgage_total',
-    name: 'Total',
+    name: 'Total Value',
     description: '',
     value: 0,
     type: 'currency',
@@ -375,7 +375,7 @@ export default [
   },
   {
     id: 'utmas_total',
-    name: 'Total Value',
+    name: 'Total',
     description: '',
     value: 0,
     type: 'currency',
@@ -408,7 +408,7 @@ export default [
     callback: '',
     notes:[],
     accounts:[],
-    parent: '529',
+    parent: 'plan_529',
     order: 1,
     alwaysDisplay: false,
   },
@@ -421,13 +421,13 @@ export default [
     callback: '',
     notes:[],
     accounts:[],
-    parent: '529',
+    parent: 'plan_529',
     order: 2,
     alwaysDisplay: false,
   },
   {
     id: 'plan_529_total',
-    name: 'Total Value',
+    name: 'Total',
     description: '',
     value: 0,
     type: 'currency',
@@ -479,7 +479,7 @@ export default [
   },
   {
     id: 'investment_account_total',
-    name: 'Total Value',
+    name: 'Total',
     description: '',
     value: 0,
     type: 'currency',
@@ -506,7 +506,7 @@ export default [
   },
   {
     id: 'cash_value_life_individal_value',
-    name: '',
+    name: 'Life Individual',
     description: '',
     value: [],
     type: 'currency',
@@ -519,7 +519,7 @@ export default [
   },
   {
     id: 'whole_life_individal_value',
-    name: '',
+    name: 'Whole Life',
     description: '',
     value: [],
     type: 'currency',
@@ -571,7 +571,7 @@ export default [
   },
   {
     id: 'ira_roth_total',
-    name: 'Total Value',
+    name: 'Total',
     description: '',
     value: 0,
     type: 'currency',
@@ -610,7 +610,7 @@ export default [
   },
   {
     id: 'k_401_total',
-    name: 'Total Value',
+    name: 'Total',
     description: '',
     value: 0,
     type: 'currency',
@@ -675,7 +675,7 @@ export default [
   },
   {
     id: 'annuity_total',
-    name: 'Total Value',
+    name: 'Total',
     description: '',
     value: [],
     type: 'currency',

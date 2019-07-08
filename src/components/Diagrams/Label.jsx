@@ -14,39 +14,28 @@ const Label = (props) => {
     <React.Fragment>
       <text
         ref={nodeTextElement}
-        x={textX ? textX : centerX}
-        y={textY ? textY : centerY}
+        x={textX || centerX}
+        y={textY || centerY}
         textAnchor="middle"
         className={'circletext ' + (! hasParent ? 'shown' : '') + ' ' + (!props.visible ? ' hidden' : 'shown') }
         onClick={onClick}
       >
-        <tspan x={textX ? textX : centerX} style={{ fontSize }} dy="0em">{name}</tspan>
+        <tspan x={textX || centerX} style={{ fontSize }} dy="0em">{name}</tspan>
         <Query query={ getNodeFields } variables={{ id }}>
-         {({ loading, error, data }) => {
-           if (loading) return null;
-           if (error) return null;
-           let fieldlist = [];
-           let order = 0;
-           if (data.getNodeFields) {
-             for (let i = 0; i < data.getNodeFields.length; i++) {
-               if (data.getNodeFields[i].alwaysDisplay) {
-                 order = data.getNodeFields[i].order;
-                 const fieldname = data.getNodeFields[i].name;
-                 const value = data.getNodeFields[i].value;
-
-                 fieldlist[order] =
-                  <tspan
-                    key={data.getNodeFields[i].id}
-                    x={textX ? textX : centerX}
-                    style={{ fontSize }}
-                    dy="1.6em">
-                    {(fieldname.length)?`${fieldname}: ${value}`: `${value}`}
-                   </tspan>;
-                }
-             }
-           }
-           return(fieldlist);
-          }}
+          {({ loading, error, data }) => {
+            if (loading || error || !data.getNodeFields) return null;
+      
+            return (
+              data.getNodeFields.map(field => (
+                field.alwaysDisplay && <tspan
+                  key={field.id}
+                  x={textX || centerX}
+                  style={{ fontSize }}
+                  dy="1.6em">
+                  {(field.name) ? `${field.name} : ${field.value}` : `Value : ${field.value}`}
+                </tspan>
+            )));
+            }}
          </Query>
       </text>
     </React.Fragment>

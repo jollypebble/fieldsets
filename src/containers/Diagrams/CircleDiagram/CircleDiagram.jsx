@@ -338,9 +338,11 @@ class CircleDiagram extends Component {
 
       // Cache hasn't been written yet, so set it using default.
       fieldList = (fieldList === null) ? { id: currentField.parent, list: [], __typename: 'FieldList' } : fieldList;
+      fieldList.list = fieldList.list.filter(item => item.id !== currentField.id);
       fieldList.list.push(currentField);
 
       // Append the field to the complete set.
+      allFields.fields.list = allFields.fields.list.filter(item => item.id === currentField.id);
       allFields.fields.list.push(currentField);
 
 
