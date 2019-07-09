@@ -15,7 +15,7 @@ export const resolvers = {
     updateField: ( object, variables, { cache, getCacheKey } ) => {
       const id = getCacheKey({__typename: 'Field', id: variables.id});
       const updatedField = cache.readFragment({ id: id, fragment: getFieldList, fragmentName: 'field' });
-
+      // TODO: ADD WRITE FRAGMENT
       return updatedField;
     },
   },
