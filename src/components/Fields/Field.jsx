@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Mutation, withApollo } from 'react-apollo';
+import { withApollo } from 'react-apollo';
 import FieldType from './FieldType';
-import { updateField } from '../../graphql';
 
 /**
  * A field is a single data value in a node.
@@ -11,6 +10,7 @@ import { updateField } from '../../graphql';
 class Field extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       value: null,
       notes:[],
@@ -54,22 +54,16 @@ class Field extends React.Component {
     const id = this.props.id;
     // Child Node
     return (
-      <Mutation mutation={updateField} variables={{ id }} onCompleted={this.updateDependencies} awaitRefetchQueries={true}>
-        {field => {
-          return (
-              <FieldType
-                id={id}
-                name={this.props.name}
-                fieldtype={this.props.fieldtype}
-                value={this.state.value}
-                options={{
-                  ...this.props.options
-                }}
-                onChange={field}
-              />
-          );
+      <FieldType
+        id={id}
+        name={this.props.name}
+        fieldtype={this.props.fieldtype}
+        value={this.state.value}
+        options={{
+          ...this.props.options
         }}
-      </Mutation>
+      onChange={this.props.onChange}
+      />
     );
     }
   }

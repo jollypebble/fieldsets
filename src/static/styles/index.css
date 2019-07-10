@@ -314,8 +314,8 @@ caption,
   fill: #515359; }
 
 .radialDialog > div {
-  width: 450px;
-  height: 450px;
+  width: 600px;
+  height: 600px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -326,7 +326,7 @@ caption,
     font-size: 22px;
     font-weight: bold; }
   .radialDialog > div > section {
-    padding: 0 30px 30px !important;
+    padding: 0 80px 30px !important;
     margin: 0 !important; }
   .radialDialog > div > footer {
     display: block;
@@ -596,6 +596,12 @@ caption,
   width: 100vw;
   height: 98vh;
   z-index: -100; }
+  .diagramviewer .storeFieldData {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    font-weight: bold;
+    letter-spacing: 0.8; }
 
 #circlediagram {
   overflow: hidden;
@@ -660,7 +666,8 @@ text.nodeAttributesBase {
   transition: width 0.3s cubic-bezier(0.215, 0.61, 0.355, 1); }
 
 #econcircleapp {
-  float: left; }
+  float: left;
+  position: relative; }
 
 #econcircleapp.sideBarRef {
   width: 96%;

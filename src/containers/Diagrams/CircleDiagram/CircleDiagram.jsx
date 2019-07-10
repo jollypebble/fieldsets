@@ -1,14 +1,37 @@
 import React, { Component } from 'react';
 import { withApollo } from "react-apollo";
-import { DiagramData, FieldData, AccountData } from '../../../data/Diagrams/CircleDiagram';
+import { DiagramData, FieldData, AccountData } from 'data/Diagrams/CircleDiagram';
 import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
+import { Button } from 'react-md';
+import { toast, ToastContainer } from 'react-toastify';
 
-import { Node, Dialog } from '../../../components/Diagrams';
-import { getFields, getFieldList, getCurrentFocus, getNodes, getNodeList, defaults } from '../../../graphql';
+import { Node, Dialog } from 'components/Diagrams';
+import {
+  getFields,
+  getFieldList,
+  updateField,
+  updateAllFields,
+  getInitialFieldData,
+  getCurrentFocus,
+  getNodes,
+  getNodeList,
+  defaults,
+  getNodeFields
+} from '../../../graphql';
+
+import 'react-toastify/dist/ReactToastify.min.css'; 
 
 /**
  * This is the container for our main diagram. It has direct access to the apollo cache so it can track foucs of it's child nodes.
  */
+
+const toastOptions = {
+  position: "bottom-left",
+  autoClose: 5000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  draggable: true
+};
 
 class CircleDiagram extends Component {
   constructor(props) {
@@ -26,6 +49,7 @@ class CircleDiagram extends Component {
       currentDialog: '',
       isZoomed: false,
       isDblClick: false,
+      fieldData: FieldData
     };
 
     this.timeouts = [];
@@ -34,6 +58,7 @@ class CircleDiagram extends Component {
     this.setFocus = this.setFocus.bind(this);
     this.getFocus = this.getFocus.bind(this);
     this.resetFocus = this.resetFocus.bind(this);
+    this.updateFieldCache = this.updateFieldCache.bind(this);
     this.updateZoom = this.updateZoom.bind(this);
     this.updateFocus = this.updateFocus.bind(this);
     this.primeCache = this.primeCache.bind(this);
@@ -47,28 +72,24 @@ class CircleDiagram extends Component {
     this.setFieldState = this.setFieldState.bind(this);
     this.getFieldData = this.getFieldData.bind(this);
     this.getAllFields = this.getAllFields.bind(this);
+    this.getInitialFieldData = this.getInitialFieldData.bind(this);
     this.handleDoubleClick = this.handleDoubleClick.bind(this);
 
     this.Viewer = React.createRef();
     this.backgroundSheet = React.createRef();
   }
 
-  /**
-   * Component will Mount is used as a one time initialization.
-   * We use this to prime our cache for this component.
-   */
   componentWillMount() {
-    // This primes our cache.
     this.primeCache();
-    // console.log('cache primed');
-    this.resetState();
   }
 
   /**
    * Here we add all of our component specific event listeners and interact with our component.
    */
   componentDidMount() {
+    this.getInitialFieldData();
     this.resetFocus();
+    this.resetState();
   }
 
   componentWillUnmount() {
@@ -85,6 +106,25 @@ class CircleDiagram extends Component {
 
   handleDoubleClick = (event) => {
     //console.log(event.x, event.y, event.originalEvent);
+  }
+
+  getInitialFieldData() {
+    this.props.client.query({
+      query: getInitialFieldData
+    }).then(({ data, error }) => {
+      if (error) {
+        console.log('error : ', error);
+        toast.error('Sorry! Unable to store field data.', toastOptions);
+      }
+      const temp = data.allFieldData.edges.map(({ node }) => ({
+        id: node.fieldId,
+        value: node.value
+      }));
+
+      this.updateFieldCache(temp);
+
+      this.setState({ fieldData: temp });
+    });
   }
 
   resetState() {
@@ -270,16 +310,16 @@ class CircleDiagram extends Component {
   primeCache = () => {
     // @TODO: REMOTE GRAPHQL CALLS GO HERE. FOR NOW WE PULL IN CONFIG BASED DATA.
     this.setAccountCache(AccountData);
-    this.setFieldCache(FieldData);
+    this.setFieldCache(this.state.fieldData);
     this.setDataCache(DiagramData);
   }
 
-  setAccountCache = (data=[]) => {
+  setAccountCache = (data = []) => {
 
   }
 
   // Cache field values
-  setFieldCache = (data=[]) => {
+  setFieldCache = (data = []) => {
     if (!data.length) return false;
     let allFields = this.getAllFields();
     allFields.fields.list = (allFields.fields.list) ? allFields.fields.list : [];
@@ -297,10 +337,12 @@ class CircleDiagram extends Component {
       });
 
       // Cache hasn't been written yet, so set it using default.
-      fieldList = ( fieldList === null ) ? { id: currentField.parent, list: [], __typename: 'FieldList' } : fieldList;
+      fieldList = (fieldList === null) ? { id: currentField.parent, list: [], __typename: 'FieldList' } : fieldList;
+      fieldList.list = fieldList.list.filter(item => item.id !== currentField.id);
       fieldList.list.push(currentField);
 
       // Append the field to the complete set.
+      allFields.fields.list = allFields.fields.list.filter(item => item.id === currentField.id);
       allFields.fields.list.push(currentField);
 
 
@@ -317,7 +359,7 @@ class CircleDiagram extends Component {
 
     const fields = allFields.fields.list;
     this.props.client.writeData({
-      data: {fields}
+      data: { fields }
     });
 
     this.setFieldState(fields);
@@ -326,7 +368,7 @@ class CircleDiagram extends Component {
   }
 
   // Caching nodes
-  setDataCache = (data=[]) => {
+  setDataCache = (data = []) => {
     if (!data.length) return false;
     const allNodes = this.getAllNodes();
     const nodes = (allNodes.nodes.list) ? allNodes.nodes.list : [];
@@ -335,7 +377,7 @@ class CircleDiagram extends Component {
       const nodeID = node.id;
       node.__typename = 'Node';
 
-      const children = typeof(node.children) === undefined ? [] : node.children;
+      const children = typeof (node.children) === undefined ? [] : node.children;
 
       if (children.length) {
         this.setDataCache(children);
@@ -348,7 +390,7 @@ class CircleDiagram extends Component {
 
       node.display.id = nodeID;
       node.display.__typename = 'DisplayData';
-      if ( node.display.attributes ) {
+      if (node.display.attributes) {
         node.display.attributes.id = nodeID;
         node.display.attributes.__typename = 'ShapeData';
       }
@@ -360,7 +402,7 @@ class CircleDiagram extends Component {
       nodes.push(node);
 
       // If are a child node, let's write to our parent node list cache.
-      if ( node.parent && node.parent.length ) {
+      if (node.parent && node.parent.length) {
         const id = `NodeList:${node.parent}`;
         let nodeList = this.props.client.readFragment({
           id: id,
@@ -368,7 +410,7 @@ class CircleDiagram extends Component {
           fragmentName: 'nodes'
         });
         // Child cache hasn't been written yet, so set it to defaults.
-        nodeList = ( nodeList === null ) ? { id: node.id, list: [], __typename: 'NodeList' } : nodeList;
+        nodeList = (nodeList === null) ? { id: node.id, list: [], __typename: 'NodeList' } : nodeList;
 
         nodeList.list.push(node);
 
@@ -384,7 +426,7 @@ class CircleDiagram extends Component {
     });
 
     this.props.client.writeData({
-      data: {nodes}
+      data: { nodes }
     });
 
     this.setNodeState(nodes);
@@ -402,30 +444,69 @@ class CircleDiagram extends Component {
     return this.getStandardRadius(depth) * 0.5;
   }
 
+  updateFieldCache(data = []) {
+    if (!data.length) return;
+
+    this.props.client.mutate({
+      mutation: updateField,
+      variables: { data },
+      refetchQueries: res => res.data.updateField.map(id => ({ query: getNodeFields, variables: { id } }))
+    });
+  }
+
+  storeFieldData = () => {
+    let fields = [];
+
+    this.getAllFields().fields.forEach(variable => {
+      if (variable.id === 'default') return;
+      let id = `Field:${variable.id}`;
+
+      let item = this.props.client.readFragment({
+        id: id,
+        fragment: getFieldList,
+        fragmentName: 'field'
+      });
+
+      fields.push(item);
+    });
+
+    this.props.client.mutate({
+      mutation: updateAllFields,
+      variables: { data: JSON.stringify(fields) }
+    }).then(({ error })=> {
+        if (error) {
+          console.log('error : ', error);
+          toast.error('Sorry! Unable to store field data.', toastOptions);
+          return;
+        }
+        toast.info('Successfully updated Field Data on database!', toastOptions);
+      })
+  }
+
   render() {
     return (
       <div className="diagramviewer">
         <div className="viewer">
           <ReactSVGPanZoom
-            width={ this.props.width }
-            height={ this.props.height }
+            width={this.props.width}
+            height={this.props.height}
             background='transparent'
             tool='auto'
             toolbarPosition='none'
             miniaturePosition='none'
-            disableDoubleClickZoomWithToolAuto={ true }
-            scaleFactor={ 2.5 }
-            scaleFactorOnWheel={ 1.06 }
-            scaleFactorMin={ 1 }
+            disableDoubleClickZoomWithToolAuto={true}
+            scaleFactor={2.5}
+            scaleFactorOnWheel={1.06}
+            scaleFactorMin={1}
             ref={Viewer => {
               this.Viewer = Viewer;
               if (!this.Viewer) return;
               this.Viewer.mainG = this.Viewer.ViewerDOM.getElementsByTagName('g')[0];
               this.backgroundSheet = this.Viewer.mainG.getElementsByTagName('rect')[0];
             }}
-            onClick={ this.handleClick }
-            onZoom={ this.updateZoom }
-            onDoubleClick={ this.handleDoubleClick }
+            onClick={this.handleClick}
+            onZoom={this.updateZoom}
+            onDoubleClick={this.handleDoubleClick}
           >
             <svg
               id="circlediagram" width={this.props.width} height={this.props.height}
@@ -442,45 +523,47 @@ class CircleDiagram extends Component {
                   <rect
                     id="mask rectangle"
                     x="720"
-                    y="240"
+                    y="235"
                     width="360"
-                    height="30"
+                    height="50"
                   />
                 </clipPath>
               </defs>
               <g style={{ clipPath: "url(#clippath)" }} id="diagramGroup">
-                { DiagramData.map(diagram => {
-                    return (
-                      <Node
-                        key={ diagram.id }
-                        nodeData={ typeof(diagram.children) === undefined ? [] : diagram.children }
-                        nodeID={ diagram.id }
-                        scaleFactor={ 1 }
-                        {...diagram}
-                        radius={ this.getStandardRadius() }
-                        updateFocus={ this.updateFocus }
-                        resetFocus={ this.resetFocus }
-                        openDialog={ this.openDialog }
-                        closeDialog={ this.closeDialog }
-                        setNodeState={ this.setNodeState }
-                        nodes={ this.state.nodes }
-                        visible={ true /* The prop means whether the node is being rendered right now by its parent */ }
-                      />
-                    );
-                  })
+                {DiagramData.map(diagram => {
+                  return (
+                    <Node
+                      key={diagram.id}
+                      nodeData={typeof (diagram.children) === undefined ? [] : diagram.children}
+                      nodeID={diagram.id}
+                      scaleFactor={1}
+                      {...diagram}
+                      radius={this.getStandardRadius()}
+                      updateFocus={this.updateFocus}
+                      resetFocus={this.resetFocus}
+                      openDialog={this.openDialog}
+                      closeDialog={this.closeDialog}
+                      setNodeState={this.setNodeState}
+                      nodes={this.state.nodes}
+                      visible={true /* The prop means whether the node is being rendered right now by its parent */}
+                    />
+                  );
+                })
                 }
               </g>
             </svg>
           </ReactSVGPanZoom>
+          <Button raised secondary className="storeFieldData" onClick={this.storeFieldData}>Store Field Data</Button>
         </div>
         <div className="diagramSheet">
         </div>
         <div className="diagramDialogs">
-          <Dialog
-            nodeID={ this.state.currentDialog }
+          {this.state.currentDialog && <Dialog
+            nodeID={this.state.currentDialog}
             onClose={this.closeDialog}
-          />
+          />}
         </div>
+        <ToastContainer style={{ fontWeight: 'bold', width: '450px' }} />
       </div>
     );
   }
