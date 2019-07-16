@@ -38,14 +38,14 @@
       min-width: 450px;
 
       .tapHeader {
-        font-size: 24px;
+        font-size: 22px;
         font-weight: bold;
-        text-transform: uppercase;
       }
 
       .closeBtn i {
         font-size: 18px;
         font-weight: bold;
+        padding-top: 2px;
       }
     }
 }
@@ -109,8 +109,35 @@
   }
 
   .client-table {
+    margin: 0 auto;
     margin-top: $largeMarginSize;
-    padding: 0 20px;
+
+    .md-table-column--plain {
+      height: 40px;
+    }
+
+    .md-table-column--adjusted {
+      padding-right: 20px;
+    }
+
+    table {
+      text-align: center;
+
+      thead {
+        tr {
+          th {
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+          }
+        }
+      }
+
+      tbody tr td {
+        text-align: center;
+        font-size: 13px;
+      }
+    }
 
     p {
       margin-top: $mediumMarginSize;
@@ -126,54 +153,42 @@
   align-items: center;
 }
 .balanceSheetContainer{
-  padding: $paddingBalanceSheet;
   height: 90%;
   overflow-y: auto;
-}
-.headerText {
-  margin-left: $marginBalanceSheet;
-  margin-top: $marginBalanceSheet;
-  font-size: $fontSizeBalanceSheet;
-}
-.dataFields {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 3px;
-}
-.dataTitle {
-  display: inline-block;
-  width: 30%;
-  text-align: right;
-  margin-left: 2 * $marginBalanceSheet;
-}
-.totalAmount .dataTitle {
-  font-weight: 600;
-  font-style: italic;
-  color: #444;
-}
-.mainHeadContainer {
-  text-align: left;
-  padding: 0 10px;
-  margin-top: 3px;
-}
-.headerSingleTitle{
-  margin-left: $marginBalanceSheet;
-  margin-top: $marginBalanceSheet;
-  width: 40%;
-  display: inline-block;
-}
-.headerSingleValue{
-  text-align: center;
-  margin-left: 4px;
-  width: 50%;
-  margin-top: $marginBalanceSheet;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-}
-.amountWrap{
-  margin:0;
+
+  #balance-tab {
+    background: $app-blue;
+
+    .md-tab {
+      min-width: unset;
+    }
+  }
+
+  .react-swipeable-view-container {
+    > div {
+      height: unset !important;
+    }
+  }
+
+  .tab-container {
+    width: 100%;
+    text-align: left;
+    padding: 0 15px;
+
+    .field-item {
+      h4 {
+        text-transform: capitalize;
+        font-weight: 600;
+        font-size: 15px;
+        margin-top: 20px;
+      }
+    }
+
+    > button {
+      float: right;
+      margin-top: 20px;
+    }
+  }
 }
 .tapHeader {
   align-items: center;

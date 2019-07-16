@@ -444,12 +444,12 @@ caption,
   .drawer-tab .tabbed-drawer {
     min-width: 450px; }
     .drawer-tab .tabbed-drawer .tapHeader {
-      font-size: 24px;
-      font-weight: bold;
-      text-transform: uppercase; }
+      font-size: 22px;
+      font-weight: bold; }
     .drawer-tab .tabbed-drawer .closeBtn i {
       font-size: 18px;
-      font-weight: bold; }
+      font-weight: bold;
+      padding-top: 2px; }
 
 .smallIcon {
   width: 24px;
@@ -492,8 +492,21 @@ caption,
     margin: 0 auto;
     margin-top: 30px; }
   .clientSheetContainer .client-table {
-    margin-top: 20px;
-    padding: 0 20px; }
+    margin: 0 auto;
+    margin-top: 20px; }
+    .clientSheetContainer .client-table .md-table-column--plain {
+      height: 40px; }
+    .clientSheetContainer .client-table .md-table-column--adjusted {
+      padding-right: 20px; }
+    .clientSheetContainer .client-table table {
+      text-align: center; }
+      .clientSheetContainer .client-table table thead tr th {
+        text-align: center;
+        font-size: 14px;
+        font-weight: bold; }
+      .clientSheetContainer .client-table table tbody tr td {
+        text-align: center;
+        font-size: 13px; }
     .clientSheetContainer .client-table p {
       margin-top: 10px; }
 
@@ -504,54 +517,26 @@ caption,
   align-items: center; }
 
 .balanceSheetContainer {
-  padding: 10px;
   height: 90%;
   overflow-y: auto; }
-
-.headerText {
-  margin-left: 10px;
-  margin-top: 10px;
-  font-size: 15px; }
-
-.dataFields {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 3px; }
-
-.dataTitle {
-  display: inline-block;
-  width: 30%;
-  text-align: right;
-  margin-left: 20px; }
-
-.totalAmount .dataTitle {
-  font-weight: 600;
-  font-style: italic;
-  color: #444; }
-
-.mainHeadContainer {
-  text-align: left;
-  padding: 0 10px;
-  margin-top: 3px; }
-
-.headerSingleTitle {
-  margin-left: 10px;
-  margin-top: 10px;
-  width: 40%;
-  display: inline-block; }
-
-.headerSingleValue {
-  text-align: center;
-  margin-left: 4px;
-  width: 50%;
-  margin-top: 10px;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center; }
-
-.amountWrap {
-  margin: 0; }
+  .balanceSheetContainer #balance-tab {
+    background: #607d8b; }
+    .balanceSheetContainer #balance-tab .md-tab {
+      min-width: unset; }
+  .balanceSheetContainer .react-swipeable-view-container > div {
+    height: unset !important; }
+  .balanceSheetContainer .tab-container {
+    width: 100%;
+    text-align: left;
+    padding: 0 15px; }
+    .balanceSheetContainer .tab-container .field-item h4 {
+      text-transform: capitalize;
+      font-weight: 600;
+      font-size: 15px;
+      margin-top: 20px; }
+    .balanceSheetContainer .tab-container > button {
+      float: right;
+      margin-top: 20px; }
 
 .tapHeader {
   align-items: center;

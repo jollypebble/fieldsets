@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withApollo } from "react-apollo";
+import { withApollo } from 'react-apollo';
 import { DiagramData, FieldData, AccountData } from 'data/Diagrams/CircleDiagram';
 import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
 import { Button } from 'react-md';
@@ -19,14 +19,14 @@ import {
   getNodeFields
 } from '../../../graphql';
 
-import 'react-toastify/dist/ReactToastify.min.css'; 
+import 'react-toastify/dist/ReactToastify.min.css';
 
 /**
  * This is the container for our main diagram. It has direct access to the apollo cache so it can track foucs of it's child nodes.
  */
 
 const toastOptions = {
-  position: "bottom-left",
+  position: 'bottom-left',
   autoClose: 5000,
   hideProgressBar: false,
   closeOnClick: true,
@@ -105,7 +105,7 @@ class CircleDiagram extends Component {
   }
 
   handleDoubleClick = (event) => {
-    //console.log(event.x, event.y, event.originalEvent);
+    // console.log(event.x, event.y, event.originalEvent);
   }
 
   getInitialFieldData() {
@@ -117,13 +117,13 @@ class CircleDiagram extends Component {
         toast.error('Sorry! Unable to store field data.', toastOptions);
       }
       const temp = data.allFieldData.edges.map(({ node }) => ({
-        id: node.fieldId,
-        value: node.value
+        ...node,
+        id: node.fieldId
       }));
 
       this.updateFieldCache(temp);
 
-      this.setState({ fieldData: temp });
+      this.setState({ fieldData: temp }, () => this.setFieldCache(temp));
     });
   }
 
@@ -148,7 +148,7 @@ class CircleDiagram extends Component {
       currentY: startY,
       currentZoom: zoom,
       isZoomed: false
-    }
+    };
     this.setState(state);
   }
 
@@ -172,7 +172,8 @@ class CircleDiagram extends Component {
     /** Our desired zoom for the current node that was clicked */
     let zoom = this.props.zoom * currentNode.display.zoom.scale;
 
-    let xs = [], ys = [];
+    const xs = []; const
+      ys = [];
     xs.push(current.centerX - this.getStandardRadius(current.depth) - this.getStandardStrokeWidth(current.depth));
     xs.push(current.centerX + this.getStandardRadius(current.depth) + this.getStandardStrokeWidth(current.depth));
     ys.push(current.centerY - this.getStandardRadius(current.depth) - this.getStandardStrokeWidth(current.depth));
@@ -184,18 +185,18 @@ class CircleDiagram extends Component {
 
     const hasChildren = children && children.length > 0;
     if (hasChildren) {
-      children.forEach(child => {
+      children.forEach((child) => {
         xs.push(child.centerX - this.getStandardRadius(child.depth) - this.getStandardStrokeWidth(child.depth));
         xs.push(child.centerX + this.getStandardRadius(child.depth) + this.getStandardStrokeWidth(child.depth));
         ys.push(child.centerY - this.getStandardRadius(child.depth) - this.getStandardStrokeWidth(child.depth));
         ys.push(child.centerY + this.getStandardRadius(child.depth) + this.getStandardStrokeWidth(child.depth));
-      })
+      });
     }
     const minX = Math.min.apply(null, xs);
     const maxX = Math.max.apply(null, xs);
     const minY = Math.min.apply(null, ys);
     const maxY = Math.max.apply(null, ys);
-    let k = (window.innerHeight / this.props.zoom) / (maxY - minY);
+    const k = (window.innerHeight / this.props.zoom) / (maxY - minY);
     zoom = zoom * k * 0.8;
     /* Next two lines are needed to calculate the point that is the center of a client's screen
      * As long as ReactSVGPanZoom lib calculates the center relatively to its own sizes we always got wrong numbers so
@@ -215,7 +216,7 @@ class CircleDiagram extends Component {
 
   /** Sets the zoom animatable just only for current case, then make it usual again */
   setTemporaryAnimatable(animationDuration) {
-    if (animationDuration === undefined) animationDuration = 300
+    if (animationDuration === undefined) animationDuration = 300;
     // Add and remove the class "animated" in order to animate the movement only for Click Node Zooming (and not for the usual movement by the mouse)
     // We remove the class upon the anim is ended, otherwise the anim won't start at all
     if (!this.Viewer.mainG.classList.contains('animated')) {
@@ -235,7 +236,7 @@ class CircleDiagram extends Component {
   getFieldData = (variables) => {
     const id = `FieldList:${variables.id}`;
     const fields = this.props.client.readFragment({
-      id: id,
+      id,
       fragment: getFieldList,
       fragmentName: 'fields'
     });
@@ -249,7 +250,7 @@ class CircleDiagram extends Component {
   getNode = (variables) => {
     const id = `Node:${variables.id}`;
     const node = this.props.client.readFragment({
-      id: id,
+      id,
       fragment: getNodeList,
       fragmentName: 'node'
     });
@@ -260,7 +261,7 @@ class CircleDiagram extends Component {
     // console.log('Getting cached Nodes', variables);
     const id = `NodeList:${variables.id}`;
     const nodes = this.props.client.readFragment({
-      id: id,
+      id,
       fragment: getNodeList,
       fragmentName: 'nodes'
     });
@@ -321,17 +322,17 @@ class CircleDiagram extends Component {
   // Cache field values
   setFieldCache = (data = []) => {
     if (!data.length) return false;
-    let allFields = this.getAllFields();
+    const allFields = this.getAllFields();
     allFields.fields.list = (allFields.fields.list) ? allFields.fields.list : [];
 
     // Get your fields here. This is defined as a static json, but could be modified here to get remote field type definitions.
-    data.map(currentField => {
+    data.map((currentField) => {
       currentField.__typename = 'Field';
 
       const id = `FieldList:${currentField.parent}`;
 
       let fieldList = this.props.client.readFragment({
-        id: id,
+        id,
         fragment: getFieldList,
         fragmentName: 'fields'
       });
@@ -342,7 +343,7 @@ class CircleDiagram extends Component {
       fieldList.list.push(currentField);
 
       // Append the field to the complete set.
-      allFields.fields.list = allFields.fields.list.filter(item => item.id === currentField.id);
+      // allFields.fields.list = allFields.fields.list.filter(item => item.id === currentField.id);
       allFields.fields.list.push(currentField);
 
 
@@ -350,7 +351,7 @@ class CircleDiagram extends Component {
       this.props.client.writeFragment({
         fragment: getFieldList,
         fragmentName: 'fields',
-        id: id,
+        id,
         data: fieldList
       });
 
@@ -373,7 +374,7 @@ class CircleDiagram extends Component {
     const allNodes = this.getAllNodes();
     const nodes = (allNodes.nodes.list) ? allNodes.nodes.list : [];
 
-    data.map(node => {
+    data.map((node) => {
       const nodeID = node.id;
       node.__typename = 'Node';
 
@@ -385,7 +386,7 @@ class CircleDiagram extends Component {
 
       // Set generic cache identifiers here so we can cache the display data.
       if (!node.display) {
-        node.display = {}
+        node.display = {};
       }
 
       node.display.id = nodeID;
@@ -405,7 +406,7 @@ class CircleDiagram extends Component {
       if (node.parent && node.parent.length) {
         const id = `NodeList:${node.parent}`;
         let nodeList = this.props.client.readFragment({
-          id: id,
+          id,
           fragment: getNodeList,
           fragmentName: 'nodes'
         });
@@ -418,7 +419,7 @@ class CircleDiagram extends Component {
         this.props.client.writeFragment({
           fragment: getNodeList,
           fragmentName: 'nodes',
-          id: id,
+          id,
           data: nodeList
         });
       }
@@ -430,14 +431,13 @@ class CircleDiagram extends Component {
     });
 
     this.setNodeState(nodes);
-
     return true;
   }
 
   getStandardRadius(depth = 0) {
     // Scale our SVG based on our desired width height based on a 100 x 75 canvas.
     const baseradius = 10;
-    return (baseradius * 75) / 100 * (Math.pow(0.6, depth));
+    return (baseradius * 75) / 100 * (0.6 ** depth);
   }
 
   getStandardStrokeWidth(depth = 0) {
@@ -455,14 +455,14 @@ class CircleDiagram extends Component {
   }
 
   storeFieldData = () => {
-    let fields = [];
+    const fields = [];
 
-    this.getAllFields().fields.forEach(variable => {
+    this.getAllFields().fields.forEach((variable) => {
       if (variable.id === 'default') return;
-      let id = `Field:${variable.id}`;
+      const id = `Field:${variable.id}`;
 
-      let item = this.props.client.readFragment({
-        id: id,
+      const item = this.props.client.readFragment({
+        id,
         fragment: getFieldList,
         fragmentName: 'field'
       });
@@ -473,14 +473,14 @@ class CircleDiagram extends Component {
     this.props.client.mutate({
       mutation: updateAllFields,
       variables: { data: JSON.stringify(fields) }
-    }).then(({ error })=> {
-        if (error) {
-          console.log('error : ', error);
-          toast.error('Sorry! Unable to store field data.', toastOptions);
-          return;
-        }
-        toast.info('Successfully updated Field Data on database!', toastOptions);
-      })
+    }).then(({ error }) => {
+      if (error) {
+        console.log('error : ', error);
+        toast.error('Sorry! Unable to store field data.', toastOptions);
+        return;
+      }
+      toast.info('Successfully updated Field Data on database!', toastOptions);
+    });
   }
 
   render() {
@@ -488,37 +488,39 @@ class CircleDiagram extends Component {
       <div className="diagramviewer">
         <div className="viewer">
           <ReactSVGPanZoom
-            width={this.props.width}
-            height={this.props.height}
-            background='transparent'
-            tool='auto'
-            toolbarPosition='none'
-            miniaturePosition='none'
-            disableDoubleClickZoomWithToolAuto={true}
-            scaleFactor={2.5}
-            scaleFactorOnWheel={1.06}
-            scaleFactorMin={1}
-            ref={Viewer => {
+            width={ this.props.width }
+            height={ this.props.height }
+            background="transparent"
+            tool="auto"
+            toolbarPosition="none"
+            miniaturePosition="none"
+            disableDoubleClickZoomWithToolAuto
+            scaleFactor={ 2.5 }
+            scaleFactorOnWheel={ 1.06 }
+            scaleFactorMin={ 1 }
+            ref={ (Viewer) => {
               this.Viewer = Viewer;
               if (!this.Viewer) return;
               this.Viewer.mainG = this.Viewer.ViewerDOM.getElementsByTagName('g')[0];
               this.backgroundSheet = this.Viewer.mainG.getElementsByTagName('rect')[0];
-            }}
-            onClick={this.handleClick}
-            onZoom={this.updateZoom}
-            onDoubleClick={this.handleDoubleClick}
+            } }
+            onClick={ this.handleClick }
+            onZoom={ this.updateZoom }
+            onDoubleClick={ this.handleDoubleClick }
           >
             <svg
-              id="circlediagram" width={this.props.width} height={this.props.height}
+              id="circlediagram"
+              width={ this.props.width }
+              height={ this.props.height }
             >
               <defs>
                 <clipPath id="clippath">
                   <ellipse
-                    id='mask ellipse'
-                    cx={876}
-                    cy={471}
-                    rx={255}
-                    ry={185}
+                    id="mask ellipse"
+                    cx={ 876 }
+                    cy={ 471 }
+                    rx={ 255 }
+                    ry={ 185 }
                   />
                   <rect
                     id="mask rectangle"
@@ -529,23 +531,23 @@ class CircleDiagram extends Component {
                   />
                 </clipPath>
               </defs>
-              <g style={{ clipPath: "url(#clippath)" }} id="diagramGroup">
-                {DiagramData.map(diagram => {
+              <g style={ { clipPath: 'url(#clippath)' } } id="diagramGroup">
+                {DiagramData.map((diagram) => {
                   return (
                     <Node
-                      key={diagram.id}
-                      nodeData={typeof (diagram.children) === undefined ? [] : diagram.children}
-                      nodeID={diagram.id}
-                      scaleFactor={1}
-                      {...diagram}
-                      radius={this.getStandardRadius()}
-                      updateFocus={this.updateFocus}
-                      resetFocus={this.resetFocus}
-                      openDialog={this.openDialog}
-                      closeDialog={this.closeDialog}
-                      setNodeState={this.setNodeState}
-                      nodes={this.state.nodes}
-                      visible={true /* The prop means whether the node is being rendered right now by its parent */}
+                      key={ diagram.id }
+                      nodeData={ diagram.children || [] }
+                      nodeID={ diagram.id }
+                      scaleFactor={ 1 }
+                      { ...diagram }
+                      radius={ this.getStandardRadius() }
+                      updateFocus={ this.updateFocus }
+                      resetFocus={ this.resetFocus }
+                      openDialog={ this.openDialog }
+                      closeDialog={ this.closeDialog }
+                      setNodeState={ this.setNodeState }
+                      nodes={ this.state.nodes }
+                      visible
                     />
                   );
                 })
@@ -553,17 +555,16 @@ class CircleDiagram extends Component {
               </g>
             </svg>
           </ReactSVGPanZoom>
-          <Button raised secondary className="storeFieldData" onClick={this.storeFieldData}>Store Field Data</Button>
+          <Button raised secondary className="storeFieldData" onClick={ this.storeFieldData }>Store Field Data</Button>
         </div>
-        <div className="diagramSheet">
-        </div>
+        <div className="diagramSheet" />
         <div className="diagramDialogs">
           {this.state.currentDialog && <Dialog
-            nodeID={this.state.currentDialog}
-            onClose={this.closeDialog}
+            nodeID={ this.state.currentDialog }
+            onClose={ this.closeDialog }
           />}
         </div>
-        <ToastContainer style={{ fontWeight: 'bold', width: '450px' }} />
+        <ToastContainer style={ { fontWeight: 'bold', width: '450px' } } />
       </div>
     );
   }

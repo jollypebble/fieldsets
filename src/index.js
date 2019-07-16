@@ -17,27 +17,22 @@ const SERVER_URL = 'http://localhost:8000';
 // const cache = new InMemoryCache({ fragmentMatcher });
 const cache = new InMemoryCache();
 
-persistCache({
+const client = new ApolloClient({
+  link: new HttpLink({
+    uri: `${SERVER_URL}/graphql`
+  }),
   cache,
-  storage: localStorage
-}).then(() => {
-  const client = new ApolloClient({
-    link: new HttpLink({
-      uri: `${SERVER_URL}/graphql`
-    }),
-    cache,
-    resolvers,
-    typeDefs,
-  });
-  
-  cache.writeData({
-    data: defaults
-  });
-
-  render(
-    <ApolloProvider client={client}>
-      <App />
-    </ApolloProvider>,
-    document.getElementById('root'),
-  );
+  resolvers,
+  typeDefs,
 });
+
+cache.writeData({
+  data: defaults
+});
+
+render(
+  <ApolloProvider client={client}>
+    <App />
+  </ApolloProvider>,
+  document.getElementById('root'),
+);

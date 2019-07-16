@@ -532,7 +532,7 @@ export default [
   },
   {
     id: 'ira_roth_value',
-    name: '',
+    name: 'IRAs',
     description: '',
     value: 0,
     type: 'currency',
@@ -545,7 +545,7 @@ export default [
   },
   {
     id: 'ira_roth_individal_value',
-    name: '',
+    name: 'Roth(s)',
     description: '',
     value: [],
     type: 'currency',
@@ -558,7 +558,7 @@ export default [
   },
   {
     id: 'ira_roth_lump',
-    name: 'LUMP',
+    name: 'Roth(s)',
     description: '',
     value: 0,
     type: 'currency',
@@ -604,7 +604,7 @@ export default [
     callback: '',
     notes:[],
     accounts:[],
-    parent: 'ira_roth',
+    parent: 'k_401',
     order: 1,
     alwaysDisplay: false,
   },
