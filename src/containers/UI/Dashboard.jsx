@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
+import { withApollo } from 'react-apollo';
 
-import { MenuBar } from '../../components/UI';
-import { TabbedDrawer, MenuDrawer } from '../../components/UI/Drawers';
-import { BalanceSheet, ClientSheet } from '../../components/Sheets';
+import { MenuBar } from 'components/UI';
+import { TabbedDrawer, MenuDrawer } from 'components/UI/Drawers';
+import { BalanceSheet, ClientSheet } from 'components/Sheets';
+
+import { getClientList } from '../../graphql';
 
 const clientSheetItems = [
   'accountName',
@@ -10,16 +13,40 @@ const clientSheetItems = [
   'clientName2',
   'cpaName',
   'attyName',
-  'ip'
+  'ipAddress'
 ];
 
-export default class Dashboard extends Component {
+class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
       clients: [],
       isMDVisible: false
     };
+  }
+
+  componentDidMount() {
+    const allClients = this.getClientList();
+    
+    this.setState({
+      clients: (allClients && allClients.list) || []
+    });
+  }
+
+  componentDidUpdate() {
+    
+  }
+
+  getClientList = () => {
+    const id = 'ClientList:normal';
+
+    const clientList = this.props.client.readFragment({
+      id,
+      fragment: getClientList,
+      fragmentName: 'clients'
+    });
+
+    return clientList;
   }
 
   toggleDrawer = () => {
@@ -36,6 +63,7 @@ export default class Dashboard extends Component {
     clientSheetItems.forEach((item) => {
       temp[item] = this._clientSheet[item]._field.getValue();
     });
+    this.setClientCache([{ ...temp, id: Date.now() }]);
     temp.dependencies = this._clientSheet.state.dependencies;
     this.setState({ clients: this.state.clients.concat(temp) });
     this.initializeClientSheet();
@@ -47,6 +75,30 @@ export default class Dashboard extends Component {
     });
     this._clientSheet.setState({ dependencies: [] });
   };
+
+  setClientCache = (data = []) => {
+    if (!data.length) return false;
+
+    data.forEach(currentClient => {
+      currentClient.__typename = 'Client';
+
+      let clientList = this.getClientList();
+
+      // Cache hasn't been written yet, so set it using default.
+      clientList = clientList || { id: 'normal', list: [], __typename: 'ClientList' };
+      clientList.list = clientList.list.filter(item => item.id !== currentClient.id);
+      clientList.list.push(currentClient);
+
+      const id = 'ClientList:normal';
+
+      this.props.client.writeFragment({
+        id,
+        fragment: getClientList,
+        fragmentName: 'clients',
+        data: clientList
+      });
+    });
+  }
 
   renderClientSheet = () => {
     return (
@@ -96,3 +148,5 @@ export default class Dashboard extends Component {
     );
   }
 }
+
+export default withApollo(Dashboard);

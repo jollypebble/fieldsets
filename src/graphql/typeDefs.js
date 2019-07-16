@@ -51,6 +51,21 @@ export const typeDefs = `
     list: [Field!]
   }
 
+  type Client implements Data {
+    id: ID!
+    accountName: String!
+    clientName1: String!
+    clientName2: String
+    cpaName: String!
+    attyName: String!
+    ipAddress: String!
+  }
+
+  type ClientList implements List {
+    id: ID!
+    list: [Client!]
+  }
+
   type Node implements Entity {
     id: ID!
     name: String!
@@ -92,6 +107,7 @@ export const typeDefs = `
 
   type Query {
     currentFocus: Node!
+    clients: ClientList!
     fields: FieldList!
     getnodeFields(id: ID!): FieldList!
     getNode(id: ID!): Node!

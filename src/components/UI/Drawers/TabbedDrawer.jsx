@@ -86,7 +86,7 @@ export default class TabbedDrawer extends PureComponent {
                 actions={ isLeft ? closeBtn : saveBtn }
                 className="md-divider-border md-divider-border--bottom tapHeader"
               >
-                { title }
+                <span>{ title }</span>
               </Toolbar>
             ) }
           >

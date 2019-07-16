@@ -20,7 +20,7 @@ const formFields = [
   [
     { id: 1, name: 'cpaName', label: 'CPA Name', isRequired: true },
     { id: 2, name: 'attyName', label: 'ATTY Name', isRequired: true },
-    { id: 3, name: 'ip', label: 'IP', isRequired: true }
+    { id: 3, name: 'ipAddress', label: 'IP', isRequired: true }
   ]
 ];
 
@@ -111,7 +111,7 @@ export default class ClientSheet extends React.Component {
                 <TableColumn>{ client.clientName1 }</TableColumn>
                 <TableColumn>{ client.cpaName }</TableColumn>
                 <TableColumn>{ client.attyName }</TableColumn>
-                <TableColumn>{ client.ip }</TableColumn>
+                <TableColumn>{ client.ipAddress }</TableColumn>
               </TableRow>
             )) }
           </TableBody>

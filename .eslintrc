@@ -47,7 +47,7 @@
     "no-return-assign": 0,
 
     //babel
-    "babel/new-cap": 1,
+    "babel/new-cap": 0,
     "babel/arrow-parens": 0,
     "babel/func-params-comma-dangle": 0,
 

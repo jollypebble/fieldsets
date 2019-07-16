@@ -60,6 +60,20 @@ export const defaults = {
     }],
     __typename: 'FieldList'
   },
+  clients: {
+    id: 'default',
+    list: [{
+      id: 'default',
+      accountName: '',
+      clientName1: '',
+      clientName2: '',
+      cpaName: '',
+      attyName: '',
+      ipAddress: '',
+      __typename: 'Client'
+    }],
+    __typename: 'ClientList'
+  },
   nodes: {
     id: 'default',
     list: [{
