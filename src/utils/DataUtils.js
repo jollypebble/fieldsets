@@ -1,4 +1,4 @@
-import ShapeDefaults from '../config/defaults/components/Diagrams/Shapes';
+import ShapeDefaults from '../config/defaults/components/Sets/Shapes';
 const _ = require('lodash');
 
 /**
@@ -35,13 +35,13 @@ const DataUtils = {
 	/**
 	 * A wrapper function for parameter merging.
 	 */
-	backfillDiagramData(data, defaults, skipdepth = false) {
+	backfillSetData(data, defaults, skipdepth = false) {
 		// Backfill default data structures.
 		let backfill = [];
 		_.forEach( data, (obj, index) => {
 			backfill[index] = mergeObjectParams(obj,defaults);
 			if (!(_.isEmpty(obj.children))) {
-				backfill[index].children = this.backfillDiagramData(obj.children, defaults, true);
+				backfill[index].children = this.backfillSetData(obj.children, defaults, true);
 			}
 		});
 

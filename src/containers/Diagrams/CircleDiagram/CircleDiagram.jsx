@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { withApollo } from 'react-apollo';
-import { DiagramData, FieldData, AccountData } from 'data/Diagrams/CircleDiagram';
+import { SetData, FieldData, AccountData } from 'data/Diagrams/CircleDiagram';
 import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
 import { Button } from 'react-md';
 import { toast, ToastContainer } from 'react-toastify';
 
-import { Node, Dialog } from 'components/Diagrams';
+import { Set, Dialog } from 'components/Sets';
 import {
   getFields,
   getFieldList,
@@ -13,16 +13,16 @@ import {
   updateAllFields,
   getInitialFieldData,
   getCurrentFocus,
-  getNodes,
-  getNodeList,
+  getSets,
+  getSetList,
   defaults,
-  getNodeFields
+  getSetFields
 } from '../../../graphql';
 
 import 'react-toastify/dist/ReactToastify.min.css';
 
 /**
- * This is the container for our main diagram. It has direct access to the apollo cache so it can track foucs of it's child nodes.
+ * This is the container for our main diagram. It has direct access to the apollo cache so it can track foucs of it's child sets.
  */
 
 const toastOptions = {
@@ -43,7 +43,7 @@ class CircleDiagram extends Component {
       currentX: this.props.startX,
       currentY: this.props.startY,
       currentZoom: this.props.zoom,
-      nodes: {},
+      sets: {},
       sheets: {},
       fields: {},
       currentDialog: '',
@@ -62,14 +62,14 @@ class CircleDiagram extends Component {
     this.updateZoom = this.updateZoom.bind(this);
     this.updateFocus = this.updateFocus.bind(this);
     this.primeCache = this.primeCache.bind(this);
-    this.setAccountCache = this.setAccountCache.bind(this);
-    this.setFieldCache = this.setFieldCache.bind(this);
-    this.setDataCache = this.setDataCache.bind(this);
-    this.setNodeState = this.setNodeState.bind(this);
-    this.getNodesData = this.getNodesData.bind(this);
-    this.getNode = this.getNode.bind(this);
-    this.getAllNodes = this.getAllNodes.bind(this);
-    this.setFieldState = this.setFieldState.bind(this);
+    this.updateAccountCache = this.updateAccountCache.bind(this);
+    this.updateFieldCache = this.updateFieldCache.bind(this);
+    this.updateDataCache = this.updateDataCache.bind(this);
+    this.updateSetState = this.updateSetState.bind(this);
+    this.getSetsData = this.getSetsData.bind(this);
+    this.getSet = this.getSet.bind(this);
+    this.getAllSets = this.getAllSets.bind(this);
+    this.updateFieldState = this.updateFieldState.bind(this);
     this.getFieldData = this.getFieldData.bind(this);
     this.getAllFields = this.getAllFields.bind(this);
     this.getInitialFieldData = this.getInitialFieldData.bind(this);
@@ -116,14 +116,14 @@ class CircleDiagram extends Component {
         console.log('error : ', error);
         toast.error('Sorry! Unable to store field data.', toastOptions);
       }
-      const temp = data.allFieldData.edges.map(({ node }) => ({
-        ...node,
-        id: node.fieldId
+      const temp = data.allFieldData.edges.map(({ set }) => ({
+        ...set,
+        id: set.fieldId
       }));
 
       this.updateFieldCache(temp);
 
-      this.setState({ fieldData: temp }, () => this.setFieldCache(temp));
+      this.setState({ fieldData: temp }, () => this.updateFieldCache(temp));
     });
   }
 
@@ -167,10 +167,10 @@ class CircleDiagram extends Component {
   setFocus = () => {
     const focus = this.getFocus();
     const current = focus.currentFocus;
-    const currentNode = this.getNode({ id: current.id });
+    const currentSet = this.getSet({ id: current.id });
 
-    /** Our desired zoom for the current node that was clicked */
-    let zoom = this.props.zoom * currentNode.display.zoom.scale;
+    /** Our desired zoom for the current set that was clicked */
+    let zoom = this.props.zoom * currentSet.display.zoom.scale;
 
     const xs = []; const
       ys = [];
@@ -180,7 +180,7 @@ class CircleDiagram extends Component {
     ys.push(current.centerY + this.getStandardRadius(current.depth) + this.getStandardStrokeWidth(current.depth));
 
 
-    const childList = this.getNodesData({ id: current.id });
+    const childList = this.getSetsData({ id: current.id });
     const children = (childList && childList.list) ? childList.list : false;
 
     const hasChildren = children && children.length > 0;
@@ -217,7 +217,7 @@ class CircleDiagram extends Component {
   /** Sets the zoom animatable just only for current case, then make it usual again */
   setTemporaryAnimatable(animationDuration) {
     if (animationDuration === undefined) animationDuration = 300;
-    // Add and remove the class "animated" in order to animate the movement only for Click Node Zooming (and not for the usual movement by the mouse)
+    // Add and remove the class "animated" in order to animate the movement only for Click Set Zooming (and not for the usual movement by the mouse)
     // We remove the class upon the anim is ended, otherwise the anim won't start at all
     if (!this.Viewer.mainG.classList.contains('animated')) {
       this.Viewer.mainG.classList.add('animated');
@@ -243,29 +243,29 @@ class CircleDiagram extends Component {
     return fields;
   }
 
-  getAllNodes = () => {
-    return this.props.client.readQuery({ query: getNodes });
+  getAllSets = () => {
+    return this.props.client.readQuery({ query: getSets });
   }
 
-  getNode = (variables) => {
-    const id = `Node:${variables.id}`;
-    const node = this.props.client.readFragment({
+  getSet = (variables) => {
+    const id = `Set:${variables.id}`;
+    const set = this.props.client.readFragment({
       id,
-      fragment: getNodeList,
-      fragmentName: 'node'
+      fragment: getSetList,
+      fragmentName: 'set'
     });
-    return node;
+    return set;
   }
 
-  getNodesData = (variables) => {
-    // console.log('Getting cached Nodes', variables);
-    const id = `NodeList:${variables.id}`;
-    const nodes = this.props.client.readFragment({
+  getSetsData = (variables) => {
+    // console.log('Getting cached Sets', variables);
+    const id = `SetList:${variables.id}`;
+    const sets = this.props.client.readFragment({
       id,
-      fragment: getNodeList,
-      fragmentName: 'nodes'
+      fragment: getSetList,
+      fragmentName: 'sets'
     });
-    return nodes;
+    return sets;
   }
 
   updateFocus = (id, focusX, focusY) => {
@@ -285,22 +285,22 @@ class CircleDiagram extends Component {
     this.setState({ isZoomed: true });
   }
 
-  openDialog = (nodeID) => {
-    this.setState({ currentDialog: nodeID });
+  openDialog = (setID) => {
+    this.setState({ currentDialog: setID });
   }
 
   closeDialog = () => {
     this.setState({ currentDialog: '' });
   }
 
-  setNodeState = (nodes) => {
-    // console.log('Setting Node state.');
-    // Do something to update a node state.
-    this.setState({ nodes });
+  updateSetState = (sets) => {
+    // console.log('Setting Set state.');
+    // Do something to update a set state.
+    this.setState({ sets });
   }
 
-  setFieldState = (fields) => {
-    // Do something to update a node state.
+  updateFieldState = (fields) => {
+    // Do something to update a set state.
     this.setState({ fields });
   }
 
@@ -310,17 +310,17 @@ class CircleDiagram extends Component {
    */
   primeCache = () => {
     // @TODO: REMOTE GRAPHQL CALLS GO HERE. FOR NOW WE PULL IN CONFIG BASED DATA.
-    this.setAccountCache(AccountData);
-    this.setFieldCache(this.state.fieldData);
-    this.setDataCache(DiagramData);
+    this.updateAccountCache(AccountData);
+    this.updateFieldCache(this.state.fieldData);
+    this.updateDataCache(SetData);
   }
 
-  setAccountCache = (data = []) => {
+  updateAccountCache = (data = []) => {
 
   }
 
   // Cache field values
-  setFieldCache = (data = []) => {
+  updateFieldCache = (data = []) => {
     if (!data.length) return false;
     const allFields = this.getAllFields();
     allFields.fields.list = (allFields.fields.list) ? allFields.fields.list : [];
@@ -347,7 +347,7 @@ class CircleDiagram extends Component {
       allFields.fields.list.push(currentField);
 
 
-      // Now append this field to the parent node field list
+      // Now append this field to the parent set field list
       this.props.client.writeFragment({
         fragment: getFieldList,
         fragmentName: 'fields',
@@ -363,74 +363,74 @@ class CircleDiagram extends Component {
       data: { fields }
     });
 
-    this.setFieldState(fields);
+    this.updateFieldState(fields);
 
     return true;
   }
 
-  // Caching nodes
-  setDataCache = (data = []) => {
+  // Caching sets
+  updateDataCache = (data = []) => {
     if (!data.length) return false;
-    const allNodes = this.getAllNodes();
-    const nodes = (allNodes.nodes.list) ? allNodes.nodes.list : [];
+    const allSets = this.getAllSets();
+    const sets = (allSets.sets.list) ? allSets.sets.list : [];
 
-    data.map((node) => {
-      const nodeID = node.id;
-      node.__typename = 'Node';
+    data.map((set) => {
+      const setID = set.id;
+      set.__typename = 'Set';
 
-      const children = typeof (node.children) === undefined ? [] : node.children;
+      const children = typeof (set.children) === undefined ? [] : set.children;
 
       if (children.length) {
-        this.setDataCache(children);
+        this.updateDataCache(children);
       }
 
       // Set generic cache identifiers here so we can cache the display data.
-      if (!node.display) {
-        node.display = {};
+      if (!set.display) {
+        set.display = {};
       }
 
-      node.display.id = nodeID;
-      node.display.__typename = 'DisplayData';
-      if (node.display.attributes) {
-        node.display.attributes.id = nodeID;
-        node.display.attributes.__typename = 'ShapeData';
+      set.display.id = setID;
+      set.display.__typename = 'DisplayData';
+      if (set.display.attributes) {
+        set.display.attributes.id = setID;
+        set.display.attributes.__typename = 'ShapeData';
       }
-      if (node.display.zoom) {
-        node.display.zoom.id = nodeID;
-        node.display.zoom.__typename = 'ZoomData';
+      if (set.display.zoom) {
+        set.display.zoom.id = setID;
+        set.display.zoom.__typename = 'ZoomData';
       }
 
-      nodes.push(node);
+      sets.push(set);
 
-      // If are a child node, let's write to our parent node list cache.
-      if (node.parent && node.parent.length) {
-        const id = `NodeList:${node.parent}`;
-        let nodeList = this.props.client.readFragment({
+      // If are a child set, let's write to our parent set list cache.
+      if (set.parent && set.parent.length) {
+        const id = `SetList:${set.parent}`;
+        let setList = this.props.client.readFragment({
           id,
-          fragment: getNodeList,
-          fragmentName: 'nodes'
+          fragment: getSetList,
+          fragmentName: 'sets'
         });
         // Child cache hasn't been written yet, so set it to defaults.
-        nodeList = (nodeList === null) ? { id: node.id, list: [], __typename: 'NodeList' } : nodeList;
+        setList = (setList === null) ? { id: set.id, list: [], __typename: 'SetList' } : setList;
 
-        nodeList.list.push(node);
+        setList.list.push(set);
 
-        // Now append this field to the parent node field list
+        // Now append this field to the parent set field list
         this.props.client.writeFragment({
-          fragment: getNodeList,
-          fragmentName: 'nodes',
+          fragment: getSetList,
+          fragmentName: 'sets',
           id,
-          data: nodeList
+          data: setList
         });
       }
       return true;
     });
 
     this.props.client.writeData({
-      data: { nodes }
+      data: { sets }
     });
 
-    this.setNodeState(nodes);
+    this.updateSetState(sets);
     return true;
   }
 
@@ -450,7 +450,7 @@ class CircleDiagram extends Component {
     this.props.client.mutate({
       mutation: updateField,
       variables: { data },
-      refetchQueries: res => res.data.updateField.map(id => ({ query: getNodeFields, variables: { id } }))
+      refetchQueries: res => res.data.updateField.map(id => ({ query: getSetFields, variables: { id } }))
     });
   }
 
@@ -532,12 +532,12 @@ class CircleDiagram extends Component {
                 </clipPath>
               </defs>
               <g style={ { clipPath: 'url(#clippath)' } } id="diagramGroup">
-                {DiagramData.map((diagram) => {
+                {SetData.map((diagram) => {
                   return (
-                    <Node
+                    <Set
                       key={ diagram.id }
-                      nodeData={ diagram.children || [] }
-                      nodeID={ diagram.id }
+                      setData={ diagram.children || [] }
+                      setID={ diagram.id }
                       scaleFactor={ 1 }
                       { ...diagram }
                       radius={ this.getStandardRadius() }
@@ -545,8 +545,8 @@ class CircleDiagram extends Component {
                       resetFocus={ this.resetFocus }
                       openDialog={ this.openDialog }
                       closeDialog={ this.closeDialog }
-                      setNodeState={ this.setNodeState }
-                      nodes={ this.state.nodes }
+                      updateSetState={ this.updateSetState }
+                      sets={ this.state.sets }
                       visible
                     />
                   );
@@ -560,7 +560,7 @@ class CircleDiagram extends Component {
         <div className="diagramSheet" />
         <div className="diagramDialogs">
           {this.state.currentDialog && <Dialog
-            nodeID={ this.state.currentDialog }
+            setID={ this.state.currentDialog }
             onClose={ this.closeDialog }
           />}
         </div>

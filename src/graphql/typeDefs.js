@@ -36,7 +36,7 @@ export const typeDefs = `
   type Field implements Entity {
     id: ID!
     name: String!
-    parent: Node!
+    parent: Set!
     value: String!
     alwaysDisplay: Boolean!
     datatype: DataType!
@@ -66,11 +66,11 @@ export const typeDefs = `
     list: [Client!]
   }
 
-  type Node implements Entity {
+  type Set implements Entity {
     id: ID!
     name: String!
-    children: NodeList!
-    parent: Node
+    children: SetList!
+    parent: Set
     centerX: Float!
     centerY: Float!
     display: DisplayData!
@@ -93,25 +93,25 @@ export const typeDefs = `
     y: Float!
   }
 
-  type NodeList implements List {
+  type SetList implements List {
     id: ID!
-    list: [Node!]
+    list: [Set!]
   }
 
   scalar Value
 
   type Mutation {
-    setCurrentFocus(id: ID!): Node
+    updateCurrentFocus(id: ID!): Set
     updateField(id: ID!, type: String!, value: Value!, formula: String): Field!
   }
 
   type Query {
-    currentFocus: Node!
+    currentFocus: Set!
     clients: ClientList!
     fields: FieldList!
-    getnodeFields(id: ID!): FieldList!
-    getNode(id: ID!): Node!
-    nodes: NodeList!
+    getsetFields(id: ID!): FieldList!
+    getSet(id: ID!): Set!
+    sets: SetList!
     owners: OwnerList!
   }
 

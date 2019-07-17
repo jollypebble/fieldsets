@@ -17,11 +17,11 @@ svg {
 	width:100%;
 }
 
-text.nodeNameBase {
+text.setNameBase {
   transform: translate(-75px, 0);
 }
 
-text.nodeAttributesBase {
+text.setAttributesBase {
   fill: $circle-fill;
   stroke: transparent;
   font-family: $font-family;
@@ -36,7 +36,7 @@ text.nodeAttributesBase {
   cursor: pointer;
 }
 
-.nodeWrapper{
+.setWrapper{
   text-align: center;
   span{
     margin-bottom: 0;

@@ -4,7 +4,7 @@ import { withApollo } from 'react-apollo';
 import FieldType from './FieldType';
 
 /**
- * A field is a single data value in a node.
+ * A field is a single data value in a set.
  */
 
 class Field extends React.Component {
@@ -52,7 +52,7 @@ class Field extends React.Component {
 
   render() {
     const id = this.props.id;
-    // Child Node
+    // Child Set
     return (
       <FieldType
         id={id}

@@ -1,1 +1,1 @@
-// export { default as ContributionsMenu } from './ContributionsMenu';
+export { default as MenuBar } from './MenuBar';

@@ -128,7 +128,7 @@
   }
 }
 
-.circlenode {
+.circleset {
   &.ellipse {
     transition: rx 0.15s, ry 0.15s !important;
   }
@@ -138,11 +138,11 @@
 }
 
 .circle-group {
-  &.parent-node {
+  &.parent-set {
     animation: initShowUp 1s;
   }
 
-  &.child-node {
+  &.child-set {
     opacity: 0;
     pointer-events: none;
 
@@ -152,7 +152,7 @@
       opacity: 1;
       pointer-events: auto;
 
-      .circlenode {
+      .circleset {
         transition:
           cx 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
           cy 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
@@ -165,7 +165,7 @@
       animation: hideAway 0.25s;
       opacity: 0;
 
-      .circlenode {
+      .circleset {
         transition:
           cx 1s cubic-bezier(0.19, 1, 0.22, 1),
           cy 1s cubic-bezier(0.19, 1, 0.22, 1),

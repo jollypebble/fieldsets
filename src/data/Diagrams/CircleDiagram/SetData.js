@@ -7,12 +7,12 @@ import DataUtils from 'utils/DataUtils';
 /**
  * Defaults will be merged with defined values in the data variable below.
  * Core functionality is based around the following variables.
- * @param int id - The node id.
- * @param string name - The node name
- * @param string parent - id of the parent node
+ * @param int id - The set id.
+ * @param string name - The set name
+ * @param string parent - id of the parent set
  * @param float centerX - X coordinate on the diagram
  * @param float centerY - Y coordinate on the diagram
- * @param array[string] children - Any child node ids
+ * @param array[string] children - Any child set ids
  * @param object{string,object} display{shape,attributes{}} - Display parameters includig tHe shape to display on the x,y coordinate and any attibutes needed for that shape.
  */
 const valueDefaults = {
@@ -423,5 +423,5 @@ const data = [
   }
 ];
 // Backfill our data.
-const DiagramData = DataUtils.backfillDiagramData(data, valueDefaults);
-export default DiagramData;
+const SetData = DataUtils.backfillSetData(data, valueDefaults);
+export default SetData;

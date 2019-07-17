@@ -10,9 +10,9 @@ export const getFields = gql`
   ${fields}
 `;
 
-export const getNodeFields = gql`
-  query GetNodeFields($id: ID!) {
-    getNodeFields(id: $id) @client
+export const getSetFields = gql`
+  query GetSetFields($id: ID!) {
+    getSetFields(id: $id) @client
   }
   ${fields}
 `;
@@ -32,7 +32,7 @@ export const getInitialFieldData = gql`
   query {
     allFieldData {
       edges {
-        node {
+        set {
           fieldId
           name
           description

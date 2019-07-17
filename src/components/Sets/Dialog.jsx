@@ -5,12 +5,12 @@ import { Query, Mutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 
 /* Our code */
-import { getNode, getNodeFields, updateField } from '../../graphql';
+import { getSet, getSetFields, updateField } from '../../graphql';
 import Field from '../Fields/Field';
 
 /**
- * Radial Nodes are functional components that represent parent circle nodes.
- * They simply check the node data and will iteratively call itself if there are children.
+ * Radial Sets are functional components that represent parent circle sets.
+ * They simply check the set data and will iteratively call itself if there are children.
  */
 class Dialog extends React.Component {
   constructor(props) {
@@ -33,7 +33,7 @@ class Dialog extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.nodeID && prevProps.nodeID !== this.props.nodeID) {
+    if (this.props.setID && prevProps.setID !== this.props.setID) {
       this.show();
     }
   }
@@ -65,27 +65,27 @@ class Dialog extends React.Component {
   }
 
   render() {
-    const { nodeID } = this.props;
+    const { setID } = this.props;
 
     const { visible, initialFocus, focusOnMount, containFocus, activeDialog } = this.state;
-    const id = nodeID;
+    const id = setID;
 
-    const divID = `${nodeID}-dialog`;
-    const dialogID = `${nodeID}-control-dialog`;
+    const divID = `${setID}-dialog`;
+    const dialogID = `${setID}-control-dialog`;
 
     return (
       <div id={divID}>
-        <Query query={getNode} variables={{ id }} >
+        <Query query={getSet} variables={{ id }} >
           {({ loading, error, data }) => {
             if (loading) return null;
             if (error) return `Error! ${error}`;
             return (
-              <Mutation mutation={updateField} variables={{ data: activeDialog }} refetchQueries={ res => res.data.updateField.map(id => ({ query: getNodeFields, variables: { id } })) } awaitRefetchQueries={true}>
+              <Mutation mutation={updateField} variables={{ data: activeDialog }} refetchQueries={ res => res.data.updateField.map(id => ({ query: getSetFields, variables: { id } })) } awaitRefetchQueries={true}>
                 {updateData => (
                   <DialogContainer
                     id={dialogID}
                     className="radialDialog"
-                    title={data.getNode ? data.getNode.name : ''}
+                    title={data.getSet ? data.getSet.name : ''}
                     visible={visible}
                     actions={[{
                       id: 'dialog-cancel',
@@ -107,21 +107,21 @@ class Dialog extends React.Component {
                     containFocus={containFocus}
                     contentClassName="md-grid"
                   >
-                    <Query query={getNodeFields} variables={{ id }}>
+                    <Query query={getSetFields} variables={{ id }}>
                       {({ loading, error, data }) => {
                         if (loading) return null;
                         if (error) return `Error! ${error}`;
                         let fieldlist = [];
                         let order = 0;
-                        for (let i = 0; i < data.getNodeFields.length; i++) {
-                          order = data.getNodeFields[i].order
+                        for (let i = 0; i < data.getSetFields.length; i++) {
+                          order = data.getSetFields[i].order
                           fieldlist[order] =
                             <Field
-                              key={data.getNodeFields[i].id}
-                              id={data.getNodeFields[i].id}
-                              name={data.getNodeFields[i].name}
-                              fieldtype={data.getNodeFields[i].type}
-                              value={data.getNodeFields[i].value}
+                              key={data.getSetFields[i].id}
+                              id={data.getSetFields[i].id}
+                              name={data.getSetFields[i].name}
+                              fieldtype={data.getSetFields[i].type}
+                              value={data.getSetFields[i].value}
                               options={[]}
                               onChange={this.handleChange}
                             />;
@@ -140,7 +140,7 @@ class Dialog extends React.Component {
   }
 }
 Dialog.propTypes = {
-  nodeID: PropTypes.string.isRequired
+  setID: PropTypes.string.isRequired
 };
 //export default withApollo(RadialDialog);
 //export default React.forwardRef((props, ref) => <RadialDialog updateFocus={ref} {...props}/>);

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { withApollo } from 'react-apollo';
 
-import { MenuBar } from 'components/UI';
-import { TabbedDrawer, MenuDrawer } from 'components/UI/Drawers';
+import { MenuBar } from 'components/Menus';
+import { TabbedDrawer, MenuDrawer } from 'components/Drawers';
 import { BalanceSheet, ClientSheet } from 'components/Sheets';
 
 import { getClientList } from '../../graphql';
@@ -27,14 +27,14 @@ class Dashboard extends Component {
 
   componentDidMount() {
     const allClients = this.getClientList();
-    
+
     this.setState({
       clients: (allClients && allClients.list) || []
     });
   }
 
   componentDidUpdate() {
-    
+
   }
 
   getClientList = () => {

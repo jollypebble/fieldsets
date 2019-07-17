@@ -20,7 +20,7 @@ const Circle = ({id, active, visibility, attributes, scaleFactor, onClick}) => {
     <React.Fragment>
       <circle
         id={id}
-        className="circlenode"
+        className="circleset"
         cx={centerX}
         cy={centerY}
         r={radius}
