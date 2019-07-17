@@ -13,8 +13,8 @@ export const getCurrentFocus = gql`
   }
 `;
 
-export const setCurrentFocus = gql`
+export const updateCurrentFocus = gql`
   mutation SetCurrentFocus($id: ID!) {
-    setCurrentFocus(id: $id) @client
+    updateCurrentFocus(id: $id) @client
   }
 `;

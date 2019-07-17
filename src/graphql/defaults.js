@@ -40,7 +40,7 @@ export const defaults = {
       }],
       __typename: 'FieldList'
     },
-    __typename: 'Node'
+    __typename: 'Set'
   },
   fields: {
     id: 'default',
@@ -74,7 +74,7 @@ export const defaults = {
     }],
     __typename: 'ClientList'
   },
-  nodes: {
+  sets: {
     id: 'default',
     list: [{
       id: 'default',
@@ -98,8 +98,8 @@ export const defaults = {
         },
         __typename: 'DisplayData'
       },
-      __typename: 'Node'
+      __typename: 'Set'
     }],
-    __typename: 'NodeList'
+    __typename: 'SetList'
   }
 };

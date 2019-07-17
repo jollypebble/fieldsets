@@ -6,7 +6,7 @@ import { Button } from 'react-md';
 import Field from '../Fields/Field';
 import { FieldData } from 'data/Diagrams/CircleDiagram';
 
-import { getNodeFields, updateField } from '../../graphql';
+import { getSetFields, updateField } from '../../graphql';
 
 const SHORT_TERM_PARENTS = ['cash_equivalents', 'mortgage', 'liabilities_debt'];
 const MID_TERM_PARENTS = ['utmas', 'plan_529', 'investment_account'];
@@ -67,18 +67,18 @@ class BalanceTab extends Component {
     const fieldData = this.getFieldData();
 
     return (
-      <Mutation mutation={updateField} variables={{ data: updateList }} refetchQueries={ res => res.data.updateField.map(id => ({ query: getNodeFields, variables: { id } })) } awaitRefetchQueries={true}>
+      <Mutation mutation={updateField} variables={{ data: updateList }} refetchQueries={ res => res.data.updateField.map(id => ({ query: getSetFields, variables: { id } })) } awaitRefetchQueries={true}>
         {updateData => (
           <div className="tab-container">
             {fieldData.map(field => (
               <div key={field.id} className="field-item">
                 <h4>{ field.id.replace('_', ' ') }</h4>
-                <Query query={getNodeFields} variables={{ id: field.id }}>
+                <Query query={getSetFields} variables={{ id: field.id }}>
                   {({ loading, error, data }) => {
                     if (loading) return null;
                     if (error) return `Error! ${error}`;
 
-                    return data.getNodeFields.map(item => (
+                    return data.getSetFields.map(item => (
                       <Field
                         key={item.id}
                         id={item.id}

@@ -28,7 +28,7 @@ const Ellipse = ({id, active, visibility, attributes, onClick}) => {
     <React.Fragment>
       <ellipse
         id={id}
-        className="circlenode ellipse"
+        className="circleset ellipse"
         cx={centerX}
         cy={centerY}
         rx={radiusX}

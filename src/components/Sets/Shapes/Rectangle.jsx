@@ -15,7 +15,7 @@ const Rectangle = ({id, visibility, attributes, gradient}) => {
     <React.Fragment>
       <rect
         id={id}
-        className="circlenode rectangle"
+        className="circleset rectangle"
         x={centerX}
         y={centerY}
         width={width}

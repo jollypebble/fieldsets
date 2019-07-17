@@ -1,5 +1,5 @@
-export const nodes = `
-  fragment node on Node @client {
+export const sets = `
+  fragment set on Set @client {
     id
     name
     centerX
@@ -10,10 +10,10 @@ export const nodes = `
       ...display
     }
   }
-  fragment nodes on NodeList @client {
+  fragment sets on SetList @client {
     id
     list {
-      ...node
+      ...set
     }
   }
   fragment display on DisplayData @client {

@@ -12,7 +12,6 @@ import { resolvers, defaults, typeDefs } from './graphql';
 
 const SERVER_URL = 'http://localhost:8000';
 
-
 // const fragmentMatcher = new IntrospectionFragmentMatcher({ fragments });
 // const cache = new InMemoryCache({ fragmentMatcher });
 const cache = new InMemoryCache();

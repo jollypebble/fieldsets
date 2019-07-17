@@ -2,16 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Mutation } from 'react-apollo';
 import _ from 'lodash';
-import { setCurrentFocus } from '../../graphql';
+import { updateCurrentFocus } from '../../graphql';
 import Shape from './Shape';
 import Label from './Label';
 
 /**
- * Nodes are state data components that represent groupings of field data and a users interactions with that data.
- * Each node will check its own node data and will iteratively call itself if there are children.
+ * Sets are state data components that represent groupings of field data and a users interactions with that data.
+ * Each set will check its own field set data and will iteratively call itself if there are children.
  */
 
-class Node extends React.Component {
+class Set extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -32,26 +32,26 @@ class Node extends React.Component {
 
     this.handleTransitionEnd = this.handleTransitionEnd.bind(this);
 
-    this.nodeElement = React.createRef();
-    this.nodeGroupElement = React.createRef();
-    this.nodeTextElement = React.createRef();
+    this.updateElement = React.createRef();
+    this.updateGroupElement = React.createRef();
+    this.updateTextElement = React.createRef();
   }
 
   componentDidMount() {
-    this.updateNodeData();
-    if (this.nodeElement && this.nodeElement.current) {
-      this.nodeElement.current.removeEventListener('transitionend', this.handleTransitionEnd)
-      this.nodeElement.current.addEventListener('transitionend', this.handleTransitionEnd)
+    this.updateSetData();
+    if (this.updateElement && this.updateElement.current) {
+      this.updateElement.current.removeEventListener('transitionend', this.handleTransitionEnd)
+      this.updateElement.current.addEventListener('transitionend', this.handleTransitionEnd)
     }
   }
 
   componentDidUpdate(prevProps) {
-    // here we want to hide all nodes down the tree if their parent is hidden
+    // here we want to hide all sets down the tree if their parent is hidden
     if (!this.props.visible && this.state.visible) this.setState({ visible: false });
   }
 
   isHidden() {
-    return this.nodeGroupElement && this.nodeGroupElement.current && this.nodeGroupElement.current.classList.contains('hidden');
+    return this.updateGroupElement && this.updateGroupElement.current && this.updateGroupElement.current.classList.contains('hidden');
   }
 
   hasParent = () => {
@@ -61,29 +61,29 @@ class Node extends React.Component {
   // Called when the css transition ends
   handleTransitionEnd(e) {
     // checks whether the transition was on a position property
-    if (this.nodeGroupElement && this.nodeGroupElement.current && e && (e.propertyName === 'cx' || e.propertyName === 'cy')) {
+    if (this.updateGroupElement && this.updateGroupElement.current && e && (e.propertyName === 'cx' || e.propertyName === 'cy')) {
       // Show/hide circles after the circle appearing animation
-      if (this.nodeGroupElement.current.classList.contains('hidden')) {
-        this.nodeGroupElement.current.classList.add('afterHidden');
-      } else if (this.nodeGroupElement.current.classList.contains('afterHidden')) {
-        this.nodeGroupElement.current.remove('afterHidden');
+      if (this.updateGroupElement.current.classList.contains('hidden')) {
+        this.updateGroupElement.current.classList.add('afterHidden');
+      } else if (this.updateGroupElement.current.classList.contains('afterHidden')) {
+        this.updateGroupElement.current.remove('afterHidden');
       }
 
       // Show/hide text labels after the circle appearing animation
-      if (this.nodeTextElement && this.nodeGroupElement.current.classList.contains('shown')) {
-        if (!this.nodeTextElement.current.classList.contains('shown')) this.nodeTextElement.current.classList.add('shown');
+      if (this.updateTextElement && this.updateGroupElement.current.classList.contains('shown')) {
+        if (!this.updateTextElement.current.classList.contains('shown')) this.updateTextElement.current.classList.add('shown');
       } else {
-        if (this.nodeTextElement.current.classList.contains('shown')) this.nodeTextElement.current.classList.remove('shown');
+        if (this.updateTextElement.current.classList.contains('shown')) this.updateTextElement.current.classList.remove('shown');
       }
     }
   }
 
-  /** Is called when the cursor acrosses borders of the radial node getting inside of it */
+  /** Is called when the cursor acrosses borders of the radial set getting inside of it */
   handleMouseEnter() {
     this.setState({ isMouseInside: true });
   }
 
-  /** Is called when the cursor acrosses borders of the radial node getting out of it */
+  /** Is called when the cursor acrosses borders of the radial set getting out of it */
   handleMouseLeave() {
     this.setState({ isMouseInside: false });
   }
@@ -103,15 +103,15 @@ class Node extends React.Component {
   }
 
   handleSingleClick() {
-    const { nodeID, centerX, centerY } = this.props;
+    const { setID, centerX, centerY } = this.props;
 
     this.clickedOnce = undefined;
-    this.props.updateFocus(nodeID, centerX, centerY);
+    this.props.updateFocus(setID, centerX, centerY);
   }
 
   handleDoubleClick = () => {
     if (!this.props.parent) return;
-    this.props.openDialog(this.props.nodeID);
+    this.props.openDialog(this.props.setID);
   }
 
   handleTargetChange = (value) => {
@@ -122,12 +122,12 @@ class Node extends React.Component {
     this.setState({ containFocus: checked });
   };
 
-  updateNodeData() {
+  updateSetData() {
     // TODO GET BOUNDING BOX HERE:
 
     // Emulate Circle Appollo Data Type in `graphql/typeDefs.js`
-    const nodedata = {
-      id: this.props.nodeID,
+    const setdata = {
+      id: this.props.setID,
       name: this.props.name,
       fields: this.props.fields,
       parent: this.props.parent,
@@ -136,30 +136,30 @@ class Node extends React.Component {
       shape: this.props.shape
     };
 
-    let updatedNodeList = this.props.nodes;
-    updatedNodeList[this.props.nodeID] = nodedata;
+    let updatedSetList = this.props.sets;
+    updatedSetList[this.props.setID] = setdata;
 
-    this.props.setNodeState(updatedNodeList); // Sets the top level Diagram node array.
-    return this.state.nodes;
+    this.props.updateSetState(updatedSetList); // Sets the top level Diagram set array.
+    return this.state.sets;
   }
 
   render() {
-    const id = this.props.nodeID;
+    const id = this.props.setID;
 
-    let { name, centerX, centerY, nodeData, parentCenterX, parentCenterY, display } = this.props;
+    let { name, centerX, centerY, setData, parentCenterX, parentCenterY, display } = this.props;
 
-    let parentNode = '';
+    let parentSet = '';
 
-    if (typeof(this.props.nodeData) !== undefined && this.props.nodeData.length > 0) {
-      parentNode =
-      <g id={ this.props.nodeID ? `${this.props.nodeID}-children` : '' }>
-        { nodeData.map(data => {
+    if (typeof(this.props.setData) !== undefined && this.props.setData.length > 0) {
+      parentSet =
+      <g id={ this.props.setID ? `${this.props.setID}-children` : '' }>
+        { setData.map(data => {
 
           return (
-            <Node
+            <Set
               key={ data.id }
-              nodeData={ typeof(data.children) === undefined ? [] : data.children }
-              nodeID={ data.id }
+              setData={ typeof(data.children) === undefined ? [] : data.children }
+              setID={ data.id }
               {...data}
 
               parentInstance={ this }
@@ -169,8 +169,8 @@ class Node extends React.Component {
               updateFocus={ this.props.updateFocus }
               resetFocus={ this.props.resetFocus }
               openDialog={ this.props.openDialog }
-              setNodeState={ this.props.setNodeState }
-              nodes={ this.props.nodes }
+              updateSetState={ this.props.updateSetState }
+              sets={ this.props.sets }
               radius={ this.props.radius }
               scaleFactor={ this.props.scaleFactor * 0.6 }
               visible={true}
@@ -180,27 +180,27 @@ class Node extends React.Component {
       </g>;
     }
 
-    /** "Immersion class" defines whether a node is a main (root node) or sub-node (has a parent) */
-    const immersionClass = this.hasParent() ? 'child-node' : 'parent-node';
+    /** "Immersion class" defines whether a set is a main (root set) or sub-set (has a parent) */
+    const immersionClass = this.hasParent() ? 'child-set' : 'parent-set';
 
-    /** "Shown class" exists only for those nodes that are able to show up and hide (child/sub nodes)  */
+    /** "Shown class" exists only for those sets that are able to show up and hide (child/sub sets)  */
     const shownClass = this.hasParent() ? (this.props.visible ? 'shown' : 'hidden') : '';
 
     /** We want to hide children at the start of the app */
     const afterHiddenClass = this.hasParent() && shownClass === '' ? 'afterHidden' : '';
 
-    // Child Node
+    // Child Set
     return (
-      <Mutation mutation={setCurrentFocus} variables={{ id, centerX, centerY }} onCompleted={this.handleClick} awaitRefetchQueries={true}>
+      <Mutation mutation={updateCurrentFocus} variables={{ id, centerX, centerY }} onCompleted={this.handleClick} awaitRefetchQueries={true}>
         {focusCircle => {
           return (
             <g
-              id={ this.props.nodeID ? `${this.props.nodeID}-group` : '' }
+              id={ this.props.setID ? `${this.props.setID}-group` : '' }
               className='radial-group'
-              ref={this.nodeGroupElement}
+              ref={this.updateGroupElement}
             >
               <g
-                id={`${this.props.nodeID}-circle`}
+                id={`${this.props.setID}-circle`}
                 className={'circle-group ' + immersionClass + ' ' + shownClass + ' ' + afterHiddenClass}
                 onMouseEnter={this.handleMouseEnter}
                 onMouseLeave={this.handleMouseLeave}
@@ -229,28 +229,26 @@ class Node extends React.Component {
                     centerY={centerY}
                     onClick={focusCircle}
                     hasParent={ this.hasParent() }
-                    nodeTextElement={ this.nodeTextElement }
+                    updateTextElement={ this.updateTextElement }
                   />
                 </React.Fragment>
 
               </g>
-              {parentNode}
+              {parentSet}
             </g>
           );
         }}
       </Mutation>
     );
-    }
   }
+}
 
-Node.propTypes = {
-  nodeID: PropTypes.string.isRequired,
-  nodeData: PropTypes.array.isRequired,
+Set.propTypes = {
+  setID: PropTypes.string.isRequired,
+  setData: PropTypes.array.isRequired,
   name: PropTypes.string.isRequired,
   centerX: PropTypes.node.isRequired,
-  centerY: PropTypes.node.isRequired,
+  centerY: PropTypes.node.isRequired
 };
 
-//export default withApollo(RadialNode);
-//export default React.forwardRef((props, ref) => <RadialNode updateFocus={ref} {...props}/>);
-export default Node;
+export default Set;

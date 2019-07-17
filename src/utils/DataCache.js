@@ -16,15 +16,15 @@ const DataCache = {
    },
 
    /**
-    * Get Node by id
+    * Get Set by id
     */
-   getNode(id) {
+   getSet(id) {
 
    },
    /**
-    * Get Node List by parent id
+    * Get Set List by parent id
     */
-   getNodeList(parent) {
+   getSetList(parent) {
 
    },
 }

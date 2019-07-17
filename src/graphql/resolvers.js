@@ -1,10 +1,10 @@
-import { getNodeList, getCurrentFocus, getFieldList } from './components/Diagrams';
+import { getSetList, getCurrentFocus, getFieldList } from './components/Sets';
 
 export const resolvers = {
   Mutation: {
-    setCurrentFocus: ( object, variables, { cache, getCacheKey } ) => {
-      const id = getCacheKey({__typename: 'Node', id: variables.id});
-      const currentFocus = cache.readFragment({ id, fragment: getNodeList, fragmentName: 'node' });
+    updateCurrentFocus: ( object, variables, { cache, getCacheKey } ) => {
+      const id = getCacheKey({__typename: 'Set', id: variables.id});
+      const currentFocus = cache.readFragment({ id, fragment: getSetList, fragmentName: 'set' });
 
       cache.writeData({
         query: getCurrentFocus,
@@ -26,7 +26,7 @@ export const resolvers = {
             value: item.value
           }
         });
-  
+
         result.push(fieldData.parent);
       });
 
@@ -34,15 +34,15 @@ export const resolvers = {
     }
   },
   Query: {
-    getNodeFields: (object, variables, { cache, getCacheKey }) => {
+    getSetFields: (object, variables, { cache, getCacheKey }) => {
       const id = getCacheKey({__typename: 'FieldList', id: variables.id});
       const fields = cache.readFragment({ id, fragment: getFieldList, fragmentName: 'fields' });
       return fields.list;
     },
-    getNode: (object, variables, { cache, getCacheKey }) => {
-      const id = getCacheKey({__typename: 'Node', id: variables.id});
-      const node = cache.readFragment({ id, fragment: getNodeList, fragmentName: 'node' });
-      return node;
+    getSet: (object, variables, { cache, getCacheKey }) => {
+      const id = getCacheKey({__typename: 'Set', id: variables.id});
+      const set = cache.readFragment({ id, fragment: getSetList, fragmentName: 'set' });
+      return set;
     }
   },
 };
