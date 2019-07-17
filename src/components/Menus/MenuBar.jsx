@@ -28,13 +28,14 @@ export default class MenuBar extends React.Component {
       rightIconCallback,
     } = this.props;
 
-    const isClassHidden = this.state.isMouseOvered ? 'visible' : 'hidden'
+    // const isClassHidden = this.state.isMouseOvered ? 'visible' : 'hidden'
 
     return (
       <React.Fragment>
         <Toolbar
           colored
-          className={"AppBarInner " + isClassHidden}
+          // className={"AppBarInner " + isClassHidden}
+          className="AppBarInner"
           nav={ <Button icon onClick={ leftIconCallback }>menu</Button> }
           actions={ <Button className="sync-icon" icon onClick={ rightIconCallback }>sync</Button> }
         >

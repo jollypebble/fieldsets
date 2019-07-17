@@ -366,18 +366,12 @@ caption,
   opacity: 0;
   transition: opacity 0.5s; }
   .circletext tspan {
-    line-height: 1pt;
-    font-weight: bold; }
+    line-height: 1pt; }
   .circletext.shown {
     opacity: 1; }
   .circletext.hidden {
     opacity: 1;
     display: none; }
-
-.refresh-icon {
-  font-family: FontAwesome;
-  font-size: 1pt;
-  cursor: pointer; }
 
 /** Showing up an element */
 @keyframes showUp {
@@ -470,12 +464,17 @@ caption,
     margin-top: 20px; }
     .clientSheetContainer .form-group .form-control > div {
       width: 100%; }
+  .clientSheetContainer .add-btn {
+    width: 100%;
+    display: inline-block;
+    text-align: right;
+    margin-top: 20px; }
   .clientSheetContainer .dependency-panel .dependency-title {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: -15px;
-    margin-top: 20px; }
+    margin: 20px 0 10px; }
   .clientSheetContainer .dependency-panel .form-control {
     display: flex;
     flex-direction: row;
@@ -485,12 +484,6 @@ caption,
       margin-left: 10px; }
   .clientSheetContainer .dependency-panel .md-icon {
     cursor: pointer !important; }
-  .clientSheetContainer .dependency-panel > hr {
-    width: 80%;
-    height: 4px;
-    background: darkgray;
-    margin: 0 auto;
-    margin-top: 30px; }
   .clientSheetContainer .client-table {
     margin: 0 auto;
     margin-top: 20px; }
@@ -501,14 +494,13 @@ caption,
     .clientSheetContainer .client-table table {
       text-align: center; }
       .clientSheetContainer .client-table table thead tr th {
-        text-align: center;
-        font-size: 14px;
-        font-weight: bold; }
+        font-size: 13px;
+        font-weight: bold;
+        text-transform: uppercase; }
       .clientSheetContainer .client-table table tbody tr td {
-        text-align: center;
         font-size: 13px; }
     .clientSheetContainer .client-table p {
-      margin-top: 10px; }
+      margin-top: 20px; }
 
 .dataValue {
   width: 50%;
@@ -522,7 +514,10 @@ caption,
   .balanceSheetContainer #balance-tab {
     background: #607d8b; }
     .balanceSheetContainer #balance-tab .md-tab {
-      min-width: unset; }
+      min-width: unset;
+      padding-bottom: 16px; }
+      .balanceSheetContainer #balance-tab .md-tab .md-tab-label {
+        font-weight: bold; }
   .balanceSheetContainer .react-swipeable-view-container > div {
     height: unset !important; }
   .balanceSheetContainer .tab-container {
@@ -530,10 +525,10 @@ caption,
     text-align: left;
     padding: 0 15px; }
     .balanceSheetContainer .tab-container .field-item h4 {
-      text-transform: capitalize;
-      font-weight: 600;
+      text-transform: uppercase;
+      font-weight: 500;
       font-size: 15px;
-      margin-top: 20px; }
+      margin: 20px 0 0; }
     .balanceSheetContainer .tab-container > button {
       float: right;
       margin-top: 20px; }

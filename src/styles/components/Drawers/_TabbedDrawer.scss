@@ -75,13 +75,20 @@
     }
   }
 
+  .add-btn {
+    width: 100%;
+    display: inline-block;
+    text-align: right;
+    margin-top: $largeMarginSize;
+  }
+
   .dependency-panel {
     .dependency-title {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: -15px;
-      margin-top: $largeMarginSize;
+      margin: $largeMarginSize 0 $mediumMarginSize;
     }
 
     .form-control {
@@ -98,14 +105,6 @@
     .md-icon {
       cursor: pointer!important;
     }
-
-    > hr {
-      width: 80%;
-      height: $largeMarginSize / 5;
-      background: darkgray;
-      margin: 0 auto;
-      margin-top: 3 * $mediumMarginSize;
-    }
   }
 
   .client-table {
@@ -117,7 +116,7 @@
     }
 
     .md-table-column--adjusted {
-      padding-right: 20px;
+      padding-right: $largeMarginSize;
     }
 
     table {
@@ -126,21 +125,20 @@
       thead {
         tr {
           th {
-            text-align: center;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
+            text-transform: uppercase;
           }
         }
       }
 
       tbody tr td {
-        text-align: center;
         font-size: 13px;
       }
     }
 
     p {
-      margin-top: $mediumMarginSize;
+      margin-top: $largeMarginSize;
     }
   }
 }
@@ -161,6 +159,11 @@
 
     .md-tab {
       min-width: unset;
+      padding-bottom: 16px;
+
+      .md-tab-label {
+        font-weight: bold;
+      }
     }
   }
 
@@ -177,10 +180,10 @@
 
     .field-item {
       h4 {
-        text-transform: capitalize;
-        font-weight: 600;
+        text-transform: uppercase;
+        font-weight: 500;
         font-size: 15px;
-        margin-top: 20px;
+        margin: 20px 0 0;
       }
     }
 

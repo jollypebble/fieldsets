@@ -48,7 +48,7 @@ const defenseDefault = {
     attributes: {
       ratio: 1.2,
       textSize: 0.45,
-      radius: 75
+      radius: 80
     },
     zoom: {
       scale: 1,
@@ -134,13 +134,13 @@ const data = [
     id: 'defense_allocation',
     name: 'Defense Allocation',
     centerX: 880,
-    centerY: 383,
+    centerY: 384,
     display: {
       shape: 'radialGroup',
       attributes: {
         path: 'M626,430.638262 L875.611509,399.411159 L1123.16376,425.812255 C1210.57272,435.134296 1151.09059,506.664739 1123.3138,426.146136 C1095.53701,345.627533 995.302104,286 875.905688,286 C754.089207,286 652.21888,348.069231 626.898289,431.067696',
         gradientId: 'defenceAllocation',
-        textSize: 0.8
+        textSize: 0.5
       },
       zoom: {
         scale: 1
@@ -165,8 +165,8 @@ const data = [
         display: {
           attributes: {
             ratio: 1.2,
-            textSize: 0.45,
-            radius: 75,
+            textSize: 0.42,
+            radius: 80,
             textY: 326
           },
           zoom: {
@@ -186,8 +186,8 @@ const data = [
         display: {
           attributes: {
             ratio: 1.2,
-            textSize: 0.45,
-            radius: 75,
+            textSize: 0.42,
+            radius: 80,
             textY: 326
           },
           zoom: {
@@ -207,8 +207,8 @@ const data = [
         display: {
           attributes: {
             ratio: 1.2,
-            textSize: 0.45,
-            radius: 75,
+            textSize: 0.42,
+            radius: 80,
             textY: 370
           },
           zoom: {
@@ -300,7 +300,7 @@ const data = [
           },
           {
             id: 'investment_account',
-            name: 'Investment Account',
+            name: 'Invest Account',
             parent: 'mid_term_money',
             centerX: 925,
             centerY: 580,
@@ -336,7 +336,7 @@ const data = [
             name: 'IRA ROTH',
             parent: 'long_term_money',
             centerX: 1010,
-            centerY: 545,
+            centerY: 544,
             ...offenseDefault
           },
           {
@@ -359,7 +359,7 @@ const data = [
             id: 'stock_option',
             name: 'Stock option',
             parent: 'long_term_money',
-            centerX: 1070,
+            centerX: 1069,
             centerY: 560,
             ...offenseSmall
           },
@@ -375,15 +375,15 @@ const data = [
             id: 'deffered_comp',
             name: 'Deffered Comp',
             parent: 'long_term_money',
-            centerX: 1105,
-            centerY: 472,
+            centerX: 1106,
+            centerY: 474,
             ...offenseSmall
           }
         ]
       },
       {
         id: 'offense_parent',
-        name: 'Offese Allocation',
+        name: 'Offense Allocation',
         centerX: 880,
         centerY: 465,
         display: {

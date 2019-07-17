@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {
   TextField,
   FontIcon,
+  Button,
   DataTable,
   TableHeader,
   TableBody,
@@ -54,11 +55,17 @@ export default class ClientSheet extends React.Component {
     let isValid = true;
     formFields.forEach(field => {
       field.forEach(subField => {
-        if (subField.isRequired && !this[subField.name]._field.getValue()) isValid = false;
+        if (subField.isRequired && !this.state[subField.name]) isValid = false;
       })
     });
     return isValid;
   };
+
+  handleChange = (name, value) => {
+    this.setState({
+      [name]: value      
+    });
+  }
 
   renderFormField = (index) => {
     return formFields[index].map(item => (
@@ -67,6 +74,7 @@ export default class ClientSheet extends React.Component {
           id={ item.name }
           label={ item.label }
           ref={ field => { this[item.name] = field } }
+          onChange={value => this.handleChange(item.name, value)}
           required={item.isRequired}
         />
       </div>
@@ -116,7 +124,7 @@ export default class ClientSheet extends React.Component {
             )) }
           </TableBody>
         </DataTable>
-        <p>{ !clients.length && 'There is no client yet.' }</p>
+        <p>{ !clients.length && 'No data' }</p>
       </div>
     );
   };
@@ -132,9 +140,11 @@ export default class ClientSheet extends React.Component {
               <FontIcon onClick={ this.addDependency }>add</FontIcon>
             </h4>
             { this.renderDependencies() }
-            <hr />
           </div>
           { this.renderFormField(1) }
+          <div className="add-btn">
+            <Button raised primary disabled={!this.isValidForm()} onClick={this.props.onSave}>Add</Button>
+          </div>
         </div>
         { this.renderClientTable() }
       </div>
@@ -144,5 +154,6 @@ export default class ClientSheet extends React.Component {
 
 ClientSheet.propTypes = {
   clients: PropTypes.array.isRequired,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired
 };
