@@ -33,10 +33,6 @@ class Dashboard extends Component {
     });
   }
 
-  componentDidUpdate() {
-
-  }
-
   getClientList = () => {
     const id = 'ClientList:normal';
 
@@ -58,7 +54,6 @@ class Dashboard extends Component {
   };
 
   handleClientSave = () => {
-    if (!this._clientSheet.isValidForm()) return;
     const temp = {};
     clientSheetItems.forEach((item) => {
       temp[item] = this._clientSheet[item]._field.getValue();
@@ -106,6 +101,7 @@ class Dashboard extends Component {
         ref={ (item) => { this._clientSheet = item; } }
         clients={ this.state.clients }
         onChange={ this.handleChange }
+        onSave={ this.handleClientSave }
       />
     );
   }
@@ -128,7 +124,6 @@ class Dashboard extends Component {
             icon="account_box"
             title="Client"
             renderContent={ () => this.renderClientSheet() }
-            saveCallback={ this.handleClientSave }
           />
           <TabbedDrawer
             position="right"

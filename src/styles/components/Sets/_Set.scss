@@ -186,7 +186,6 @@
 
   tspan {
     line-height: 1pt;
-    font-weight: bold;
   }
 
   &.shown {
@@ -197,12 +196,6 @@
     opacity: 1;
     display: none;
   }
-}
-
-.refresh-icon {
-  font-family: FontAwesome;
-  font-size: 1pt;
-  cursor: pointer;
 }
 
 /** Showing up an element */

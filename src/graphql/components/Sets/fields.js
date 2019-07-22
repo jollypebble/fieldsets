@@ -30,20 +30,11 @@ export const getFieldList = gql`${fields}`;
 
 export const getInitialFieldData = gql`
   query {
-    allFieldData {
+    allScreener(last: 1) {
       edges {
-        set {
-          fieldId
-          name
-          description
-          value
-          type
-          callback
-          notes
-          accounts
-          parent
-          order
-          alwaysDisplay
+        node {
+          id
+          data
         }
       }
     }
@@ -51,10 +42,13 @@ export const getInitialFieldData = gql`
 `;
 
 export const updateAllFields = gql`
-  mutation updateAllFields($data: String!) {
-    createFieldData(data: $data) {
-      result {
-        status
+  mutation createScreener($data: String!) {
+    createScreener(data: $data) {
+      portfolioScreener {
+        id
+        data
+        timestamp
+        uuid
       }
     }
   }
