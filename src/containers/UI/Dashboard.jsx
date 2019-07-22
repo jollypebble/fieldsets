@@ -3,7 +3,7 @@ import { withApollo } from 'react-apollo';
 
 import { MenuBar } from 'components/Menus';
 import { TabbedDrawer, MenuDrawer } from 'components/Drawers';
-import { BalanceSheet, ClientSheet } from 'components/Sheets';
+import { Sheet } from 'components/Sheets';
 
 import { getClientList } from '../../graphql';
 
@@ -95,20 +95,14 @@ class Dashboard extends Component {
     });
   }
 
-  renderClientSheet = () => {
+  renderSheet = () => {
     return (
-      <ClientSheet
+      <Sheet
         ref={ (item) => { this._clientSheet = item; } }
         clients={ this.state.clients }
         onChange={ this.handleChange }
         onSave={ this.handleClientSave }
       />
-    );
-  }
-
-  renderBalanceSheet = () => {
-    return (
-      <BalanceSheet />
     );
   }
 
@@ -123,13 +117,13 @@ class Dashboard extends Component {
             position="right"
             icon="account_box"
             title="Client"
-            renderContent={ () => this.renderClientSheet() }
+            renderContent={ () => this.renderSheet() }
           />
           <TabbedDrawer
             position="right"
             icon="library_books"
             title="Balance"
-            renderContent={ this.renderBalanceSheet }
+            renderContent={ this.renderSheet() }
           />
         </div>
         <div id="menu-wrapper">

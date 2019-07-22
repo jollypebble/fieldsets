@@ -12,7 +12,7 @@ const SHORT_TERM_PARENTS = ['cash_equivalents', 'mortgage', 'liabilities_debt'];
 const MID_TERM_PARENTS = ['utmas', 'plan_529', 'investment_account'];
 const LONG_TERM_PARENTS = ['cash_value_life', 'ira_roth', 'k_401', 'annuity', 'stock_option', 'investment_real_estate', 'deffered_comp'];
 
-class BalanceTab extends Component {
+class SheetTab extends Component {
   constructor() {
     super();
 
@@ -101,8 +101,8 @@ class BalanceTab extends Component {
   }
 };
 
-export default BalanceTab;
+export default SheetTab;
 
-BalanceTab.propTypes = {
+SheetTab.propTypes = {
   tabId: PropTypes.string.isRequired
 }

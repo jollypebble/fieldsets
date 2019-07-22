@@ -1,2 +1,1 @@
-export { default as BalanceSheet } from './BalanceSheet';
-export { default as ClientSheet } from './ClientSheet';
+export { default as Sheet } from './Sheet';
