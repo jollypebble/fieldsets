@@ -4,11 +4,13 @@ import PropTypes from 'prop-types';
 import {
   TextField,
   FontIcon,
+  Button,
   DataTable,
   TableHeader,
   TableBody,
   TableRow,
-  TableColumn
+  TableColumn,
+  Card
 } from 'react-md';
 
 const formFields = [
@@ -54,11 +56,17 @@ export default class ClientSheet extends React.Component {
     let isValid = true;
     formFields.forEach(field => {
       field.forEach(subField => {
-        if (subField.isRequired && !this[subField.name]._field.getValue()) isValid = false;
+        if (subField.isRequired && !this.state[subField.name]) isValid = false;
       })
     });
     return isValid;
   };
+
+  handleChange = (name, value) => {
+    this.setState({
+      [name]: value      
+    });
+  }
 
   renderFormField = (index) => {
     return formFields[index].map(item => (
@@ -67,6 +75,7 @@ export default class ClientSheet extends React.Component {
           id={ item.name }
           label={ item.label }
           ref={ field => { this[item.name] = field } }
+          onChange={value => this.handleChange(item.name, value)}
           required={item.isRequired}
         />
       </div>
@@ -93,7 +102,7 @@ export default class ClientSheet extends React.Component {
     const { clients } = this.props;
 
     return (
-      <div className="client-table">
+      <Card className="client-table">
         <DataTable plain>
           <TableHeader>
             <TableRow>
@@ -116,8 +125,8 @@ export default class ClientSheet extends React.Component {
             )) }
           </TableBody>
         </DataTable>
-        <p>{ !clients.length && 'There is no client yet.' }</p>
-      </div>
+        {!clients.length && <p>No data</p>}
+      </Card>
     );
   };
 
@@ -127,14 +136,16 @@ export default class ClientSheet extends React.Component {
         <div className="form-group">
           { this.renderFormField(0) }
           <div className="dependency-panel">
-            <h4 className="dependency-title">
+            <h5 className="dependency-title">
               Dependent Names
               <FontIcon onClick={ this.addDependency }>add</FontIcon>
-            </h4>
+            </h5>
             { this.renderDependencies() }
-            <hr />
           </div>
           { this.renderFormField(1) }
+          <div className="add-btn">
+            <Button raised primary disabled={!this.isValidForm()} onClick={this.props.onSave}>Add</Button>
+          </div>
         </div>
         { this.renderClientTable() }
       </div>
@@ -144,5 +155,6 @@ export default class ClientSheet extends React.Component {
 
 ClientSheet.propTypes = {
   clients: PropTypes.array.isRequired,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired
 };

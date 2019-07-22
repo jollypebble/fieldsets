@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Rectangle = ({id, visibility, attributes, gradient}) => {
+const Rectangle = ({id, visibility, attributes, gradient, onClick}) => {
   const {radiusX, radiusY, width, height, parentCenterX, parentCenterY, parent, rotate} = attributes;
   let {centerX, centerY, strokeWidth} = attributes;
   const hasParent = (parent && parent !== '') ? true : false;
@@ -24,7 +24,7 @@ const Rectangle = ({id, visibility, attributes, gradient}) => {
         rx={radiusX}
         ry={radiusY}
         strokeWidth={strokeWidth ? strokeWidth : 1}
-        onClick={attributes.focusCircle}
+        onClick={onClick}
       />
     </React.Fragment>
   );

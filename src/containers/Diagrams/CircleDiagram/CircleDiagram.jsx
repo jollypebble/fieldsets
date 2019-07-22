@@ -58,12 +58,12 @@ class CircleDiagram extends Component {
     this.setFocus = this.setFocus.bind(this);
     this.getFocus = this.getFocus.bind(this);
     this.resetFocus = this.resetFocus.bind(this);
+    this.setFieldCache = this.setFieldCache.bind(this);
     this.updateFieldCache = this.updateFieldCache.bind(this);
     this.updateZoom = this.updateZoom.bind(this);
     this.updateFocus = this.updateFocus.bind(this);
     this.primeCache = this.primeCache.bind(this);
     this.updateAccountCache = this.updateAccountCache.bind(this);
-    this.updateFieldCache = this.updateFieldCache.bind(this);
     this.updateDataCache = this.updateDataCache.bind(this);
     this.updateSetState = this.updateSetState.bind(this);
     this.getSetsData = this.getSetsData.bind(this);
@@ -113,17 +113,16 @@ class CircleDiagram extends Component {
       query: getInitialFieldData
     }).then(({ data, error }) => {
       if (error) {
-        console.log('error : ', error);
-        toast.error('Sorry! Unable to store field data.', toastOptions);
+        return toast.error('Sorry! Unable to store field data.', toastOptions);
       }
-      const temp = data.allFieldData.edges.map(({ set }) => ({
-        ...set,
-        id: set.fieldId
-      }));
-
-      this.updateFieldCache(temp);
-
-      this.setState({ fieldData: temp }, () => this.updateFieldCache(temp));
+      if (data.allScreener.edges.length) {
+        console.log('data', data);
+        const result = JSON.parse(data.allScreener.edges[0].node.data);
+  
+        this.setFieldCache(result);
+  
+        this.setState({ fieldData: result }, () => this.updateFieldCache(result));
+      }
     });
   }
 
@@ -311,7 +310,6 @@ class CircleDiagram extends Component {
   primeCache = () => {
     // @TODO: REMOTE GRAPHQL CALLS GO HERE. FOR NOW WE PULL IN CONFIG BASED DATA.
     this.updateAccountCache(AccountData);
-    this.updateFieldCache(this.state.fieldData);
     this.updateDataCache(SetData);
   }
 
@@ -320,7 +318,7 @@ class CircleDiagram extends Component {
   }
 
   // Cache field values
-  updateFieldCache = (data = []) => {
+  setFieldCache = (data = []) => {
     if (!data.length) return false;
     const allFields = this.getAllFields();
     allFields.fields.list = (allFields.fields.list) ? allFields.fields.list : [];

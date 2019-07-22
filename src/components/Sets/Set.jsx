@@ -11,6 +11,8 @@ import Label from './Label';
  * Each set will check its own field set data and will iteratively call itself if there are children.
  */
 
+const DBCLICK_DISABLED = ['offense_parent', 'defense_parent']
+
 class Set extends React.Component {
   constructor(props) {
     super(props);
@@ -90,7 +92,7 @@ class Set extends React.Component {
 
   handleClick(e) {
     if (!this._delayedClick) {
-      this._delayedClick = _.debounce(this.handleSingleClick, 200);
+      this._delayedClick = _.debounce(this.handleSingleClick, 250);
     }
     if (this.clickedOnce) {
       this._delayedClick.cancel();
@@ -110,8 +112,9 @@ class Set extends React.Component {
   }
 
   handleDoubleClick = () => {
-    if (!this.props.parent) return;
-    this.props.openDialog(this.props.setID);
+    const { setID } = this.props;
+    if (DBCLICK_DISABLED.includes(setID)) return;
+    this.props.openDialog(setID);
   }
 
   handleTargetChange = (value) => {
