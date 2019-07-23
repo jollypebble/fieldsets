@@ -5,12 +5,14 @@ import { HttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloProvider } from 'react-apollo';
 import './static/styles/index.css';
+
+import { Config } from './config';
 import App from './App';
 import { resolvers, defaults, typeDefs } from './graphql';
 //import fragments from './graphql/fragmentTypes.json';
 
 // const SERVER_URL = 'http://localhost:8000';
-const SERVER_URL = 'http://ec2-3-91-177-72.compute-1.amazonaws.com';
+const GRAPHQL_SERVER = Config.servers.graphql;
 
 // const fragmentMatcher = new IntrospectionFragmentMatcher({ fragments });
 // const cache = new InMemoryCache({ fragmentMatcher });
@@ -18,7 +20,7 @@ const cache = new InMemoryCache();
 
 const client = new ApolloClient({
   link: new HttpLink({
-    uri: `${SERVER_URL}/graphql`
+    uri: `${GRAPHQL_SERVER}/graphql`
   }),
   cache,
   resolvers,

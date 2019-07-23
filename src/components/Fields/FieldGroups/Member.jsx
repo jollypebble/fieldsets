@@ -1,9 +1,10 @@
 import React from 'react';
+
 import {
   TextField
 } from 'react-md';
 
-const Default = ({id, name, value, account, member, options, onChange}) => {
+const Member = ({id, name, value, account, member, options, onChange}) => {
   return (
     <React.Fragment>
       <TextField
@@ -17,4 +18,4 @@ const Default = ({id, name, value, account, member, options, onChange}) => {
   );
 }
 
-export default Default;
+export default Member;

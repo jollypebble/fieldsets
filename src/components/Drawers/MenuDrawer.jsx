@@ -25,29 +25,11 @@ export default class MenuDrawer extends PureComponent {
 
   renderFilterItems = () => (
     <div className="filter-items block-header-over" id="filter-items">
-      <SelectField
-        id="select-filter"
-        placeholder="Filter 1"
-        menuItems={ filterItems1 }
-        position={ SelectField.Positions.BELOW }
-      />
-      <SelectField
-        id="select-filter"
-        placeholder="Filter 2"
-        menuItems={ filterItems1 }
-        position={ SelectField.Positions.BELOW }
-      />
       <Checkbox
-        id="checkbox1"
-        name="checkbox1"
-        label="CheckBox 1"
-        value="checkbox1"
-      />
-      <Checkbox
-        id="checkbox2"
-        name="checkbox2"
-        label="CheckBox 2"
-        value="checkbox2"
+        id="filter1"
+        name="filter1"
+        label="Tax Advantaged"
+        value="taxadvantaged"
       />
     </div>
   );

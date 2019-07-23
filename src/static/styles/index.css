@@ -698,21 +698,11 @@ text.setAttributesBase {
   line-height: 64px;
   color: #FFF;
   font-size: 20px;
-  transition: top 0.2s;
-  /** We remove margin-left here because "Monthly Contribution" wasn't able to be placed at the center of the top bar */ }
+  transition: top 0.2s; }
   .AppBarInner.hidden {
     top: -64px; }
   .AppBarInner.visible {
     top: 0; }
-  .AppBarInner .toolbarText {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font: bold 20px auto;
-    text-transform: uppercase; }
-  .AppBarInner > .md-toolbar--action-right {
-    margin-left: 0; }
   .AppBarInner .hidden {
     display: none; }
   .AppBarInner .centered {

@@ -80,58 +80,53 @@ class Dialog extends React.Component {
             if (loading) return null;
             if (error) return `Error! ${error}`;
             return (
-              <Mutation mutation={updateField} variables={{ data: activeDialog }} refetchQueries={ res => res.data.updateField.map(id => ({ query: getSetFields, variables: { id } })) } awaitRefetchQueries={true}>
-                {updateData => (
-                  <DialogContainer
-                    id={dialogID}
-                    className="radialDialog"
-                    title={data.getSet ? data.getSet.name : ''}
-                    visible={visible}
-                    actions={[{
-                      id: 'dialog-cancel',
-                      secondary: true,
-                      children: 'Cancel',
-                      onClick: this.hide,
-                    }, {
-                      id: 'dialog-ok',
-                      primary: true,
-                      children: 'Ok',
-                      onClick: () => {
-                        updateData();
-                        this.hide();
-                      },
-                    }]}
-                    onHide={this.hide}
-                    initialFocus={initialFocus}
-                    focusOnMount={focusOnMount}
-                    containFocus={containFocus}
-                    contentClassName="md-grid"
-                  >
-                    <Query query={getSetFields} variables={{ id }}>
-                      {({ loading, error, data }) => {
-                        if (loading) return null;
-                        if (error) return `Error! ${error}`;
-                        let fieldlist = [];
-                        let order = 0;
-                        for (let i = 0; i < data.getSetFields.length; i++) {
-                          order = data.getSetFields[i].order
-                          fieldlist[order] =
-                            <Field
-                              key={data.getSetFields[i].id}
-                              id={data.getSetFields[i].id}
-                              name={data.getSetFields[i].name}
-                              fieldtype={data.getSetFields[i].type}
-                              value={data.getSetFields[i].value}
-                              options={[]}
-                              onChange={this.handleChange}
-                            />;
-                        }
-                        return (fieldlist);
-                      }}
-                    </Query>
-                  </DialogContainer>
-                )}
-              </Mutation>
+                <DialogContainer
+                  id={dialogID}
+                  className="radialDialog"
+                  title={data.getSet ? data.getSet.name : ''}
+                  visible={visible}
+                  actions={[{
+                    id: 'dialog-cancel',
+                    secondary: true,
+                    children: 'Cancel',
+                    onClick: this.hide,
+                  }, {
+                    id: 'dialog-ok',
+                    primary: true,
+                    children: 'Ok',
+                    onClick: () => {
+                      this.hide();
+                    },
+                  }]}
+                  onHide={this.hide}
+                  initialFocus={initialFocus}
+                  focusOnMount={focusOnMount}
+                  containFocus={containFocus}
+                  contentClassName="md-grid"
+                >
+                  <Query query={getSetFields} variables={{ id }}>
+                    {({ loading, error, data }) => {
+                      if (loading) return null;
+                      if (error) return `Error! ${error}`;
+                      let fieldlist = [];
+                      let order = 0;
+                      for (let i = 0; i < data.getSetFields.length; i++) {
+                        order = data.getSetFields[i].order
+                        fieldlist[order] =
+                          <Field
+                            key={data.getSetFields[i].id}
+                            id={data.getSetFields[i].id}
+                            name={data.getSetFields[i].name}
+                            fieldtype={data.getSetFields[i].type}
+                            value={data.getSetFields[i].value}
+                            options={[]}
+                            onChange={this.handleChange}
+                          />;
+                      }
+                      return (fieldlist);
+                    }}
+                  </Query>
+                </DialogContainer>
             );
           }}
         </Query>
@@ -142,6 +137,5 @@ class Dialog extends React.Component {
 Dialog.propTypes = {
   setID: PropTypes.string.isRequired
 };
-//export default withApollo(RadialDialog);
-//export default React.forwardRef((props, ref) => <RadialDialog updateFocus={ref} {...props}/>);
+
 export default Dialog;

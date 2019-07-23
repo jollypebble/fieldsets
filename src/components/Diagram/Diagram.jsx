@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import { withApollo } from 'react-apollo';
 import { SetData, FieldData, AccountData } from 'data/Diagrams/CircleDiagram';
-import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
-import { Button } from 'react-md';
 
-import { Set, Dialog } from 'components/Sets';
 import {
   getFields,
   getFieldList,
@@ -16,12 +13,13 @@ import {
   getSetList,
   defaults,
   getSetFields
-} from '../../../graphql';
+} from '../../graphql';
 
 /**
- * This is the container for our main diagram. It has direct access to the apollo cache so it can track foucs of it's child sets.
+ * This is the generic Diagram class which should be extended to build diagram containers.
+ * This class is in charge of priming setting up our data cache for use within our diagrams.
  */
-class CircleDiagram extends Component {
+class Diagram extends Component {
   constructor(props) {
     super(props);
 
@@ -102,6 +100,7 @@ class CircleDiagram extends Component {
     }).then(({ data, error }) => {
       if (error) {
         console.log('Sorry! Unable to store field data.');
+        return;
       }
       if (data.allScreener.edges.length) {
         console.log('data', data);

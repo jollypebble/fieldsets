@@ -123,22 +123,8 @@ text.setAttributesBase {
   &.hidden { top: -64px; }
   &.visible { top: 0; }
 
-  .toolbarText {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font: bold 20px auto;
-    text-transform: uppercase;
-  }
-
-  /** We remove margin-left here because "Monthly Contribution" wasn't able to be placed at the center of the top bar */
-  & > .md-toolbar--action-right {
-    margin-left: 0;
-  }
-
   .hidden {
-      display: none;
+    display: none;
   }
 
   .centered {

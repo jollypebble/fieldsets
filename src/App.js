@@ -5,15 +5,10 @@ import { withApollo } from 'react-apollo';
 import { Dashboard } from './containers/UI'
 import { CircleDiagram } from './containers/Diagrams/CircleDiagram';
 
-import DiagramEvents from './utils/DiagramEvents'
-
 /**
  * The basic UI components and all visualization areas are added here
  */
 class App extends Component {
-  componentDidMount() {
-    DiagramEvents.init()
-  }
 
   render() {
     /** Zoom of the main diagram */

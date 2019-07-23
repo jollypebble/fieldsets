@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withApollo } from 'react-apollo';
+import { Query, Mutation, withApollo } from 'react-apollo';
 import FieldType from './FieldType';
+import { updateField } from '../../graphql';
 
 /**
  * A field is a single data value in a set.
@@ -14,7 +15,8 @@ class Field extends React.Component {
     this.state = {
       value: null,
       notes:[],
-      owners:[]
+      account:null,
+      member:null
     };
   }
 
@@ -30,7 +32,8 @@ class Field extends React.Component {
     const {
       value,
       notes,
-      owners
+      account,
+      member
     } = this.props;
 
     // @TODO: Insert a remote save before reset.
@@ -40,33 +43,41 @@ class Field extends React.Component {
     const state = {
       value: value,
       notes: notes,
-      owners: owners
+      account: account,
+      member: member
     }
     this.setState(state);
   }
 
   /** Refetch values calculated on this field. */
-  updateDependencies() {
+  updateFieldDependencies() {
 
   }
 
   render() {
     const id = this.props.id;
+    const value = this.state.value;
     // Child Set
     return (
-      <FieldType
-        id={id}
-        name={this.props.name}
-        fieldtype={this.props.fieldtype}
-        value={this.state.value}
-        options={{
-          ...this.props.options
-        }}
-      onChange={this.props.onChange}
-      />
+      <Mutation mutation={updateField} variables={{ data: {id,value} }} awaitRefetchQueries={true}>
+        {updateData => (
+          <FieldType
+            id={id}
+            account={this.props.account}
+            member={this.props.member}
+            name={this.props.name}
+            fieldtype={this.props.fieldtype}
+            value={value}
+            options={{
+              ...this.props.options
+            }}
+            onChange={updateData}
+          />
+        )}
+      </Mutation>
     );
-    }
   }
+}
 
 Field.propTypes = {
   id: PropTypes.string.isRequired,

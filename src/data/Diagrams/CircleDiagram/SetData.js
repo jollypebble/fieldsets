@@ -88,7 +88,6 @@ const data = [
     name: 'Monthly Contribution',
     centerX: 720,
     centerY: 240,
-    parent: 'diagram',
     display: {
       shape: 'Rectangle',
       attributes: {
@@ -105,7 +104,6 @@ const data = [
     name: 'Lump Sums',
     centerX: 900,
     centerY: 240,
-    parent: 'diagram',
     display: {
       shape: 'Rectangle',
       attributes: {
@@ -357,7 +355,7 @@ const data = [
           },
           {
             id: 'stock_option',
-            name: 'Stock option',
+            name: 'Stock Option',
             parent: 'long_term_money',
             centerX: 1069,
             centerY: 560,

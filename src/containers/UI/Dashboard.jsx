@@ -95,13 +95,10 @@ class Dashboard extends Component {
     });
   }
 
-  renderSheet = () => {
+  renderSheet = (sheet) => {
     return (
       <Sheet
-        ref={ (item) => { this._clientSheet = item; } }
-        clients={ this.state.clients }
-        onChange={ this.handleChange }
-        onSave={ this.handleClientSave }
+        sheet={sheet}
       />
     );
   }
@@ -110,20 +107,27 @@ class Dashboard extends Component {
     return (
       <React.Fragment>
         <MenuBar
-          leftIconCallback={ this.toggleDrawer }
+          title='Econ Circles'
+          menuIconCallback={ this.toggleDrawer }
         />
         <div id="tabs-wrapper">
           <TabbedDrawer
             position="right"
             icon="account_box"
-            title="Client"
-            renderContent={ () => this.renderSheet() }
+            title="Account Info"
+            renderContent={ () => this.renderSheet('AccountSheet') }
           />
           <TabbedDrawer
             position="right"
             icon="library_books"
-            title="Balance"
-            renderContent={ this.renderSheet() }
+            title="Balance Sheet"
+            renderContent={ () => this.renderSheet('BalanceSheet') }
+          />
+          <TabbedDrawer
+            position="right"
+            icon="bubble_chart"
+            title="Econ Circles"
+            renderContent={ () => this.renderSheet('AccountSheet') }
           />
         </div>
         <div id="menu-wrapper">

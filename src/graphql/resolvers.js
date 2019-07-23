@@ -1,4 +1,4 @@
-import { getSetList, getCurrentFocus, getFieldList } from './components/Sets';
+import { getSetList, getCurrentFocus, getFieldList } from './queries';
 
 export const resolvers = {
   Mutation: {
@@ -13,6 +13,22 @@ export const resolvers = {
       return currentFocus;
     },
     updateField: ( object, { data }, { cache, getCacheKey } ) => {
+      const id = getCacheKey({ __typename: 'Field', id: data.id });
+      const fieldData = cache.readFragment({ id, fragment: getFieldList, fragmentName: 'field' });
+      const updatedFieldData = {
+        ...fieldData,
+        value: data.value
+      };
+      cache.writeFragment({
+        id,
+        fragment: getFieldList,
+        fragmentName: 'field',
+        data: updatedFieldData
+      });
+
+      return updatedFieldData;
+    },
+    updateFieldList: ( object, { data }, { cache, getCacheKey } ) => {
       let result = [];
       data.forEach(item => {
         const id = getCacheKey({ __typename: 'Field', id: item.id });

@@ -116,10 +116,15 @@ export const typeDefs = `
   }
 
   enum FieldType {
+    string
+    number
     currency
-    status
-    dob
-    firstname
-    lastname
+    coordinate
+    object
+    list
+    search
+    bool
+    date
+    time
   }
 `;
