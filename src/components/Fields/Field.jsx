@@ -62,7 +62,7 @@ class Field extends React.Component {
         options={{
           ...this.props.options
         }}
-      onChange={this.props.onChange}
+        onChange={this.props.onChange}
       />
     );
     }

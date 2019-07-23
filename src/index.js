@@ -9,8 +9,7 @@ import App from './App';
 import { resolvers, defaults, typeDefs } from './graphql';
 //import fragments from './graphql/fragmentTypes.json';
 
-// const SERVER_URL = 'http://localhost:8000';
-const SERVER_URL = 'ec2-3-91-177-72.compute-1.amazonaws.com';
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
 // const fragmentMatcher = new IntrospectionFragmentMatcher({ fragments });
 // const cache = new InMemoryCache({ fragmentMatcher });
@@ -18,7 +17,7 @@ const cache = new InMemoryCache();
 
 const client = new ApolloClient({
   link: new HttpLink({
-    uri: `https://${SERVER_URL}/graphql`
+    uri: `${SERVER_URL}/graphql`
   }),
   cache,
   resolvers,
