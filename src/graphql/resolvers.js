@@ -37,7 +37,7 @@ export const resolvers = {
     getSetFields: (object, variables, { cache, getCacheKey }) => {
       const id = getCacheKey({__typename: 'FieldList', id: variables.id});
       const fields = cache.readFragment({ id, fragment: getFieldList, fragmentName: 'fields' });
-      return fields.list;
+      return fields.list || [];
     },
     getSet: (object, variables, { cache, getCacheKey }) => {
       const id = getCacheKey({__typename: 'Set', id: variables.id});

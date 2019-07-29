@@ -116,7 +116,6 @@ class CircleDiagram extends Component {
         return toast.error('Sorry! Unable to store field data.', toastOptions);
       }
       if (data.allScreener.edges.length) {
-        console.log('data', data);
         const result = JSON.parse(data.allScreener.edges[0].node.data);
   
         this.setFieldCache(result);
