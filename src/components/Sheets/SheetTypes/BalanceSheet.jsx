@@ -67,7 +67,6 @@ const BalanceSheet = ({id, name, data, options, onChange, onSave}) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-
           </TableBody>
         </DataTable>
         <p>No data</p>

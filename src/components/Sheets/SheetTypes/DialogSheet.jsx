@@ -9,10 +9,9 @@ import { getSet, getSetFields, updateField } from '../../graphql';
 import Field from '../Fields/Field';
 
 /**
- * Radial Sets are functional components that represent parent circle sets.
- * They simply check the set data and will iteratively call itself if there are children.
+ * Dialog Sheets are fields sets in a popup modal
  */
-class Dialog extends React.Component {
+class DialogSheet extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -134,8 +133,8 @@ class Dialog extends React.Component {
     );
   }
 }
-Dialog.propTypes = {
+DialogSheet.propTypes = {
   setID: PropTypes.string.isRequired
 };
 
-export default Dialog;
+export default DialogSheet;

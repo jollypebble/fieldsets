@@ -1,6 +1,7 @@
 export default [
   {
     id: 'family_name',
+    owner: '',
     name: 'Family Name',
     parent: '',
     fields: [],

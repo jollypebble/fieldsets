@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { withApollo } from 'react-apollo';
-import { SetData, FieldData, AccountData } from 'data/Diagrams/CircleDiagram';
+import { SetData, FieldData } from 'data/Diagrams/CircleDiagram';
 import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
 import { Button } from 'react-md';
 
-import { Set, Dialog } from 'components/Sets';
+import { Set } from 'components/Sets';
+import { DialogSheet } from 'components/Sheets/SheetTypes/DialogSheet';
+
 import {
   getFields,
   getFieldList,
@@ -297,7 +299,7 @@ class CircleDiagram extends Component {
    */
   primeCache = () => {
     // @TODO: REMOTE GRAPHQL CALLS GO HERE. FOR NOW WE PULL IN CONFIG BASED DATA.
-    this.updateAccountCache(AccountData);
+    //this.updateAccountCache(AccountData);
     this.updateDataCache(SetData);
   }
 
@@ -527,7 +529,7 @@ class CircleDiagram extends Component {
                       radius={ this.getStandardRadius() }
                       updateFocus={ this.updateFocus }
                       resetFocus={ this.resetFocus }
-                      openDialog={ this.openDialog }
+                      onDoubleClick={ this.openDialog }
                       closeDialog={ this.closeDialog }
                       updateSetState={ this.updateSetState }
                       sets={ this.state.sets }
@@ -543,7 +545,7 @@ class CircleDiagram extends Component {
         </div>
         <div className="diagramSheet" />
         <div className="diagramDialogs">
-          {this.state.currentDialog && <Dialog
+          {this.state.currentDialog && <DialogSheet
             setID={ this.state.currentDialog }
             onClose={ this.closeDialog }
           />}

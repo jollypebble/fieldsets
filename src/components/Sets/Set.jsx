@@ -27,7 +27,7 @@ class Set extends React.Component {
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleSingleClick = this.handleSingleClick.bind(this);
-    this.handleDoubleClick = this.handleDoubleClick.bind(this);
+    this.doAction = this.doAction.bind(this);
 
     this.handleTargetChange = this.handleTargetChange.bind(this);
     this.handleFocusChange = this.handleFocusChange.bind(this);
@@ -97,7 +97,7 @@ class Set extends React.Component {
     if (this.clickedOnce) {
       this._delayedClick.cancel();
       this.clickedOnce = false;
-      this.handleDoubleClick();
+      this.doAction();
     } else {
       this._delayedClick(e);
       this.clickedOnce = true;
@@ -111,10 +111,10 @@ class Set extends React.Component {
     this.props.updateFocus(setID, centerX, centerY);
   }
 
-  handleDoubleClick = () => {
+  doAction = () => {
     const { setID } = this.props;
     if (DBCLICK_DISABLED.includes(setID)) return;
-    this.props.openDialog(setID);
+    this.props.onDoubleClick(setID);
   }
 
   handleTargetChange = (value) => {
@@ -171,7 +171,7 @@ class Set extends React.Component {
 
               updateFocus={ this.props.updateFocus }
               resetFocus={ this.props.resetFocus }
-              openDialog={ this.props.openDialog }
+              onDoubleClick={ this.props.onDoubleClick }
               updateSetState={ this.props.updateSetState }
               sets={ this.props.sets }
               radius={ this.props.radius }
@@ -195,7 +195,7 @@ class Set extends React.Component {
     // Child Set
     return (
       <Mutation mutation={updateCurrentFocus} variables={{ id, centerX, centerY }} onCompleted={this.handleClick} awaitRefetchQueries={true}>
-        {focusCircle => {
+        {setFocus => {
           return (
             <g
               id={ this.props.setID ? `${this.props.setID}-group` : '' }
@@ -213,8 +213,8 @@ class Set extends React.Component {
                   shape={display.shape}
                   active={this.state.isMouseInside}
                   visibility={shownClass}
-                  onClick={focusCircle}
-                  onDoubleClick={this.handleDoubleClick}
+                  onClick={setFocus}
+                  onDoubleClick={this.doAction}
                   attributes={{
                     centerX,
                     centerY,
@@ -230,7 +230,7 @@ class Set extends React.Component {
                     name={name}
                     centerX={centerX}
                     centerY={centerY}
-                    onClick={focusCircle}
+                    onClick={setFocus}
                     hasParent={ this.hasParent() }
                     updateTextElement={ this.updateTextElement }
                   />

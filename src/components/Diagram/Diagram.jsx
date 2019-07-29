@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withApollo } from 'react-apollo';
-import { SetData, FieldData, AccountData } from 'data/Diagrams/CircleDiagram';
+import { DataCache } from '../Core/DataCache';
 
 import {
   getFields,
@@ -35,7 +35,9 @@ class Diagram extends Component {
       currentDialog: '',
       isZoomed: false,
       isDblClick: false,
-      fieldData: FieldData
+      fieldData: {},
+      setData: {},
+      accountData: {},
     };
 
     this.timeouts = [];
@@ -59,13 +61,15 @@ class Diagram extends Component {
     this.getFieldData = this.getFieldData.bind(this);
     this.getAllFields = this.getAllFields.bind(this);
     this.getInitialFieldData = this.getInitialFieldData.bind(this);
-    this.handleDoubleClick = this.handleDoubleClick.bind(this);
 
-    this.Viewer = React.createRef();
     this.backgroundSheet = React.createRef();
   }
 
   componentWillMount() {
+    this.setState({
+      setData: this.props.sets,
+      fieldData: this.props.fields,
+    });
     this.primeCache();
   }
 
@@ -80,18 +84,6 @@ class Diagram extends Component {
 
   componentWillUnmount() {
     this.timeouts.forEach(clearTimeout);
-  }
-
-  handleClick = (event) => {
-    const target = event.originalEvent.target;
-    if (!target) return;
-    if (target !== this.backgroundSheet) return;
-    this.resetFocus();
-    this.setTemporaryAnimatable();
-  }
-
-  handleDoubleClick = (event) => {
-    // console.log(event.x, event.y, event.originalEvent);
   }
 
   getInitialFieldData() {
@@ -148,6 +140,19 @@ class Diagram extends Component {
     this.Viewer.setPointOnViewerCenter(startX, startY, zoom);
     this.setState({ isZoomed: false });
     this.setState({ currentZoom: zoom });
+  }
+
+
+  handleClick = (event) => {
+    const target = event.originalEvent.target;
+    if (!target) return;
+    if (target !== this.backgroundSheet) return;
+    this.resetFocus();
+    this.setTemporaryAnimatable();
+  }
+
+  handleDoubleClick = (event) => {
+    // console.log(event.x, event.y, event.originalEvent);
   }
 
   setFocus = () => {
@@ -288,16 +293,6 @@ class Diagram extends Component {
   updateFieldState = (fields) => {
     // Do something to update a set state.
     this.setState({ fields });
-  }
-
-  /**
-   * Set our data cache before we deal with User interactions.
-   * Make you you consider the order which you data is primed. In this case, accounts are part of fields which are part of the diagram.
-   */
-  primeCache = () => {
-    // @TODO: REMOTE GRAPHQL CALLS GO HERE. FOR NOW WE PULL IN CONFIG BASED DATA.
-    this.updateAccountCache(AccountData);
-    this.updateDataCache(SetData);
   }
 
   updateAccountCache = (data = []) => {
