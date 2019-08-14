@@ -3,7 +3,7 @@ import { Query, Mutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 
 import { Button } from 'react-md';
-import Field from '../Fields/Field';
+import Field from 'components/Fields/Field';
 import { FieldData } from 'data/Diagrams/CircleDiagram';
 
 import { getSetFields, updateField } from '../../graphql';

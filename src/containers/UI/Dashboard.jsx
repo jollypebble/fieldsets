@@ -3,7 +3,7 @@ import { withApollo } from 'react-apollo';
 
 import { MenuBar } from 'components/Menus';
 import { TabbedDrawer, MenuDrawer } from 'components/Drawers';
-import { BalanceSheet, ClientSheet } from 'components/Sheets';
+import { BalanceSheet, ClientSheet } from 'containers/Sheets';
 
 import { getClientList } from '../../graphql';
 

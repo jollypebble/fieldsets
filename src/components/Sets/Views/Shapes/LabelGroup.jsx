@@ -1,6 +1,6 @@
 import React from 'react';
 import Cone from './Cone';
-import * as Gradients from 'config/defaults/components/Gradients';
+import * as Gradients from './Gradients';
 
 const LabelGroup = ({ id, active, visibility, attributes }) => {
   return (

@@ -117,9 +117,9 @@ class CircleDiagram extends Component {
       }
       if (data.allScreener.edges.length) {
         const result = JSON.parse(data.allScreener.edges[0].node.data);
-  
+
         this.setFieldCache(result);
-  
+
         this.setState({ fieldData: result }, () => this.updateFieldCache(result));
       }
     });

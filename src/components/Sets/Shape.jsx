@@ -1,4 +1,4 @@
-import * as Shapes from './Shapes';
+import * as Shapes from './Views/Shapes';
 
 const Shape = ({id, shape, active, visibility, attributes, scaleFactor, gradient, onClick}) => {
   if (shape) {
