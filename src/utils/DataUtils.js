@@ -1,4 +1,4 @@
-import ShapeDefaults from '../config/defaults/components/Sets/Shapes';
+import SetViewDefaults from 'config/defaults/components/Sets/Views';
 const _ = require('lodash');
 
 /**
@@ -9,9 +9,9 @@ const _ = require('lodash');
  */
 const mergeObjectParams = ( object, defaults ) => {
 	const backfilled = _.defaultsDeep( _.cloneDeep(object), defaults );
-	const shape = backfilled.display.shape.charAt(0).toUpperCase() + backfilled.display.shape.slice(1);
-	const shapeDefaults = ShapeDefaults[shape];
-	backfilled.display.attributes = _.defaultsDeep( backfilled.display.attributes, shapeDefaults );
+	const setview = backfilled.display.setview.charAt(0).toUpperCase() + backfilled.display.setview.slice(1);
+	const setviewDefaults = SetViewDefaults[setview];
+	backfilled.display.attributes = _.defaultsDeep( backfilled.display.attributes, setviewDefaults );
 	return backfilled;
 }
 

@@ -18,7 +18,7 @@ export const sets = `
   }
   fragment display on DisplayData @client {
     id
-    shape
+    setview
     visible
     zoom {
       ...zoom

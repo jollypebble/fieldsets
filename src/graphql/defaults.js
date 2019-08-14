@@ -9,7 +9,7 @@ export const defaults = {
     depth: 0,
     display: {
       id: 'default',
-      shape: '',
+      setview: '',
       attributes: [],
       visible: false,
       className: '',
@@ -85,7 +85,7 @@ export const defaults = {
       depth: 0,
       display: {
         id: 'default',
-        shape: '',
+        setview: '',
         attributes: [],
         visible: false,
         className: '',

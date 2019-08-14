@@ -3,9 +3,9 @@ import { withApollo } from 'react-apollo';
 
 import { MenuBar } from 'components/Menus';
 import { TabbedDrawer, MenuDrawer } from 'components/Drawers';
-import { Sheet } from 'components/Sheets';
+import { Sheet } from 'components/Core';
 
-import { getClientList } from '../../graphql';
+import { getClientList } from 'graphql/queries';
 
 const clientSheetItems = [
   'accountName',

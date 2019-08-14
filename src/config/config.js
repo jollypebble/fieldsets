@@ -4,6 +4,7 @@ export default {
       graphql: 'http://localhost:8000'
   },
   diagrams: [
+    // In the fieldsets framework, Diagrams are another set type. Here we can define which diagrams we want to use, so we can persistantly store their data for any aggregated data analysis.
     {
       id: 'CircleDiagram',
       name: 'Econ Circles'

@@ -3,7 +3,7 @@ import { withApollo } from 'react-apollo';
 
 // Custom Components
 import { Dashboard } from './containers/UI'
-import { CircleDiagram } from './containers/Diagrams/CircleDiagram';
+import { CircleDiagram } from './containers/Diagrams';
 
 /**
  * The basic UI components and all visualization areas are added here

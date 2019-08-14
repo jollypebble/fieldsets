@@ -79,7 +79,7 @@ export const typeDefs = `
 
   type DisplayData implements Data {
     id: ID!
-    shape: String!
+    setview: String!
     attributes: [String]
     zoom: ZoomData!
     visible: Boolean!
