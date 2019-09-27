@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Query, Mutation, withApollo } from 'react-apollo';
 import FieldType from './FieldType';
@@ -7,76 +7,30 @@ import { updateField } from 'graphql/queries';
 /**
  * A field is a single data value in a set.
  */
+const Field = ({id, fieldtype, name, account, options}) => {
+  const [field, updateData] = useState({});
 
-class Field extends React.Component {
-  constructor(props) {
-    super(props);
+  const value = field.value;
+  const notes = field.notes;
 
-    this.state = {
-      value: null,
-      notes:[],
-      account:null,
-      member:null
-    };
-  }
-
-  /**
-   * Component will Mount is used as a one time initialization.
-   * Initialize the last saved local state.
-   */
-  componentWillMount() {
-    this.resetState()
-  }
-
-  resetState() {
-    const {
-      value,
-      notes,
-      account,
-      member
-    } = this.props;
-
-    // @TODO: Insert a remote save before reset.
-    // this.props.client.writeData({ data: {  } });
-
-    // Reset our state
-    const state = {
-      value: value,
-      notes: notes,
-      account: account,
-      member: member
-    }
-    this.setState(state);
-  }
-
-  /** Refetch values calculated on this field. */
-  updateFieldDependencies() {
-
-  }
-
-  render() {
-    const id = this.props.id;
-    const value = this.state.value;
-    // Child Set
-    return (
-      <Mutation mutation={updateField} variables={{ data: {id,value} }} awaitRefetchQueries={true}>
-        {updateData => (
-          <FieldType
-            id={id}
-            account={this.props.account}
-            member={this.props.member}
-            name={this.props.name}
-            fieldtype={this.props.fieldtype}
-            value={value}
-            options={{
-              ...this.props.options
-            }}
-            onChange={updateData}
-          />
-        )}
-      </Mutation>
-    );
-  }
+  return (
+  <Mutation mutation={updateField} variables={{ data: {id,value} }} awaitRefetchQueries={true}>
+    <FieldType
+      id={id}
+      account={account}
+      name={name}
+      fieldtype={fieldtype}
+      value={value}
+      options={{
+        ...options
+      }}
+      onChange={ () => {
+        //updateCache({ id: id, type: 'update', data: field });
+        updateData({ value, notes });
+      } }
+    />
+  </Mutation>
+  );
 }
 
 Field.propTypes = {

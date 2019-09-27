@@ -15,8 +15,8 @@ import {
 
 import MemberSheet from 'containers/Sheets/MemberSheet';
 
-import TableActions from 'components/Tables/TableActions';
-import MemberRow from 'components/Tables/Rows/MemberRow';
+import TableActions from 'components/Sheets/Tables/TableActions';
+import MemberRow from 'components/Sheets/Tables/Rows/MemberRow';
 
 const AccountSheet = ({id, name, data, options, onChange, onSave}) => {
   const [account, setAccount] = useState(id);
@@ -36,7 +36,7 @@ const AccountSheet = ({id, name, data, options, onChange, onSave}) => {
   }
 
   return (
-    <Card tableCard>
+    <Card tableCard={true} visible={true}>
       <TableActions
         name={'Account Members'}
         onAddClick={() => toggleDialog(true)}

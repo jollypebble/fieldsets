@@ -1,39 +1,49 @@
-import React, { Component } from 'react';
-import { withApollo } from 'react-apollo';
+import React from 'react';
 
 // Custom Components
-import { Dashboard } from './containers/UI'
-import { CircleDiagram } from './containers/Diagrams';
+import { Account, DataCache, Interface, Diagram } from 'components/Core';
 
 /**
  * The basic UI components and all visualization areas are added here
  */
-class App extends Component {
+const App = (props) => {
+  /** Zoom of the main diagram */
+  const diagramZoom = 2.5;
+  /** Width of the main diagram */
+  const diagramWidth = 1920;
+  /** The screen width. We need it for setting startX in the middle of the screen */
+  const screenWidth = window.innerWidth ? window.innerWidth : 750; // 750 is fallback
 
-  render() {
-    /** Zoom of the main diagram */
-    let diagramZoom = 2.5;
-    // let diagramZoom = 30;
-    /** Width of the main diagram */
-    let diagramWidth = 1920;
-    /** The screen width. We need it for setting startX in the middle of the screen */
-    let screenWidth = window.innerWidth ? window.innerWidth : 750; // 750 is fallback
+  const startX = 880 + (diagramWidth - screenWidth) / diagramZoom * 0.5;
 
-    return (
-      <React.Fragment>
-        <div id="econcircleapp">
-          <CircleDiagram
-            width={diagramWidth}
-            height={1080}
-            zoom={diagramZoom}
-            startX={880 + (diagramWidth - screenWidth) / diagramZoom * 0.5} // here we calculate the point which means the center of the screen (the first "magic number" is unknown shift which puts "0" of diagram to "0" of the screen)
-            startY={490}
-          />
-        </div>
-        <Dashboard />
-      </React.Fragment>
-    );
-  }
+  return (
+    <DataCache>
+      <Diagram
+        id="econcircle-app"
+        type="CircleDiagram"
+        name="Econ Circles"
+        meta={{
+          attributes: {
+            width: diagramWidth,
+            height: 1080
+          },
+          center: {
+            x: startX,
+            y: 490
+          },
+          zoom: {
+            scale: diagramZoom
+          }
+        }}
+        isFocused={true}
+      />
+      <Interface
+        id="econcircle-dashboard"
+        type="Dashboard"
+        name="Econ Circles"
+      />
+    </DataCache>
+  );
 }
 
-export default withApollo(App);
+export default App;

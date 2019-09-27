@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import PropTypes from 'prop-types';
-import { Mutation } from 'react-apollo';
 import _ from 'lodash';
-import { updateCurrentFocus } from 'graphql/queries';
+import {useFocus} from 'components/Core/Hooks';
 import SetView from './SetView';
 import Label from './Label';
 
@@ -13,245 +13,227 @@ import Label from './Label';
 
 const DBCLICK_DISABLED = ['offense_parent', 'defense_parent']
 
-class Set extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isMouseInside: false,
-      visible: this.props.visible,
-      containFocus: true,
-      initialFocus: undefined
-    };
+const Set = ({ setID, setData, name, center, type, visible, parent = '', setview, fields, sets, meta, onDoubleClick, resetFocus, parentCenter, scaleFactor, radius, updateSetState }) => {
 
-    this.handleMouseEnter = this.handleMouseEnter.bind(this);
-    this.handleMouseLeave = this.handleMouseLeave.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-    this.handleSingleClick = this.handleSingleClick.bind(this);
-    this.doAction = this.doAction.bind(this);
+  const [isMouseInside, updateMouseStatus] = useState(false);
+  const [isVisible, updateVisibility] = useState(visible);
+  const [containFocus, updateCotainmentStatus] = useState(true);
+  const [initialFocus, updateInitialFocus] = useState(undefined);
+  const [focus, updateFocus] = useFocus();
 
-    this.handleTargetChange = this.handleTargetChange.bind(this);
-    this.handleFocusChange = this.handleFocusChange.bind(this);
+  const updateElement = React.createRef();
+  const updateGroupElement = React.createRef();
+  const updateTextElement = React.createRef();
 
-    this.handleTransitionEnd = this.handleTransitionEnd.bind(this);
+  let _delayedClick = undefined;
+  let clickedOnce = false;
 
-    this.updateElement = React.createRef();
-    this.updateGroupElement = React.createRef();
-    this.updateTextElement = React.createRef();
+  const refocus = ({ id, center }) => {
+      focus = {
+        ...focus,
+        target: id,
+        type: type,
+        center: center
+      }
+      updateFocus({action: 'refocus', data: focus});
+  };
+
+
+  useEffect( () => {
+    updateSetData();
+    if (updateElement && updateElement.current) {
+      updateElement.current.removeEventListener('transitionend', handleTransitionEnd)
+      updateElement.current.addEventListener('transitionend', handleTransitionEnd)
+    }},
+    [updateElement]
+  );
+
+  useEffect( () => {
+      if (!visible && isVisible) updateVisibility(false);
+    },
+    [updateElement]
+  );
+
+  const isHidden = () => {
+    return updateGroupElement && updateGroupElement.current && updateGroupElement.current.classList.contains('hidden');
   }
 
-  componentDidMount() {
-    this.updateSetData();
-    if (this.updateElement && this.updateElement.current) {
-      this.updateElement.current.removeEventListener('transitionend', this.handleTransitionEnd)
-      this.updateElement.current.addEventListener('transitionend', this.handleTransitionEnd)
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    // here we want to hide all sets down the tree if their parent is hidden
-    if (!this.props.visible && this.state.visible) this.setState({ visible: false });
-  }
-
-  isHidden() {
-    return this.updateGroupElement && this.updateGroupElement.current && this.updateGroupElement.current.classList.contains('hidden');
-  }
-
-  hasParent = () => {
-    return this.props && this.props.parent !== '';
+  const hasParent = () => {
+    return parent && parent !== '';
   }
 
   // Called when the css transition ends
-  handleTransitionEnd(e) {
+  const handleTransitionEnd = (e) => {
     // checks whether the transition was on a position property
-    if (this.updateGroupElement && this.updateGroupElement.current && e && (e.propertyName === 'cx' || e.propertyName === 'cy')) {
+    if (updateGroupElement && updateGroupElement.current && e && (e.propertyName === 'cx' || e.propertyName === 'cy')) {
       // Show/hide circles after the circle appearing animation
-      if (this.updateGroupElement.current.classList.contains('hidden')) {
-        this.updateGroupElement.current.classList.add('afterHidden');
-      } else if (this.updateGroupElement.current.classList.contains('afterHidden')) {
-        this.updateGroupElement.current.remove('afterHidden');
+      if (updateGroupElement.current.classList.contains('hidden')) {
+        updateGroupElement.current.classList.add('afterHidden');
+      } else if (updateGroupElement.current.classList.contains('afterHidden')) {
+        updateGroupElement.current.remove('afterHidden');
       }
 
       // Show/hide text labels after the circle appearing animation
-      if (this.updateTextElement && this.updateGroupElement.current.classList.contains('shown')) {
-        if (!this.updateTextElement.current.classList.contains('shown')) this.updateTextElement.current.classList.add('shown');
+      if (updateTextElement && updateGroupElement.current.classList.contains('shown')) {
+        if (!updateTextElement.current.classList.contains('shown')) updateTextElement.current.classList.add('shown');
       } else {
-        if (this.updateTextElement.current.classList.contains('shown')) this.updateTextElement.current.classList.remove('shown');
+        if (updateTextElement.current.classList.contains('shown')) updateTextElement.current.classList.remove('shown');
       }
     }
   }
 
   /** Is called when the cursor acrosses borders of the radial set getting inside of it */
-  handleMouseEnter() {
-    this.setState({ isMouseInside: true });
+  const handleMouseEnter = () => {
+    updateMouseStatus(true);
   }
 
   /** Is called when the cursor acrosses borders of the radial set getting out of it */
-  handleMouseLeave() {
-    this.setState({ isMouseInside: false });
+  const handleMouseLeave = () => {
+    updateMouseStatus(false);
   }
 
-  handleClick(e) {
-    if (!this._delayedClick) {
-      this._delayedClick = _.debounce(this.handleSingleClick, 250);
+  const handleClick = (e) => {
+    if (!_delayedClick) {
+      _delayedClick = _.debounce(handleSingleClick, 250);
     }
-    if (this.clickedOnce) {
-      this._delayedClick.cancel();
-      this.clickedOnce = false;
-      this.doAction();
+    if (clickedOnce) {
+      _delayedClick.cancel();
+      clickedOnce = false;
+      doAction();
     } else {
-      this._delayedClick(e);
-      this.clickedOnce = true;
+      _delayedClick(e);
+      clickedOnce = true;
     }
   }
 
-  handleSingleClick() {
-    const { setID, centerX, centerY } = this.props;
-
-    this.clickedOnce = undefined;
-    this.props.updateFocus(setID, centerX, centerY);
+  const handleSingleClick = () => {
+    clickedOnce = undefined;
+    updateFocus(setID, center.x, center.y);
   }
 
-  doAction = () => {
-    const { setID } = this.props;
+  const doAction = () => {
     if (DBCLICK_DISABLED.includes(setID)) return;
-    this.props.onDoubleClick(setID);
+    onDoubleClick(setID);
   }
 
-  handleTargetChange = (value) => {
-    this.setState({ initialFocus: value ? `#${value}` : undefined });
+  const handleTargetChange = (value) => {
+    updateInitialFocus( (value) ? `#${value}` : undefined );
   };
 
-  handleFocusChange = (checked) => {
-    this.setState({ containFocus: checked });
+  const handleFocusChange = (checked) => {
+    updateCotainmentStatus(checked);
   };
 
-  updateSetData() {
+  const updateSetData = () => {
     // TODO GET BOUNDING BOX HERE:
 
     // Emulate Circle Appollo Data Type in `graphql/typeDefs.js`
     const setdata = {
-      id: this.props.setID,
-      name: this.props.name,
-      fields: this.props.fields,
-      parent: this.props.parent,
-      centerX: this.props.centerX,
-      centerY: this.props.centerY,
-      setview: this.props.setview
+      id: setID,
+      name: name,
+      fields: fields,
+      parent: parent,
+      center: center,
+      setview: setview
     };
 
-    let updatedSetList = this.props.sets;
-    updatedSetList[this.props.setID] = setdata;
+    let updatedSubSet = sets;
+    updatedSubSet[setID] = setdata;
 
-    this.props.updateSetState(updatedSetList); // Sets the top level Diagram set array.
-    return this.state.sets;
+    updateSetState(updatedSubSet); // Sets the top level Diagram set array.
+    return sets;
   }
 
-  render() {
-    const id = this.props.setID;
 
-    let { name, centerX, centerY, setData, parentCenterX, parentCenterY, display } = this.props;
+  const id = setID;
+  let parentSet = '';
 
-    let parentSet = '';
+  if (typeof(setData) !== undefined && setData.length > 0) {
+    parentSet =
+    <g id={ setID ? `${setID}-children` : '' }>
+      { setData.map(data => {
 
-    if (typeof(this.props.setData) !== undefined && this.props.setData.length > 0) {
-      parentSet =
-      <g id={ this.props.setID ? `${this.props.setID}-children` : '' }>
-        { setData.map(data => {
+        return (
+          <Set
+            key={ data.id }
+            setData={ typeof(data.children) === undefined ? [] : data.children }
+            setID={ data.id }
+            {...data}
 
-          return (
-            <Set
-              key={ data.id }
-              setData={ typeof(data.children) === undefined ? [] : data.children }
-              setID={ data.id }
-              {...data}
+            parentInstance={ this }
+            parentCenter={ center }
 
-              parentInstance={ this }
-              parentCenterX={ centerX }
-              parentCenterY={ centerY }
-
-              updateFocus={ this.props.updateFocus }
-              resetFocus={ this.props.resetFocus }
-              onDoubleClick={ this.props.onDoubleClick }
-              updateSetState={ this.props.updateSetState }
-              sets={ this.props.sets }
-              radius={ this.props.radius }
-              scaleFactor={ this.props.scaleFactor * 0.6 }
-              visible={true}
-            />
-          );
-        }) }
-      </g>;
-    }
-
-    /** "Immersion class" defines whether a set is a main (root set) or sub-set (has a parent) */
-    const immersionClass = this.hasParent() ? 'child-set' : 'parent-set';
-
-    /** "Shown class" exists only for those sets that are able to show up and hide (child/sub sets)  */
-    const shownClass = this.hasParent() ? (this.props.visible ? 'shown' : 'hidden') : '';
-
-    /** We want to hide children at the start of the app */
-    const afterHiddenClass = this.hasParent() && shownClass === '' ? 'afterHidden' : '';
-
-    // Child Set
-    return (
-      <Mutation mutation={updateCurrentFocus} variables={{ id, centerX, centerY }} onCompleted={this.handleClick} awaitRefetchQueries={true}>
-        {setFocus => {
-          return (
-            <g
-              id={ this.props.setID ? `${this.props.setID}-group` : '' }
-              className='radial-group'
-              ref={this.updateGroupElement}
-            >
-              <g
-                id={`${this.props.setID}-circle`}
-                className={'circle-group ' + immersionClass + ' ' + shownClass + ' ' + afterHiddenClass}
-                onMouseEnter={this.handleMouseEnter}
-                onMouseLeave={this.handleMouseLeave}
-              >
-                <SetView
-                  id={id}
-                  setview={display.setview}
-                  active={this.state.isMouseInside}
-                  visibility={shownClass}
-                  onClick={setFocus}
-                  onDoubleClick={this.doAction}
-                  attributes={{
-                    centerX,
-                    centerY,
-                    parentCenterX,
-                    parentCenterY,
-                    ...display.attributes
-                  }}
-                  scaleFactor={ this.props.scaleFactor * 0.6 }
-                />
-                <React.Fragment>
-                  <Label
-                    {...this.props}
-                    name={name}
-                    centerX={centerX}
-                    centerY={centerY}
-                    onClick={setFocus}
-                    hasParent={ this.hasParent() }
-                    updateTextElement={ this.updateTextElement }
-                  />
-                </React.Fragment>
-
-              </g>
-              {parentSet}
-            </g>
-          );
-        }}
-      </Mutation>
-    );
+            updateFocus={ updateFocus }
+            resetFocus={ resetFocus }
+            onDoubleClick={ onDoubleClick }
+            updateSetState={ updateSetState }
+            sets={ sets }
+            radius={ radius }
+            scaleFactor={ scaleFactor * 0.6 }
+            visible={true}
+          />
+        );
+      }) }
+    </g>;
   }
+
+  /** "Immersion class" defines whether a set is a main (root set) or sub-set (has a parent) */
+  const immersionClass = hasParent() ? 'child-set' : 'parent-set';
+
+  /** "Shown class" exists only for those sets that are able to show up and hide (child/sub sets)  */
+  const shownClass = hasParent() ? (visible ? 'shown' : 'hidden') : '';
+
+  /** We want to hide children at the start of the app */
+  const afterHiddenClass = hasParent() && shownClass === '' ? 'afterHidden' : '';
+
+  // Child Set
+  return (
+    <g
+      id={ setID ? `${setID}-group` : '' }
+      className='radial-group'
+      ref={updateGroupElement}
+    >
+      <g
+        id={`${setID}-circle`}
+        className={'circle-group ' + immersionClass + ' ' + shownClass + ' ' + afterHiddenClass}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <SetView
+          id={id}
+          setview={meta.data.setview}
+          active={isMouseInside}
+          visibility={shownClass}
+          onClick={updateFocus}
+          onDoubleClick={doAction}
+          meta={{
+            ...meta.data,
+            parentCenter: parentCenter,
+            center: center,
+            attributes: { ...meta.data.attributes }
+          }}
+          scaleFactor={ scaleFactor * 0.6 }
+        />
+        <React.Fragment>
+          <Label
+            name={name}
+            center={center}
+            onClick={updateFocus}
+            hasParent={ hasParent }
+            updateTextElement={ updateTextElement }
+          />
+        </React.Fragment>
+
+      </g>
+      {parentSet}
+    </g>
+  );
 }
 
 Set.propTypes = {
   setID: PropTypes.string.isRequired,
   setData: PropTypes.array.isRequired,
-  name: PropTypes.string.isRequired,
-  centerX: PropTypes.node.isRequired,
-  centerY: PropTypes.node.isRequired
+  name: PropTypes.string.isRequired
 };
 
 export default Set;

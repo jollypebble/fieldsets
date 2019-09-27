@@ -1,0 +1,1 @@
+{"__schema":{"types":[{"kind":"INTERFACE","name":"Sets","possibleTypes":[{"name":"FieldSet"},{"name":"Set"},{"name":"Member"},{"name":"Role"},{"name":"Account"}]},{"kind":"INTERFACE","name":"Data","possibleTypes":[{"name":"Field"}]}]}}

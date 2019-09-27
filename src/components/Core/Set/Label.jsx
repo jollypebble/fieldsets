@@ -2,11 +2,14 @@ import React from 'react';
 import { Query } from 'react-apollo';
 
 /* Our code */
-import { getSetFields } from 'graphql/queries';
+import { fetchFields } from 'graphql/queries';
 
 const array = ['net_worth_total', 'monthly_contribution_total', 'lump_sums_total'];
 
 const Label = (props) => {
+  // If no label has been set don't render;
+  if (! props.display.attributes ) return null;
+
   let { textX, textY, textSize, ratio } = props.display.attributes;
   const { id, name, centerX, centerY, onClick, updateTextElement, hasParent, scaleFactor } = props;
   textSize = (ratio ? ratio * textSize : textSize) * 9;
@@ -24,12 +27,12 @@ const Label = (props) => {
         onClick={onClick}
       >
         <tspan x={textX || centerX} style={{ fontSize, fontWeight: 'bold', textTransform: 'uppercase' }} dy="0em">{name}</tspan>
-        <Query query={ getSetFields } variables={{ id }}>
+        <Query query={ fetchFields } variables={{ id }}>
           {({ loading, error, data }) => {
-            if (loading || error || !data.getSetFields) return null;
+            if (loading || error || !data.fetchFields) return null;
 
             return (
-              data.getSetFields.map((field, index) => (
+              data.fetchFields.map((field, index) => (
                 field.alwaysDisplay && <tspan
                   key={field.id}
                   x={textX || centerX}

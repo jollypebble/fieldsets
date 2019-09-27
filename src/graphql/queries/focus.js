@@ -1,20 +1,38 @@
-import gql from 'graphql-tag';
+/**
+ * This file contains ROOT queries that represent the current focus of the the application.
+ * Root level data will be written to triggered by events in the application that cause the fragments to be written to and then, these queries will be refetched.
+ */
+ import gql from 'graphql-tag';
+ import { fragments } from '../fragments'
 
-export const getCurrentFocus = gql`
-  query getCurrentFocus @client {
-    currentFocus @client {
+ export const fetchFocus = gql`
+  query FetchFocus {
+    focus @client(always: true) {
       id
-      name
-      centerX
-      centerY
+      focusID
+      container {
+        containerID
+        type
+      }
+      type
       depth
-      parent
+      center {
+        x
+        y
+      }
+      zoom {
+        x
+        y
+        scale
+      }
     }
   }
 `;
 
-export const updateCurrentFocus = gql`
-  mutation SetCurrentFocus($id: ID!) {
-    updateCurrentFocus(id: $id) @client
+ export const updateFocus = gql`
+  mutation UpdateFocus($data: Array) {
+    updateFocus(data: $data) @client(always: true) {
+      focus @client(always: true)
+    }
   }
 `;

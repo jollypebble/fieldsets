@@ -1,55 +1,21 @@
 import gql from 'graphql-tag';
-import { fields } from '../fragments';
+import { fragments } from '../fragments';
 
-export const getFields = gql`
-  query GetFields @client {
-    fields {
-      ...fields
-    }
+/**
+ * Fetch all the fields of a fieldset
+ */
+export const fetchFields = gql`
+  query FetchFields {
+    fetchFields @client(always: true)
   }
-  ${fields}
-`;
-
-export const getSetFields = gql`
-  query GetSetFields($id: ID!) {
-    getSetFields(id: $id) @client
-  }
-  ${fields}
+  ${fragments.field}
 `;
 
 export const updateField = gql`
   mutation UpdateField($data: Array) {
-    updateField(data: $data) @client {
-      id
-    }
+    updateField(data: $data) @client(always: true)
   }
-  ${fields}
+  ${fragments.field}
 `;
 
-export const getFieldList = gql`${fields}`;
-
-export const getInitialFieldData = gql`
-  query {
-    allScreener(last: 1) {
-      edges {
-        node {
-          id
-          data
-        }
-      }
-    }
-  }
-`;
-
-export const updateAllFields = gql`
-  mutation createScreener($data: String!) {
-    createScreener(data: $data) {
-      portfolioScreener {
-        id
-        data
-        timestamp
-        uuid
-      }
-    }
-  }
-`;
+export const fetchField = gql`${fragments.field}`;

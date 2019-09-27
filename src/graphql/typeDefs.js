@@ -1,130 +1,137 @@
+import {MetaTypes, SetTypes, FieldTypes} from './enums';
+const metatypes = MetaTypes.join(" \n");
+const settypes = SetTypes.join(" \n");
+const fieldtypes = FieldTypes.join(" \n");
+
 export const typeDefs = `
-  interface Entity {
+
+  type Member implements Set {
+    id: ID!
+    name: String
+    type: SetType
+    parent: ID
+    children: [ID]
+    meta: Meta
+    roles: [ID]
+  }
+
+  type Account implements Set {
     id: ID!
     name: String!
+    type: SetType
+    parent: ID
+    children: [ID]
+    members: [ID]
+    meta: Meta
   }
 
-  interface List {
+  type Role implements Set {
     id: ID!
-    list: [Entity!]
+    name: String
+    type: SetType
+    parent: ID
+    children: [ID]
+    meta: Meta
   }
 
-  interface Data {
+  type FieldSet implements Set {
     id: ID!
+    name: String
+    type: SetType
+    parent: ID
+    children: [ID]
+    fields: [ID]
+    meta: Meta
   }
 
-  type DataType {
+  type Field {
     id: ID!
-    name: String!
-    format: String!
-    options: [String]!
+    name: String
+    label: String
+    parent: ID
+    fieldsets: [ID]
+    value: JSON
+    type: FieldType
+    dependencies: [ID]
+    order: Int
+    owner: Member
+    meta: Meta
   }
 
-  type Owner implements Entity {
+  type Zoom implements Coordinate {
+    x: Int
+    y: Int
+    Scale: Int
+  }
+
+  type Center implements Coordinate {
+    x: Int
+    y: Int
+  }
+
+  type Meta {
     id: ID!
-    name: String!
-    firstname: String!
-    lastname: [String]!
-    dob: String!
+    type: MetaType
+    data: JSONObject
   }
 
-  type OwnerList implements List {
+  interface Coordinate {
+    x: Int
+    y: Int
+  }
+
+  type Focus {
     id: ID!
-    list: [Owner!]
+    name: String
+    parent: ID
+    center: JSONObject
+    depth: Int
+    zoom: JSONObject
   }
-
-  type Field implements Entity {
-    id: ID!
-    name: String!
-    parent: Set!
-    value: String!
-    alwaysDisplay: Boolean!
-    datatype: DataType!
-    callback: String!
-    notes:[String!]!
-    owners: OwnerList!
-    order: Int!
-  }
-
-  type FieldList implements List {
-    id: ID!
-    list: [Field!]
-  }
-
-  type Client implements Data {
-    id: ID!
-    accountName: String!
-    clientName1: String!
-    clientName2: String
-    cpaName: String!
-    attyName: String!
-    ipAddress: String!
-  }
-
-  type ClientList implements List {
-    id: ID!
-    list: [Client!]
-  }
-
-  type Set implements Entity {
-    id: ID!
-    name: String!
-    children: SetList!
-    parent: Set
-    centerX: Float!
-    centerY: Float!
-    display: DisplayData!
-    depth: Int!
-  }
-
-  type DisplayData implements Data {
-    id: ID!
-    setview: String!
-    attributes: [String]
-    zoom: ZoomData!
-    visible: Boolean!
-    className: String!
-  }
-
-  type ZoomData implements Data {
-    id: ID!
-    scale: Float!
-    x: Float!
-    y: Float!
-  }
-
-  type SetList implements List {
-    id: ID!
-    list: [Set!]
-  }
-
-  scalar Value
 
   type Mutation {
-    updateCurrentFocus(id: ID!): Set
-    updateField(id: ID!, type: String!, value: Value!, formula: String): Field!
+    updateFocus(id: ID!): Focus
+    updateField(id: ID!): Field!
+    updateFieldSet(id: ID): FieldSet
+    updateFieldSets(id: ID): [FieldSet]
+    updateMeta(id: ID): Meta
+    updateMember(id: ID): Member
+    updateAccount(id: ID): Account
+    updateRole(id: ID): Role
   }
 
   type Query {
-    currentFocus: Set!
-    clients: ClientList!
-    fields: FieldList!
-    getsetFields(id: ID!): FieldList!
-    getSet(id: ID!): Set!
-    sets: SetList!
-    owners: OwnerList!
+    fetchFieldSets: [FieldSet]
+    fetchFieldSet(id: ID): FieldSet
+    fetchFields: [Field]
+    fetchField(id: ID): Field
+    fetchMeta(id: ID): Meta
+    fetchAccounts: [Account]
+    fetchAccount: Account
+    fetchMembers: [Member]
+    fetchRoles: [Role]
   }
 
   enum FieldType {
-    string
-    number
-    currency
-    coordinate
-    object
-    list
-    search
-    bool
-    date
-    time
+    ${fieldtypes}
+  }
+
+  enum SetType {
+    ${settypes}
+  }
+
+  enum MetaType {
+    ${metatypes}
+  }
+
+  scalar JSON
+  scalar JSONObject
+
+  interface Set {
+    id: ID!
+    type: SetType
+    parent: ID
+    children: [ID]
+    meta: Meta
   }
 `;

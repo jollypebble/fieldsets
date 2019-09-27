@@ -9,3 +9,5 @@ Field Types represent the input visualization for altering fields and the valida
 * Select - A single select drop down that you can pass valid string options. No validation.
 * Date - a datepicker field.
 * Function - Non-editable value that is calculated off a subset of fields. Functions can be defined in (Functions.js)[../Functions.js]
+
+Custom FieldTypes can be defined in `components/Fields`

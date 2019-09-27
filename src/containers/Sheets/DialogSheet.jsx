@@ -5,7 +5,7 @@ import { Query, Mutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 
 /* Our code */
-import { getSet, getSetFields, updateField } from 'graphql/queries';
+import { fetchFieldSet, fetchFields, updateField } from 'graphql/queries';
 import { Field } from 'components/Core';
 
 /**
@@ -74,7 +74,7 @@ class DialogSheet extends React.Component {
 
     return (
       <div id={divID}>
-        <Query query={getSet} variables={{ id }} >
+        <Query query={fetchFieldSet} variables={{ id }} >
           {({ loading, error, data }) => {
             if (loading) return null;
             if (error) return `Error! ${error}`;
@@ -82,7 +82,7 @@ class DialogSheet extends React.Component {
                 <DialogContainer
                   id={dialogID}
                   className="radialDialog"
-                  title={data.getSet ? data.getSet.name : ''}
+                  title={data.fetchFieldSet ? data.fetchFieldSet.name : ''}
                   visible={visible}
                   actions={[{
                     id: 'dialog-cancel',
@@ -103,26 +103,26 @@ class DialogSheet extends React.Component {
                   containFocus={containFocus}
                   contentClassName="md-grid"
                 >
-                  <Query query={getSetFields} variables={{ id }}>
+                  <Query query={fetchFields} variables={{ id }}>
                     {({ loading, error, data }) => {
                       if (loading) return null;
                       if (error) return `Error! ${error}`;
-                      let fieldlist = [];
+                      let fieldset = [];
                       let order = 0;
-                      for (let i = 0; i < data.getSetFields.length; i++) {
-                        order = data.getSetFields[i].order
-                        fieldlist[order] =
+                      for (let i = 0; i < data.fetchFields.length; i++) {
+                        order = data.fetchFields[i].order
+                        fieldset[order] =
                           <Field
-                            key={data.getSetFields[i].id}
-                            id={data.getSetFields[i].id}
-                            name={data.getSetFields[i].name}
-                            fieldtype={data.getSetFields[i].type}
-                            value={data.getSetFields[i].value}
+                            key={data.fetchFields[i].id}
+                            id={data.fetchFields[i].id}
+                            name={data.fetchFields[i].name}
+                            fieldtype={data.fetchFields[i].type}
+                            value={data.fetchFields[i].value}
                             options={[]}
                             onChange={this.handleChange}
                           />;
                       }
-                      return (fieldlist);
+                      return (fieldset);
                     }}
                   </Query>
                 </DialogContainer>

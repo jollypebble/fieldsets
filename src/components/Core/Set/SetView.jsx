@@ -1,12 +1,12 @@
-import * as Views from './Views';
+import * as Views from 'components/Sets';
 
-const SetView = ({id, setview, active, visibility, attributes, scaleFactor, gradient, onClick}) => {
-  if (setview) {
+const SetView = (props) => {
+  if (props.setview) {
     // Allow lower case names to be passed and convert the first character to a more friendly class name.
-    const setviewClassName = setview.charAt(0).toUpperCase() + setview.slice(1);
-    return Views[setviewClassName]({id, active, visibility, attributes, scaleFactor, gradient, onClick});
+    const setviewClassName = props.setview.charAt(0).toUpperCase() + props.setview.slice(1);
+    return Views[setviewClassName](props);
   }
-  return;
+  return null;
 }
 
 export default SetView;

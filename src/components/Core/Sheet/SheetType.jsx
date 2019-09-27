@@ -1,12 +1,18 @@
-import * as SheetTypes from 'containers/Sheets';
+import * as SheetTypes from './SheetTypes';
+import * as CustomSheetTypes from 'containers/Sheets';
 
-const SheetType = ({sheet, name, data, options, onChange, onSave}) => {
-  if (sheet) {
+const SheetType = (props) => {
+  if (props.type) {
     // Allow lower case names to be passed and convert the first character to a more friendly class name.
-    const sheetClassName = sheet.charAt(0).toUpperCase() + sheet.slice(1);
-    return SheetTypes[sheetClassName]({sheet, name, data, options, onChange, onSave});
+    const typeClassName = props.type.charAt(0).toUpperCase() + props.type.slice(1);
+    if ( typeClassName in CustomSheetTypes ) {
+      return CustomSheetTypes[typeClassName](props);
+    } else if (typeClassName in SheetTypes ) {
+      return SheetTypes[typeClassName](props);
+    }
   }
-  return;
+
+  return SheetTypes['Default'](props);
 }
 
 export default SheetType;

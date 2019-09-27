@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 
 import { Button } from 'react-md';
 import Field from 'components/Core/Field/Field';
-import { FieldData } from 'data/Diagrams/CircleDiagram';
+import { FieldData } from 'data/defaults/Diagrams/CircleDiagram';
 
-import { getSetFields, updateField } from 'graphql/queries';
+import { fetchFields, updateField } from 'graphql/queries';
 
 const SHORT_TERM_PARENTS = ['cash_equivalents', 'mortgage', 'liabilities_debt'];
 const MID_TERM_PARENTS = ['utmas', 'plan_529', 'investment_account'];
@@ -67,18 +67,18 @@ class SheetTab extends Component {
     const fieldData = this.getFieldData();
 
     return (
-      <Mutation mutation={updateField} variables={{ data: updateList }} refetchQueries={ res => res.data.updateField.map(id => ({ query: getSetFields, variables: { id } })) } awaitRefetchQueries={true}>
+      <Mutation mutation={updateField} variables={{ data: updateList }} refetchQueries={ res => res.data.updateField.map(id => ({ query: fetchFields, variables: { id } })) } awaitRefetchQueries={true}>
         {updateData => (
           <div className="tab-container">
             {fieldData.map(field => (
               <div key={field.id} className="field-item">
                 <h4>{ field.id.replace('_', ' ') }</h4>
-                <Query query={getSetFields} variables={{ id: field.id }}>
+                <Query query={fetchFields} variables={{ id: field.id }}>
                   {({ loading, error, data }) => {
                     if (loading) return null;
                     if (error) return `Error! ${error}`;
 
-                    return data.getSetFields.map(item => (
+                    return data.fetchFields.map(item => (
                       <Field
                         key={item.id}
                         id={item.id}

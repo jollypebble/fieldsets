@@ -1,71 +1,43 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import SheetType from './SheetType';
+import { callCache } from 'components/Core/DataCache/reducers/datacache';
 
-class Sheet extends React.Component {
-  constructor(props) {
-    super(props);
+export const Sheet = ({id, type, name, options, children}) => {
+  const [status, updateStatus] = useState('initializing');
+  const [data, updateData] = useState({
+    id: id,
+    fields: {},
+    sets: {},
+    meta: {}
+  });
 
-    this.state = {
-      sheet: null,
-      name: '',
-      data: {},
-      options: {}
-    };
-  }
-
-  /**
-   * Component will Mount is used as a one time initialization.
-   * Initialize the last saved local state.
-   */
-  componentWillMount() {
-    this.resetState()
-  }
-
-  resetState() {
-    const {
-      sheet,
-      name,
-      data,
-      options,
-      onChange,
-      onSave
-    } = this.props;
-
-    // Reset our state
-    const state = {
-      sheet: sheet,
-      name: name,
-      data: data
-    }
-    this.setState(state);
-  }
-
-  /** Refetch values calculated on this field. */
-  updateDependencies() {
+  const onChange = () => {
 
   }
 
-  render() {
-    return (
-      <SheetType
-        sheet={this.props.sheet}
-        data={this.state.value}
-        onChange={this.props.onChange}
-        onSave={this.props.onSave}
-        options={{
-          ...this.props.options
-        }}
-      />
-    );
+  const onSave = () => {
+
   }
+
+  return (
+    <SheetType
+      id={id}
+      type={type}
+      data={data}
+      onChange={onChange}
+      onSave={onSave}
+      options={options}
+    >
+      {children}
+    </SheetType>
+  );
 }
 
 Sheet.propTypes = {
-  sheet: PropTypes.string.isRequired,
-  data: PropTypes.array,
-  onChange: PropTypes.func,
-  onSave: PropTypes.func
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string,
+  data: PropTypes.array
 };
 
 export default Sheet;
