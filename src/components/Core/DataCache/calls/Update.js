@@ -124,7 +124,7 @@ export const Update = ( call, data ) => {
         case 'fieldsets':
           // Fields have a fieldsets list of ids. Push the id accordingly.
           if ('field' === call.target) {
-            previous.fieldsets.push(data);
+            previous.sets.push(data);
           } else if ( 'fieldset' === call.target ) {
             // Order only matters on fieldsets that aren't containers.
             const order = (data.order) ? data.order : 0;

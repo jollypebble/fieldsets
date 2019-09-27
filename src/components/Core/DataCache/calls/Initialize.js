@@ -108,7 +108,7 @@ export const initializeFieldData = ({ id, container = 'container', data = [] }) 
 
       // Field parents are arrays as a fields can belong to multiple sets.
       // Make sure we push to the top level id that was initialized as well, but don't classify it as a parent fieldset to the field.
-      for ( let fieldSetID of field.fieldsets ) {
+      for ( let fieldSetID of field.sets ) {
         callCache({id: fieldSetID, target: 'fieldset', action: 'update', filter: 'fields'}, field.id);
       }
 

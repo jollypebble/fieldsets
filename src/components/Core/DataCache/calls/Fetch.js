@@ -94,8 +94,8 @@ export const Fetch = ( call ) => {
             // Fields have a fieldsets list of ids. Return those fieldsets if this call targets a field instead of a set.
             // Both of these result lists are not lists of fieldsets. So we iterate through them to generate our list.
             let resultList = [];
-            if ('field' === call.target && result.fieldsets) {
-              for ( let fieldsetID of result.fieldsets ) {
+            if ('field' === call.target && result.sets) {
+              for ( let fieldsetID of result.sets ) {
                 const fieldset = client.readFragment({
                   id: `FieldSet:${fieldsetID}`,
                   fragment: fetchFieldSet,

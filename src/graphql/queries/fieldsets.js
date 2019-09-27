@@ -5,9 +5,14 @@ import { fragments } from '../fragments';
  * Fetch children of a parent id.
  */
 export const fetchFieldSets = gql`
-  query FetchFieldSets {
-    fetchFieldSets @client(always:true) {
-      ...fieldset
+  query FetchFieldSets($data: Array) {
+    fieldsets(data: $data) @client(always: true) {
+      id
+      name
+      type
+      parent
+      children
+      fields
     }
   }
 `;

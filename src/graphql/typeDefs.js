@@ -101,7 +101,7 @@ export const typeDefs = `
   }
 
   type Query {
-    fetchFieldSets: [FieldSet]
+    fetchFieldSets(id: ID): [FieldSet]
     fetchFieldSet(id: ID): FieldSet
     fetchFields: [Field]
     fetchField(id: ID): Field

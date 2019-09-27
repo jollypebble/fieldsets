@@ -17,8 +17,7 @@ export const fragments = {
     ${field}`,
   fieldset: gql`
     ${fieldset}
-    ${meta}
-    ${field}`,
+    ${meta}`,
   member: gql`
     ${meta}
     ${role}`,

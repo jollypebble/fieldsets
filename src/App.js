@@ -13,7 +13,6 @@ const App = (props) => {
   const diagramWidth = 1920;
   /** The screen width. We need it for setting startX in the middle of the screen */
   const screenWidth = window.innerWidth ? window.innerWidth : 750; // 750 is fallback
-
   const startX = 880 + (diagramWidth - screenWidth) / diagramZoom * 0.5;
 
   return (

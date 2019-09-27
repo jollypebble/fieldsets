@@ -1,5 +1,5 @@
 import GraphQLJSON, { GraphQLJSONObject } from 'graphql-type-json';
-import { fetchMeta, fetchFocus, fetchField, fetchFieldSet } from './queries';
+import { fetchMeta, fetchFocus, fetchField, fetchFieldSet, fetchFieldSets } from './queries';
 import { defaults } from './defaults';
 
 export const resolvers = {
@@ -60,7 +60,7 @@ export const resolvers = {
       });
 
       client.writeData({ data: { fields: fields } });
-      client.writeData({ data: { fieldsets: fieldsets } });
+      client.writeQuery({ query: fetchFieldSets, data: { fieldsets: fieldsets } });
 
       return;
     },
@@ -94,7 +94,6 @@ export const resolvers = {
             value: item.value
           }
         });
-
         result.push(fieldData.parent);
       });
 
@@ -116,8 +115,7 @@ export const resolvers = {
   Query: {
     fetchFieldSets: ( object, { data }, { client, getCacheKey } ) => {
       console.log('fetching');
-      console.log(data);
-      console.log( object );
+      
       return;
     },
     fetchFields: ( object, { data }, { client, getCacheKey } ) => {

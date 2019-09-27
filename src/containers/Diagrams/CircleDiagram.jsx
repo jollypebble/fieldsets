@@ -5,20 +5,39 @@ import { Button } from 'react-md';
 import { Set } from 'components/Core';
 import { DialogSheet } from 'containers/Sheets';
 import {useFocus} from 'components/Core/Hooks';
+import { callCache } from 'components/Core/DataCache/reducers/datacache';
 
 /**
  * This is the container for our main diagram. It has direct access to the apollo cache so it can track foucs of it's child sets.
  */
-const CircleDiagram =  ({ id, name, type, meta, status, data, updateData } ) => {
+const CircleDiagram =  ({ id, name, type, status, data } ) => {
   const [dialog, updateDialog] = useState();
   const [focus, updateFocus] = useFocus();
 
-  const {attributes, center, zoom} = meta;
+  const [meta, updateMeta] = useState({});
 
+  useEffect(
+    () => {
+      if ( 'initializing' !== status ) {
+        let diagrammeta = callCache({id: id, target: 'meta', action: 'fetch'});
+        updateMeta(diagrammeta.data);
+        // Set our default focus.
+        if (diagrammeta.data.focus) {
+          updateFocus({action: 'refocus'}, diagrammeta.data.focus );
+        }
+      }
+    },
+    [status]
+  );
 
   const timeouts = [];
   const Viewer = useRef();
   let backgroundSheet = useRef();
+
+  if ( 'ready' !== status ) {
+    return null;
+  }
+
 
   const getStandardRadius = (depth = 0) => {
     // Scale our SVG based on our desired width height based on a 100 x 75 canvas.
@@ -58,14 +77,14 @@ const CircleDiagram =  ({ id, name, type, meta, status, data, updateData } ) => 
     <div className="diagramviewer">
       <div className="viewer">
         <ReactSVGPanZoom
-          width={ attributes.width }
-          height={ attributes.height }
+          width={ meta.attributes.width }
+          height={ meta.attributes.height }
           background="transparent"
           tool="auto"
           toolbarPosition="none"
           miniaturePosition="none"
           disableDoubleClickZoomWithToolAuto
-          scaleFactor={ zoom.scale }
+          scaleFactor={ meta.zoom.scale }
           scaleFactorOnWheel={ 1.06 }
           scaleFactorMin={ 1 }
           ref={ (Viewer) => {
@@ -79,8 +98,8 @@ const CircleDiagram =  ({ id, name, type, meta, status, data, updateData } ) => 
         >
           <svg
             id="circlediagram"
-            width={ attributes.width }
-            height={ attributes.height }
+            width={ meta.attributes.width }
+            height={ meta.attributes.height }
           >
             <defs>
               <clipPath id="clippath">
@@ -102,28 +121,21 @@ const CircleDiagram =  ({ id, name, type, meta, status, data, updateData } ) => 
             </defs>
             <g style={ { clipPath: 'url(#clippath)' } } id="diagramGroup">
               {
-                /**
-
                 data.fieldsets.map((diagram) => {
-                return (
-                  <Set
-                    key={ diagram.id }
-                    setData={ diagram.children || [] }
-                    setID={ diagram.id }
-                    scaleFactor={ 1 }
-                    { ...diagram }
-                    center={diagram.meta.data.center}
-                    radius={ getStandardRadius() }
-                    updateFocus={ updateFocus }
-                    resetFocus={ resetFocus }
-                    onDoubleClick={ openDialog }
-                    closeDialog={ closeDialog }
-                    updateSetState={ updateData }
-                    visible
-                  />
-                );
-              })
-              */
+                  return (
+                    <Set
+                      key={ diagram.id }
+                      setData={ diagram.children || [] }
+                      setID={ diagram.id }
+                      scaleFactor={ 1 }
+                      { ...diagram }
+                      center={meta.center}
+                      radius={ getStandardRadius() }
+                      closeDialog={ closeDialog }
+                      visible
+                    />
+                  );
+                })
               }
             </g>
           </svg>

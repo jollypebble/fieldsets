@@ -1,16 +1,17 @@
-import React, { useState, useLayoutEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ApolloProvider } from 'react-apollo';
-import { StatusBar } from 'components/Dialogs/StatusBar';
 import { getDataCacheService } from './DataCacheService';
-import { Focus } from 'components/Core';
+import { FocusHandler } from 'components/Core';
+import { StatusBar } from 'components/Core';
+import { useStatus } from 'components/Core/Hooks';
+
 
 /**
  * Our Data cache wrapper around apollo/graphql, indexDB and PostgreSQL.
  * The data cache is a react-window component that contains all of our fieldsets, subsets and metasets and is used to performantly load large lists of data.
  */
 const DataCache = ({children}) => {
-  const [status, updateStatus] = useState('initializing');
-  const [message, updateMessage] = useState(`Initializng datacache....`);
+  const [{status, message, visible}, updateStatus] = useStatus();
   let client;
 
   const initCache = async () => {
@@ -20,37 +21,34 @@ const DataCache = ({children}) => {
     } catch (error) {
       setStatus('error', `Data Cache Load Error: ${error}`);
     }
-
     setStatus('ready');
   };
 
   const setStatus = (newStatus, newMessage = '') => {
-    updateStatus(newStatus);
-    updateMessage(newMessage);
+    updateStatus({status: newStatus, message: newMessage, action: 'update'});
   }
 
   // Asynchronously initialize cache and wait for it to finish.
-  useLayoutEffect(
+  useEffect(
     () => {
-      initCache();
+      if ( 'initializing' === status ) {
+        initCache();
+      }
     },
     [status]
   );
 
-  if ( 'ready' !== status ) {
-    return <StatusBar
-      id="datacache-status-bar"
-      status={status}
-      message={message}
-    />;
-  }
-
   client = getDataCacheService();
   return (
     <ApolloProvider client={client}>
-      <Focus>
+      <FocusHandler>
+        <StatusBar
+          status={'initializing'}
+          message={'Initializng datacache....'}
+          visible={true}
+        />
         {children}
-      </Focus>
+      </FocusHandler>
     </ApolloProvider>
   );
 }

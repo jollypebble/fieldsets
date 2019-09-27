@@ -22,7 +22,7 @@ export const fragmentDefaults = {
     name: '',
     description: '',
     parent: '',
-    fieldsets: [],
+    sets: [],
     value: null,
     type: 'default',
     callback: false,

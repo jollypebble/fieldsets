@@ -10,7 +10,7 @@ export const field = `
     owner
     order
     dependencies
-    fieldsets
+    sets
     meta {
       ...meta
     }

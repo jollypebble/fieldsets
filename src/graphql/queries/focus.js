@@ -31,8 +31,6 @@
 
  export const updateFocus = gql`
   mutation UpdateFocus($data: Array) {
-    updateFocus(data: $data) @client(always: true) {
-      focus @client(always: true)
-    }
+    updateFocus(data: $data) @client(always: true)
   }
 `;

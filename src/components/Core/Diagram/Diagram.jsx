@@ -2,7 +2,6 @@ import React, { useLayoutEffect, useEffect, useState } from 'react';
 import { useLazyQuery } from '@apollo/react-hooks';
 import PropTypes from 'prop-types';
 import DiagramType from './DiagramType';
-import { StatusBar } from 'components/Dialogs/StatusBar';
 import { defaults } from 'graphql/defaults';
 import { getDataCacheService } from 'components/Core/DataCache/DataCacheService';
 import { callCache } from 'components/Core/DataCache/reducers/datacache';
@@ -26,6 +25,7 @@ const Diagram = ({id, name, type, meta, isFocused = false, children}) => {
     client: client,
     partialRefetch: true,
     onCompleted: () => {
+
       setStatus('ready');
     }
   });
@@ -51,35 +51,12 @@ const Diagram = ({id, name, type, meta, isFocused = false, children}) => {
     [status]
   );
 
-  useEffect( () => {
-      //console.log(status);
-      //console.log(focus);
-      //console.log(called);
-      //console.log(loading);
-      //console.log(networkStatus);
-    },
-    [status]
-  );
-
   /**
    * Merge the updated data with current diagram data.
    */
   const getDiagramData = () => {
     setStatus('updating','Updating diagram data....');
     fetchDiagramData();
-  }
-
-  /**
-   * Wait for our initial data load, otherwise we won't be blocked on re-renders as the diagram renders are managed by data states and asyncrhonous updates to the data cache.
-   */
-  if ( 'ready' !== status ) {
-    return (
-      <StatusBar
-        id="diagram-status-bar"
-        status={status}
-        message={message}
-      />
-    );
   }
 
   return (
@@ -89,7 +66,6 @@ const Diagram = ({id, name, type, meta, isFocused = false, children}) => {
         id={id}
         name={name}
         type={type}
-        meta={meta}
         status={status}
         data={data}
       >

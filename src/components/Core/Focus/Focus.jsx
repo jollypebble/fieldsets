@@ -18,7 +18,7 @@ export const FocusContext = createContext({});
 /**
  * Our focus is a local cache fragement. It uses the id of 'current' for it along with the it's corresponding container.
  */
-const Focus = ( {children} ) => {
+const FocusHandler = ( {children} ) => {
   const client = getDataCacheService();
   const [container, updateContainer] = useState(defaults.focus.container);
 
@@ -100,4 +100,4 @@ const Focus = ( {children} ) => {
   );
 }
 
-export default Focus;
+export default FocusHandler;
