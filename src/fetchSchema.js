@@ -28,7 +28,7 @@ fetch('http://localhost:8000/graphql', {
     type => type.possibleTypes !== null,
   );
   result.data.__schema.types = filteredData;
-  fs.writeFile('./fragmentTypes.json', JSON.stringify(result.data), err => {
+  fs.writeFile('./src/fragmentTypes.json', JSON.stringify(result.data), err => {
     if (err) {
       console.error('Error writing fragmentTypes file', err);
     } else {

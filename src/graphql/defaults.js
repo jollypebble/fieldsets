@@ -17,9 +17,8 @@ export const defaults = {
     },
     center: { x: 0, y: 0, __typename: 'JSONObject' },
     depth: 0,
-    scale: 1,
-    zoom: { scale: 1, x: 0, y: 0, __typename: 'JSONObject' },
+    zoom: { scale: 1, __typename: 'JSONObject' },
     __typename: 'Focus'
   },
-  fieldsets: []
+  container: null
 };

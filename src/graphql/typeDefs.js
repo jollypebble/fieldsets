@@ -91,6 +91,7 @@ export const typeDefs = `
 
   type Mutation {
     updateFocus(id: ID!): Focus
+    updateContainer(data: JSONObject): [FieldSet]
     updateField(id: ID!): Field!
     updateFieldSet(id: ID): FieldSet
     updateFieldSets(id: ID): [FieldSet]
@@ -101,15 +102,17 @@ export const typeDefs = `
   }
 
   type Query {
-    fetchFieldSets(id: ID): [FieldSet]
+    fetchFocus: Focus
+    fetchContainer: FieldSet
+    fetchFieldSets(data: JSONObject): [FieldSet]
     fetchFieldSet(id: ID): FieldSet
-    fetchFields: [Field]
+    fetchFields(id: ID): [Field]
     fetchField(id: ID): Field
     fetchMeta(id: ID): Meta
-    fetchAccounts: [Account]
-    fetchAccount: Account
-    fetchMembers: [Member]
-    fetchRoles: [Role]
+    fetchAccounts(data: JSONObject): [Account]
+    fetchAccount(id: ID): Account
+    fetchMembers(data: JSONObject): [Member]
+    fetchRoles(data: JSONObject): [Role]
   }
 
   enum FieldType {

@@ -1,5 +1,5 @@
 import GraphQLJSON, { GraphQLJSONObject } from 'graphql-type-json';
-import { fetchMeta, fetchFocus, fetchField, fetchFieldSet, fetchFieldSets } from './queries';
+import { fetchMeta, fetchFocus, fetchField, fetchFieldSet, fetchContainer } from './queries';
 import { defaults } from './defaults';
 
 export const resolvers = {
@@ -24,44 +24,21 @@ export const resolvers = {
         }
       };
       client.writeQuery({query: fetchFocus, data: {focus: newfocus}});
-      // After we set our focus, we need to load the fragment data into our root query fieldsets so we can use use them within the focused container.
-
-      return;
+      return newfocus;
     },
-    updateFieldSets: ( object, { data }, { cache, client, getCacheKey } ) => {
+    updateContainer: ( object, { data }, { client, getCacheKey } ) => {
+      // Don't use defaults for updates.
       const containerID = data.containerID;
-      const containerType = data.type;
-      const container = cache.readFragment({
+      const container = client.readFragment({
         id: getCacheKey({ __typename: 'FieldSet', id: containerID }),
         fragment: fetchFieldSet,
         fragmentName: 'fieldset'
       });
-
-      let fieldsets = [];
-      container.children.map((fieldsetID) => {
-        const fieldset = cache.readFragment({
-          id: getCacheKey({ __typename: 'FieldSet', id: fieldsetID }),
-          fragment: fetchFieldSet,
-          fragmentName: 'fieldset'
-        });
-        fieldset.meta.data.__typename = 'JSONObject';
-        fieldsets.push(fieldset);
-      });
-
-      let fields = [];
-      container.fields.map((fieldID) => {
-        const field = cache.readFragment({
-          id: getCacheKey({ __typename: 'Field', id: fieldID }),
-          fragment: fetchField,
-          fragmentName: 'field'
-        });
-        field.meta.data.__typename = 'JSONObject';
-        fields.push(field);
-      });
-
-      client.writeData({ data: { fields: fields } });
-      client.writeQuery({ query: fetchFieldSets, data: { fieldsets: fieldsets } });
-
+      client.writeQuery({query: fetchContainer, data: {container: container}});
+      const refetch = client.readQuery({query: fetchContainer});
+      return refetch.container;
+    },
+    updateFieldSets: ( object, { data }, { client, getCacheKey } ) => {
       return;
     },
     updateField: ( object, { data }, { client, getCacheKey } ) => {
@@ -114,24 +91,38 @@ export const resolvers = {
   },
   Query: {
     fetchFieldSets: ( object, { data }, { client, getCacheKey } ) => {
-      console.log('fetching');
-      
-      return;
+      const container = client.readQuery({query: fetchContainer});
+      let fieldsets = [];
+      container.container.children.map(
+        (fieldsetID) => {
+          const fieldset = client.readFragment({
+            id: getCacheKey({ __typename: 'FieldSet', id: fieldsetID }),
+            fragment: fetchFieldSet,
+            fragmentName: 'fieldset'
+          });
+          fieldsets.push(fieldset);
+        }
+      );
+      // We allow for specific filters here.
+      if ( data ) {
+        if (data.hasOwnProperty('parent')) {
+          const parents = fieldsets.filter( ( fieldset ) => {
+            return fieldset.parent === data.parent;
+          });
+          return parents;
+        }
+      }
+      return fieldsets;
     },
     fetchFields: ( object, { data }, { client, getCacheKey } ) => {
     },
     fetchAccounts: ( object, { data }, { client, getCacheKey } ) => {
-
     },
     fetchAccount: ( object, { data }, { client, getCacheKey } ) => {
-
     },
     fetchMembers: ( object, { data }, { client, getCacheKey } ) => {
-
-
     },
     fetchRoles: ( object, { data }, { cache, getCacheKey } ) => {
-
     }
   },
   Set: {

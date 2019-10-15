@@ -21,8 +21,6 @@
         y
       }
       zoom {
-        x
-        y
         scale
       }
     }

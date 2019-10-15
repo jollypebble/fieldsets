@@ -6,9 +6,6 @@ export const account = `
     parent
     children
     members
-    meta {
-      ...meta
-    }
   }
 `;
 
@@ -20,9 +17,6 @@ export const member = `
     type
     children
     roles
-    meta {
-      ...meta
-    }
   }
 `;
 
@@ -33,8 +27,5 @@ export const role = `
     type
     parent
     children
-    meta {
-      ...meta
-    }
   }
 `;

@@ -136,14 +136,6 @@ const SetData = [
             parent: 'long_term_money',
           }
         ]
-      },
-      {
-        id: 'offense_parent',
-        name: 'Offense Allocation',
-      },
-      {
-        id: 'defense_parent',
-        name: 'Defense Allocation',
       }
     ]
   }

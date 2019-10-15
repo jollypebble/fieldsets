@@ -1,5 +1,5 @@
 import * as SheetTypes from './SheetTypes';
-import * as CustomSheetTypes from 'containers/Sheets';
+import * as CustomSheetTypes from 'components/Sheets';
 
 const SheetType = (props) => {
   if (props.type) {

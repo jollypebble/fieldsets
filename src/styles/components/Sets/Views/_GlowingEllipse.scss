@@ -1,0 +1,18 @@
+#net_worth-group {
+  #net_worth-parent {
+    #net_worth {
+      fill: $net_worth-fill;
+      stroke: $net_worth-stroke;
+    }
+    #net_worth-radialgradient {
+      .gradient-start {
+        stop-color: $net_worth-fill;
+        stop-opacity: 1;
+      }
+      .gradient-stop {
+        stop-color: $app-white;
+        stop-opacity: 0.5;
+      }
+    }
+  }
+}

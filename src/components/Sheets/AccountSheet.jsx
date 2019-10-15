@@ -13,7 +13,7 @@ import {
   Toolbar
 } from 'react-md';
 
-import MemberSheet from 'containers/Sheets/MemberSheet';
+import MemberSheet from 'components/Sheets/MemberSheet';
 
 import TableActions from 'components/Sheets/Tables/TableActions';
 import MemberRow from 'components/Sheets/Tables/Rows/MemberRow';

@@ -1,31 +1,54 @@
 import React from 'react';
+import SVGLabel from './Labels/SVGLabel';
 
-const Circle = ({id, active, visibility, attributes, scaleFactor, onClick}) => {
-  const {ratio, parentCenterX, parentCenterY, parent} = attributes;
-  let radius = ((active) ? attributes.radius * 1.1 : attributes.radius) * scaleFactor;
-  const hasParent = (parent && parent !== '') ? true : false;
-  let {centerX, centerY, strokeWidth} = attributes;
+const Circle = ({id, active, variables}) => {
+  const defaults = {
+    radius: 7.5,
+    ratio: 1,
+    strokeWidth: 1
+  };
 
-  // Ensure centers are set to parent in proper instances.
-  if (visibility === 'hidden' || (hasParent && visibility === '')) {
-    centerX = parentCenterX;
-    centerY = parentCenterY;
-  }
-  radius = ratio ? ratio * radius : radius;
-  if ( ! strokeWidth ) {
-    strokeWidth = radius / 30;
-  }
+  let {ratio, radius, textX, textY, strokeWidth} = {...defaults, ...variables.attributes};
+
+  const parent = variables.parent;
+  const hasParent = (parent) ? true : false;
+
+  const center = variables.center;
+  const centerX = center.x;
+  const centerY = center.y;
+
+  const visible = variables.visible;
+
+  radius = ((active) ? radius * 1.1 : radius) * variables.zoom.scale;
+  radius = ratio * radius;
+
+  textX = (textX) ? textX : centerX;
+  textY = (textY) ? textY : centerY;
+
+  /**
+   * Circle Text is set to center.
+   */
+  variables.attributes.textX = textX;
+  variables.attributes.textY = textY;
 
   return (
     <React.Fragment>
       <circle
         id={id}
-        className="circleset"
+        className="setview-circle"
         cx={centerX}
         cy={centerY}
         r={radius}
         strokeWidth={strokeWidth}
-        onClick={onClick}
+        onClick={() => {return}}
+      />
+      <SVGLabel
+        id={`${id}-label`}
+        className="setview-label setview-circle-label"
+        name={variables.name}
+        active={active}
+        visible={visible}
+        variables={variables}
       />
     </React.Fragment>
   );

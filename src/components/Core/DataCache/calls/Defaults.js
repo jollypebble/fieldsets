@@ -65,6 +65,7 @@ export const Defaults = ( call, data ) => {
           ...previous,
           ...data,
           id: key,
+          children: [],
           meta: {
             id: key,
             type: type,

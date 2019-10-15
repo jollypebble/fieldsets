@@ -1,1 +1,1 @@
-export { default as CircleDiagram } from './CircleDiagram';
+export { default as CircleDiagram } from './CircleDiagram/CircleDiagram';

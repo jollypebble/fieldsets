@@ -252,65 +252,57 @@ caption,
   font-weight: 100;
   src: url("/assets/fonts/OpenSans-Light.ttf"); }
 
-#defense_allocation-group .circle-group ellipse {
-  fill: #f9bcc0;
+#defense_allocation-group .set-group ellipse {
+  fill: rgba(244, 70, 71, 0.75);
   stroke: #f44647; }
 
-#defense_allocation-group .circle-group circle {
-  fill: #f9bcc0;
+#defense_allocation-group .set-group circle {
+  fill: rgba(244, 70, 71, 0.75);
   stroke: #f44647; }
 
-#defense_allocation-group .circle-group tspan {
+#defense_allocation-group .set-group tspan {
   fill: #515359; }
 
-#offense_allocation-group .circle-group ellipse {
-  fill: #5fc6f5;
-  stroke: #efef41; }
-
-#offense_allocation-group .circle-group #defense_parent {
-  fill: #f9bcc0;
-  stroke: #f44647; }
-
-#offense_allocation-group .circle-group #offense_parent {
-  fill: #b3e7ff;
-  stroke: #63b2ff; }
-
-#offense_allocation-group .circle-group tspan {
-  fill: #515359; }
-
-#net_worth-group .circle-group #net_worth {
-  fill: #82db83;
-  stroke: #42ac09; }
-
-#net_worth-group .circle-group tspan {
-  fill: #515359; }
-
-#short_term_money-group .circle-group circle, #short_term_money-group .circle-group rect {
-  fill: #83c5e4;
-  stroke: #6bb6f8; }
-
-#short_term_money-group .circle-group tspan {
-  fill: #515359; }
-
-#mid_term_money-group .circle-group circle, #mid_term_money-group .circle-group ellipse {
-  fill: #b3e7ff;
+#offense_allocation-group .set-group ellipse {
+  fill: rgba(109, 184, 254, 0.75);
   stroke: #6db8fe; }
 
-#mid_term_money-group .circle-group tspan {
+#offense_allocation-group .set-group tspan {
   fill: #515359; }
 
-#long_term_money-group .circle-group circle, #long_term_money-group .circle-group rect {
-  fill: #90c5f5;
-  stroke: #44c1ff; }
-
-#long_term_money-group .circle-group tspan {
-  fill: #515359; }
-
-#monthly_contribution-group .circle-group rect, #lump_sums-group .circle-group rect {
-  fill: #ffffad;
+#net_worth-group .set-group #net_worth {
+  fill: rgba(239, 239, 65, 0.5);
   stroke: #efef41; }
 
-#monthly_contribution-group .circle-group tspan, #lump_sums-group .circle-group tspan {
+#net_worth-group .set-group tspan {
+  fill: #515359; }
+
+#short_term_money-group .set-group circle, #short_term_money-group .set-group rect {
+  fill: transparent;
+  stroke: #6db8fe; }
+
+#short_term_money-group .set-group tspan {
+  fill: #515359; }
+
+#mid_term_money-group .set-group circle, #mid_term_money-group .set-group ellipse {
+  fill: transparent;
+  stroke: #6db8fe; }
+
+#mid_term_money-group .set-group tspan {
+  fill: #515359; }
+
+#long_term_money-group .set-group circle, #long_term_money-group .set-group rect {
+  fill: transparent;
+  stroke: #6db8fe; }
+
+#long_term_money-group .set-group tspan {
+  fill: #515359; }
+
+#monthly_contribution-group .set-group rect, #lump_sums-group .set-group rect {
+  fill: rgba(239, 239, 65, 0.5);
+  stroke: #efef41; }
+
+#monthly_contribution-group .set-group tspan, #lump_sums-group .set-group tspan {
   fill: #515359; }
 
 .radialDialog > div {
@@ -396,14 +388,60 @@ caption,
   100% {
     opacity: 1; } }
 
-#short_term_money-group .circle-group rect {
-  fill: url(#Gradient); }
+#short_term_money-gradientcone .gradient-start {
+  stop-color: #b8e7f5;
+  stop-opacity: 1; }
 
-#mid_term_money-group .circle-group rect {
-  fill: url(#Gradient); }
+#short_term_money-gradientcone .gradient-stop {
+  stop-color: #f7fcff;
+  stop-opacity: 0.5; }
 
-#long_term_money-group .circle-group rect {
-  fill: url(#Gradient); }
+#mid_term_money-gradientcone .gradient-start {
+  stop-color: #eff8fb;
+  stop-opacity: 1; }
+
+#mid_term_money-gradientcone .gradient-stop {
+  stop-color: #89c8e5;
+  stop-opacity: 0.5; }
+
+#long_term_money-gradientcone .gradient-start {
+  stop-color: #4fc6f5;
+  stop-opacity: 1; }
+
+#long_term_money-gradientcone .gradient-stop {
+  stop-color: #f7fcff;
+  stop-opacity: 0.5; }
+
+#monthly_contribution {
+  fill: rgba(239, 239, 65, 0.5);
+  stroke: #efef41; }
+
+#lump_sums {
+  fill: rgba(239, 239, 65, 0.5);
+  stroke: #efef41; }
+
+#defense_allocation-group #defense_allocation-parent #defense_allocation {
+  fill: rgba(244, 70, 71, 0.75);
+  stroke: #f44647; }
+
+#defense_allocation-group #defense_allocation-children circle {
+  fill: transparent; }
+
+#offense_allocation-group #offense_allocation-parent ellipse {
+  fill: rgba(109, 184, 254, 0.75);
+  stroke: #6db8fe; }
+
+#net_worth-group #net_worth-parent #net_worth {
+  fill: rgba(239, 239, 65, 0.5);
+  stroke: #efef41; }
+
+#net_worth-group #net_worth-parent #net_worth-radialgradient .gradient-start {
+  stop-color: rgba(239, 239, 65, 0.5);
+  stop-opacity: 1; }
+
+#net_worth-group #net_worth-parent #net_worth-radialgradient .gradient-stop {
+  stop-color: #FFF;
+  stop-opacity: 0.5; }
 
 #tabs-wrapper {
   text-align: center;
@@ -518,7 +556,7 @@ caption,
   height: 90%;
   overflow-y: auto; }
   .balanceSheetContainer #balance-tab {
-    background: #607d8b; }
+    background: #6db8fe; }
     .balanceSheetContainer #balance-tab .md-tab {
       min-width: unset;
       padding-bottom: 16px; }
@@ -589,10 +627,6 @@ caption,
     font-weight: bold;
     letter-spacing: 0.8; }
 
-#circlediagram {
-  overflow: hidden;
-  position: relative; }
-
 body {
   margin: 0;
   padding: 0;
@@ -611,7 +645,7 @@ text.setNameBase {
   transform: translate(-75px, 0); }
 
 text.setAttributesBase {
-  fill: #ffffad;
+  fill: #efef41;
   stroke: transparent;
   font-family: "OpenSans", Roboto, sans-serif;
   transform: translate(-75px, 0); }
@@ -636,7 +670,7 @@ text.setAttributesBase {
 .sideBar {
   height: 1000px;
   width: 60px;
-  background: #607d8b;
+  background: #6db8fe;
   float: left;
   overflow: hidden;
   -webkit-transition: width 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
@@ -645,7 +679,7 @@ text.setAttributesBase {
 .expandSideBar {
   height: 1000px;
   width: 250px;
-  background: #607d8b;
+  background: #6db8fe;
   float: left;
   overflow: hidden;
   -webkit-transition: width 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
@@ -1593,7 +1627,7 @@ a.md-btn {
   background: rgba(96, 125, 139, 0.12); }
 
 .md-btn--color-secondary-active {
-  background: rgba(255, 109, 0, 0.12); }
+  background: rgba(255, 64, 129, 0.12); }
 
 .md-btn--text {
   border-radius: 2px;
@@ -1972,7 +2006,7 @@ tbody .md-table-row {
     margin-left: 8px; }
 
 .md-card-title--contextual {
-  background: #fff3e0;
+  background: #fce4ec;
   height: 100%;
   left: 0;
   position: absolute;
@@ -1981,7 +2015,7 @@ tbody .md-table-row {
   z-index: 1; }
 
 .md-card-title--title-contextual {
-  color: #ff6d00;
+  color: #ff4081;
   font-size: 16px;
   font-weight: 500;
   line-height: 80px; }
@@ -2993,7 +3027,7 @@ svg.md-icon {
 
 .md-circular-progress-path {
   fill: none;
-  stroke: #ff6d00;
+  stroke: #ff4081;
   stroke-dasharray: 187px; }
 
 .md-circular-progress-path--animated {
@@ -3022,14 +3056,14 @@ svg.md-icon {
     stroke-dashoffset: 187px; } }
 
 .md-progress--linear {
-  background: #ffd180;
+  background: #ff80ab;
   height: 3px;
   overflow: hidden;
   position: relative;
   width: 100%; }
 
 .md-progress--linear-active {
-  background: #ff6d00; }
+  background: #ff4081; }
 
 .md-progress--linear-determinate {
   height: 100%;
@@ -3154,7 +3188,7 @@ svg.md-icon {
   width: 40px; }
 
 .md-switch-track--on {
-  background: rgba(255, 152, 0, 0.5); }
+  background: rgba(233, 30, 99, 0.5); }
 
 .md-switch-track--off {
   background: rgba(0, 0, 0, 0.38); }
@@ -3174,7 +3208,7 @@ svg.md-icon {
   width: 24px; }
 
 .md-switch-thumb--on {
-  background: #ff9800;
+  background: #e91e63;
   transform: translate3d(20px, -4px, 0); }
 
 .md-switch-thumb--off {
@@ -3516,7 +3550,7 @@ svg.md-icon {
     color: rgba(255, 255, 255, 0.7); }
 
 .md-tab-indicator {
-  background: #ff6d00;
+  background: #ff4081;
   bottom: 0;
   content: '';
   height: 2px;
@@ -4125,7 +4159,7 @@ svg.md-icon {
   .md-text--theme-primary {
     color: #607d8b; }
   .md-text--theme-secondary {
-    color: #ff6d00; }
+    color: #ff4081; }
   .md-text--error {
     color: #f44336; }
   .md-text--inherit.md-text--inherit {
@@ -4135,7 +4169,7 @@ svg.md-icon {
   background: rgba(96, 125, 139, 0.26); }
 
 .md-ink--secondary .md-ink {
-  background: rgba(255, 109, 0, 0.26); }
+  background: rgba(255, 64, 129, 0.26); }
 
 .md-background {
   background: #fafafa; }
@@ -4145,11 +4179,11 @@ svg.md-icon {
     background: #607d8b;
     color: #fff; }
   .md-background--secondary {
-    background: #ff6d00;
+    background: #ff4081;
     color: #fff; }
 
 @media screen and (min-width: 1025px) {
   .md-background--primary-hover:hover {
     background: rgba(96, 125, 139, 0.9); }
   .md-background--secondary-hover:hover {
-    background: rgba(255, 109, 0, 0.9); } }
+    background: rgba(255, 64, 129, 0.9); } }

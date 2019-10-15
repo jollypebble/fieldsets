@@ -95,43 +95,30 @@ export const fragmentDefaults = {
       focus: null,
       notes: [],
       attributes: {
-        width: 1920,
-        height: 1080,
         __typename: 'JSONObject'
       },
       zoom: {
         scale: 1,
-        x: 0.5,
-        y: 0.5,
         __typename: 'JSONObject'
       },
-      center: { x: 0, y: 0, __typename: 'JSONObject' },
+      center: { __typename: 'JSONObject' },
       options: null,
       filters: null,
       className: ''
     },
     fieldset: {
       notes: [],
-      center: { x: 0, y: 0, __typename: 'JSONObject' },
+      center: { __typename: 'JSONObject' },
       visible: true,
       depth: 0,
       setview: 'Circle',
       attributes: {
-        textX: 0,
-        textY: 0,
-        textSize: 0.6,
-        ratio: 1,
-        radiusX: 75,
-        radiusY: 16,
-        radius: 80,
         __typename: 'JSONObject'
       },
       className: '',
       options: null,
       zoom: {
         scale: 1,
-        x: 0.5,
-        y: 0.5,
         __typename: 'JSONObject'
       },
       filters: null

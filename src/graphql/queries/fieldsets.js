@@ -2,26 +2,26 @@ import gql from 'graphql-tag';
 import { fragments } from '../fragments';
 
 /**
- * Fetch children of a parent id.
+ * Fetch fieldsets from active container.
  */
 export const fetchFieldSets = gql`
-  query FetchFieldSets($data: Array) {
-    fieldsets(data: $data) @client(always: true) {
-      id
-      name
-      type
-      parent
-      children
-      fields
+  query FetchFieldSets( $data: Array ) {
+    fetchFieldSets(data: $data) @client(always: true) {
+      ...fieldset
     }
   }
+  ${fragments.fieldset}
 `;
 
 export const updateFieldSets = gql`
   mutation UpdateFieldSets($data: Array) {
-    updateFieldSets(data: $data) @client(always: true)
+    updateFieldSets(data: $data) @client(always: true) {
+      ...fieldset
+    }
   }
+  ${fragments.fieldset}
 `;
+
 
 export const updateFieldSet = gql`
   mutation UpdateFieldSet($data: Array) {

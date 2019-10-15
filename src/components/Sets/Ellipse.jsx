@@ -1,42 +1,55 @@
 import React from 'react';
+import SVGLabel from './Labels/SVGLabel';
 
-const Ellipse = ({id, active, visibility, attributes, onClick}) => {
-  const {ratio, parentCenterX, parentCenterY, parent} = attributes;
-  let radiusX = (active) ? attributes.radiusX * 1.1 : attributes.radiusX;
-  let radiusY = (active) ? attributes.radiusY * 1.1 : attributes.radiusY;
+const Ellipse = ({id, active, variables}) => {
+  const defaults = {
+    radiusX: 9,
+    radiusY: 1.8,
+    ratio: 1.1,
+    strokeWidth: 1
+  };
 
-  // Use the circle radius default value(7.5) for stroke withd.
-  const defaultRadius = 7.5;
-  let radius = (active) ? defaultRadius * 1.1 : defaultRadius;
+  let {ratio, radiusX, radiusY, textX, textY, strokeWidth} = {...defaults, ...variables.attributes};
+  radiusX = (active) ? radiusX * ratio : radiusX;
+  radiusY = (active) ? radiusY * ratio : radiusY;
 
+  const visible = variables.visible;
+
+  const {center, parent} = variables;
   const hasParent = (parent && parent !== '') ? true : false;
-  let {centerX, centerY, strokeWidth} = attributes;
 
-  // Ensure centers are set to parent in proper instances.
-  if (visibility === 'hidden' || (hasParent && visibility === '')) {
-    centerX = parentCenterX;
-    centerY = parentCenterY;
-  }
+  const centerX = center.x;
+  const centerY = center.y;
 
-  radius = ratio ? ratio * radius : radius;
+  textX = (textX) ? textX : centerX;
+  textY = (textY) ? textY : centerY;
 
-  if ( ! strokeWidth ) {
-    strokeWidth = radius / 6;
-  }
+  /**
+   * Circle Text is set to center.
+   */
+  variables.attributes.textX = textX;
+  variables.attributes.textY = textY;
 
   return (
     <React.Fragment>
       <ellipse
         id={id}
-        className="circleset ellipse"
+        className="setview-ellipse"
         cx={centerX}
         cy={centerY}
         rx={radiusX}
         ry={radiusY}
         strokeWidth={strokeWidth}
-        onClick={onClick}
-      >
-      </ellipse>
+        onClick={() => {return}}
+      />
+      <SVGLabel
+        id={`${id}-label`}
+        className="setview-label setview-circle-label"
+        name={variables.name}
+        active={active}
+        visible={visible}
+        variables={variables}
+      />
     </React.Fragment>
   );
 }

@@ -57,9 +57,8 @@ export const initializeFieldSets = ({ id, container = 'container', data = [] }) 
   const fields = data.fields;
   const meta = data.meta;
 
-  // Initialize Fields first as this will initialize all of our field sets.
-  initializeFieldData( { id, container, data: fields });
   initializeSetData( { id, container, data: sets });
+  initializeFieldData( { id, container, data: fields });
   initializeMetaData( { data: meta } );
 }
 
@@ -72,23 +71,23 @@ export const initializeSetData = ({ id, container = 'container', data = [] }) =>
 
       // Write the defaults
       let setFragment = callCache({id: setID, action: 'defaults', target: 'fieldset'},set);
-
       // Write the fragment
-      set = callCache({id: setID, target: 'fieldset', action: 'update'}, setFragment);
+      callCache({id: setID, target: 'fieldset', action: 'update'}, setFragment);
+
       // Write our child fragments.
-      if (set.children.length) {
+      if (set.children && set.children.length) {
         initializeSetData({id, container, data: set.children});
       }
 
       // Now append this set to the parent fieldset list
       // Write our fieldset & set relationships
-      if (set.parent.length) {
-        callCache({id: set.parent, target: 'fieldset', action: 'update', filter: 'children'}, set.id);
+      if (set.parent && set.parent.length) {
+        callCache({id: set.parent, target: 'fieldset', action: 'update', filter: 'children'}, setID);
       }
 
       // Add all set ids to the container that initialized
       if (id) {
-        callCache({id: id, target: container, action: 'update', filter: 'children'}, set.id);
+        callCache({id: id, target: container, action: 'update', filter: 'children'}, setID);
       }
     }
   });
@@ -104,16 +103,16 @@ export const initializeFieldData = ({ id, container = 'container', data = [] }) 
       const fieldID = field.id;
       const fieldFragment = callCache( {id: fieldID, action: 'defaults', target: 'field'}, field );
 
-      field = callCache({id: fieldID, target: 'field', action: 'update'}, fieldFragment);
+      callCache({id: fieldID, target: 'field', action: 'update'}, fieldFragment);
 
       // Field parents are arrays as a fields can belong to multiple sets.
       // Make sure we push to the top level id that was initialized as well, but don't classify it as a parent fieldset to the field.
-      for ( let fieldSetID of field.sets ) {
-        callCache({id: fieldSetID, target: 'fieldset', action: 'update', filter: 'fields'}, field.id);
+      for ( let fieldSetID of field.fieldsets ) {
+        callCache({id: fieldSetID, target: 'fieldset', action: 'update', filter: 'fields'}, fieldID);
       }
 
       if (id) {
-        callCache({id: id, target: container, action: 'update', filter: 'fields'}, field.id);
+        callCache({id: id, target: container, action: 'update', filter: 'fields'}, fieldID);
       }
     }
   });

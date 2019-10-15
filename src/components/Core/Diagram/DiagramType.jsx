@@ -1,6 +1,5 @@
 import * as DiagramTypes from 'containers/Diagrams';
 
-// {id, name, type, attributes, status, fieldsets, updatefocus}
 const DiagramType = (props) => {
   if (props.type) {
     // Allow lower case names to be passed and convert the first character to a more friendly class name.
