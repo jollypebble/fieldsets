@@ -4,6 +4,4 @@
 export { default as Circle } from './Circle';
 export { default as Rectangle } from './Rectangle';
 export { default as Ellipse } from './Ellipse';
-export { default as GlowingEllipse } from './GlowingEllipse';
-export { default as GradientCone } from './GradientCone';
-export { default as Label } from './Labels/SVGLabel';
+export { default as Label } from './Label';

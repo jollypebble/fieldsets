@@ -1,4 +1,4 @@
-import { Initialize, Fetch, Update, Defaults } from 'components/Core/DataCache/calls';
+import { Initialize, Fetch, Write, Update, Defaults } from 'components/Core/DataCache/calls';
 
 /**
  * A data cache call uses the datacache service and returns a result in the datastore context.
@@ -19,11 +19,13 @@ export const callCache = ( call, data = {}) => {
     case 'initialize':
       result = Initialize( call );
       break;
-    case 'write':
-    case 'insert':
     case 'set':
     case 'update':
       result = Update( call, data )
+      break;
+    case 'write':
+    case 'insert':
+      result = Write( call, data );
       break;
     case 'fetch':
     case 'read':

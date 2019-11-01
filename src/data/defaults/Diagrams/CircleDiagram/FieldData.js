@@ -33,7 +33,8 @@ export default [
   {
     id: 'will_status',
     name: 'Status',
-    value: 'none',
+    value: 'None',
+    options:[ 'None', 'Complete', 'Incomplete', 'Needs Update' ],
     type: 'select',
     fieldsets: ['will']
   },
@@ -238,7 +239,7 @@ export default [
     name: 'Value',
     value: 0,
     type: 'currency',
-    fieldsets: ['529']
+    fieldsets: ['plan_529']
   },
   {
     id: 'plan_529_individal_value',
@@ -269,7 +270,8 @@ export default [
     name: 'Value',
     value: 0,
     type: 'currency',
-    fieldsets: ['investment_account']
+    fieldsets: ['investment_account'],
+    children: ['investment_account_individal_value']
   },
   {
     id: 'investment_account_individal_value',
@@ -277,7 +279,8 @@ export default [
     value: [],
     type: 'currency',
     fieldsets: ['investment_account'],
-    order: 1
+    order: 1,
+    parent: 'investment_account_value',
   },
   {
     id: 'investment_account_lump',
@@ -293,7 +296,8 @@ export default [
     value: 0,
     type: 'currency',
     fieldsets: ['investment_account'],
-    order: 3
+    order: 3,
+    children: ['investment_account_value', 'investment_account_lump']
   },
   // Long Term Money
   {
@@ -339,7 +343,7 @@ export default [
     name: 'LUMP',
     value: 0,
     type: 'currency',
-    fieldsets: ['529'],
+    fieldsets: ['ira_roth'],
     order: 2
   },
   {

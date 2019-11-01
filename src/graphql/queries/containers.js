@@ -7,6 +7,7 @@
  */
 
 import gql from 'graphql-tag';
+import { fragments } from '../fragments';
 
 /**
  * Fetch Fieldsets from Root Query Active Focus Container.
@@ -40,4 +41,18 @@ export const updateContainer = gql`
       }
     }
   }
+`;
+
+
+/**
+ * Fetch fieldsets from active container.
+ * Currently fieldsets are read only in the application and should be defined in your data architecture (either dd or json format)
+ */
+export const fetchContainerData = gql`
+  query FetchContainerData {
+    fetchContainerData @client(always: true) {
+      ...fieldset
+    }
+  }
+  ${fragments.fieldset}
 `;

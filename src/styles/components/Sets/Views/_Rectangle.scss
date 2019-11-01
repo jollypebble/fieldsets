@@ -1,9 +1,7 @@
-#monthly_contribution {
-  fill: $contribution-fill;
-  stroke: $contribution-stroke;
-}
-
-#lump_sums {
-  fill: $contribution-fill;
-  stroke: $contribution-stroke;
+.view-rectangle-text {
+  .view-legend {
+    font-size: 0.45vw;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
 }

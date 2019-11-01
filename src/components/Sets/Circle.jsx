@@ -1,26 +1,19 @@
-import React from 'react';
-import SVGLabel from './Labels/SVGLabel';
+import React, { useRef, useEffect } from 'react';
+import { SetLabel, Sheet } from 'components/Core';
 
-const Circle = ({id, active, variables}) => {
+const Circle = ({id, view, active, variables}) => {
   const defaults = {
-    radius: 7.5,
-    ratio: 1,
+    radius: 28,
+    ratio: 1.1,
     strokeWidth: 1
   };
 
   let {ratio, radius, textX, textY, strokeWidth} = {...defaults, ...variables.attributes};
-
-  const parent = variables.parent;
-  const hasParent = (parent) ? true : false;
-
-  const center = variables.center;
+  const {center, visible} = variables;
   const centerX = center.x;
   const centerY = center.y;
 
-  const visible = variables.visible;
-
-  radius = ((active) ? radius * 1.1 : radius) * variables.zoom.scale;
-  radius = ratio * radius;
+  radius = (active) ? radius * ratio : radius;
 
   textX = (textX) ? textX : centerX;
   textY = (textY) ? textY : centerY;
@@ -31,25 +24,35 @@ const Circle = ({id, active, variables}) => {
   variables.attributes.textX = textX;
   variables.attributes.textY = textY;
 
+  // Lowercase view for className
+  const view_lower = view.toLowerCase();
   return (
     <React.Fragment>
       <circle
-        id={id}
-        className="setview-circle"
+        id={`${id}-view`}
+        className={`view view-${view_lower}`}
         cx={centerX}
         cy={centerY}
         r={radius}
         strokeWidth={strokeWidth}
-        onClick={() => {return}}
       />
-      <SVGLabel
+      <SetLabel
         id={`${id}-label`}
-        className="setview-label setview-circle-label"
+        type='FieldSetLabel'
+        className={`view-label view-${view_lower}-label`}
         name={variables.name}
         active={active}
         visible={visible}
         variables={variables}
-      />
+      >
+        <Sheet
+          id={id}
+          type='LabelSheet'
+          active={active}
+          visible={visible}
+          variables={variables}
+        />
+      </SetLabel>
     </React.Fragment>
   );
 }

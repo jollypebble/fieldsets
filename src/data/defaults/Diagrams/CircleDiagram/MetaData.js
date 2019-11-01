@@ -2,25 +2,19 @@
 
 const parentDefaultAttrs = {
   radiusX: 75,
-  radiusY: 16,
+  radiusY: 20,
 };
 
 const defenseDefaultAttrs = {
-  ratio: 1.2,
-  textSize: 0.45,
-  radius: 26
+  radius: 35
 };
 
 const offenseDefaultAttrs = {
-  ratio: 1.7,
-  textSize: 0.28,
-  radius: 17
+  radius: 28
 };
 
 const offenseSmallAttrs = {
-  ratio: 1.4,
-  textSize: 0.3,
-  radius: 15
+  radius: 21
 };
 
 const MetaData =  [
@@ -28,7 +22,7 @@ const MetaData =  [
     id: 'econcircle-app',
     type: 'diagram',
     data: {
-      setview: 'CircleDiagram',
+      view: 'CircleDiagram',
       focus: {
         focusID: 'net_worth'
       }
@@ -38,12 +32,11 @@ const MetaData =  [
     id: 'monthly_contribution',
     type: 'fieldset',
     data: {
-      setview: 'Rectangle',
+      view: 'Rectangle',
       center: { x: 720, y: 240 },
       attributes: {
-        textSize: 0.6,
-        width: 120,
-        height: 36
+        width: 150,
+        height: 50
       }
     }
   },
@@ -51,12 +44,11 @@ const MetaData =  [
     id: 'lump_sums',
     type: 'fieldset',
     data: {
-      setview: 'Rectangle',
+      view: 'Rectangle',
       center: { x: 900, y: 240 },
       attributes: {
-        textSize: 0.6,
-        width: 120,
-        height: 36
+        width: 150,
+        height: 50
       }
     }
   },
@@ -64,8 +56,8 @@ const MetaData =  [
     id: 'defense_allocation',
     type: 'fieldset',
     data: {
-      setview: 'ellipse',
-      center: { x: 880, y: 390 },
+      view: 'ellipse',
+      center: { x: 880, y: 385 },
       attributes: {
         ...parentDefaultAttrs
       }
@@ -75,7 +67,7 @@ const MetaData =  [
     id: 'will',
     type: 'fieldset',
     data: {
-      setview: 'Circle',
+      view: 'Circle',
       center: { x: 730, y: 375 },
       attributes: {
         ...defenseDefaultAttrs
@@ -86,7 +78,7 @@ const MetaData =  [
     id: 'disability_insurance',
     type: 'fieldset',
     data: {
-      setview: 'Circle',
+      view: 'Circle',
       center: { x: 818, y: 332 },
       attributes: {
         ...defenseDefaultAttrs
@@ -97,7 +89,7 @@ const MetaData =  [
     id: 'long_term_care',
     type: 'fieldset',
     data: {
-      setview: 'Circle',
+      view: 'Circle',
       center: { x: 940, y: 332 },
       attributes: {
         ...defenseDefaultAttrs
@@ -108,7 +100,7 @@ const MetaData =  [
     id: 'term_insurance',
     type: 'fieldset',
     data: {
-      setview: 'Circle',
+      view: 'Circle',
       center: { x: 1030, y: 375 },
       attributes: {
         ...defenseDefaultAttrs
@@ -119,8 +111,8 @@ const MetaData =  [
     id: 'offense_allocation',
     type: 'fieldset',
     data: {
-      setview: 'ellipse',
-      center: { x: 880, y: 465 },
+      view: 'ellipse',
+      center: { x: 880, y: 471 },
       attributes: {
         ...parentDefaultAttrs
       }
@@ -130,18 +122,15 @@ const MetaData =  [
     id: 'short_term_money',
     type: 'fieldset',
     data: {
-      setview: 'Label',
-      center: { x: 725, y: 465 },
-      attributes: {
-        textSize: 1
-      },
+      view: 'Label',
+      center: { x: 725, y: 465 }
     }
   },
   {
     id: 'cash_equivalents',
     type: 'fieldset',
     data: {
-      setview: 'Circle',
+      view: 'Circle',
       center: { x: 690, y: 510 },
       attributes: {
         ...offenseDefaultAttrs
@@ -152,7 +141,7 @@ const MetaData =  [
     id: 'mortgage',
     type: 'fieldset',
     data: {
-      setview: 'Circle',
+      view: 'Circle',
       center: { x: 770, y: 500 },
       attributes: {
         ...offenseDefaultAttrs
@@ -163,7 +152,7 @@ const MetaData =  [
     id: 'liabilities_debt',
     type: 'fieldset',
     data: {
-      setview: 'Circle',
+      view: 'Circle',
       center: { x: 740, y: 570 },
       attributes: {
         ...offenseDefaultAttrs
@@ -174,18 +163,15 @@ const MetaData =  [
     id: 'mid_term_money',
     type: 'fieldset',
     data: {
-      setview: 'Label',
-      center: { x: 890, y: 630 },
-      attributes: {
-        textSize: 1
-      }
+      view: 'Label',
+      center: { x: 890, y: 630 }
     }
   },
   {
     id: 'utmas',
     type: 'fieldset',
     data: {
-      setview: 'Circle',
+      view: 'Circle',
       center: { x: 885, y: 525 },
       attributes: {
         ...offenseDefaultAttrs
@@ -196,7 +182,7 @@ const MetaData =  [
     id: 'plan_529',
     type: 'fieldset',
     data: {
-      setview: 'Circle',
+      view: 'Circle',
       center: { x: 845, y: 580 },
       attributes: {
         ...offenseDefaultAttrs
@@ -207,7 +193,7 @@ const MetaData =  [
     id: 'investment_account',
     type: 'fieldset',
     data: {
-      setview: 'Circle',
+      view: 'Circle',
       center: { x: 925, y: 580 },
       attributes: {
         ...offenseDefaultAttrs
@@ -218,18 +204,15 @@ const MetaData =  [
     id: 'long_term_money',
     type: 'fieldset',
     data: {
-      setview: 'Label',
-      center: { x: 1040, y: 455 },
-      attributes: {
-        textSize: 1
-      },
+      view: 'Label',
+      center: { x: 1040, y: 455 }
     }
   },
   {
     id: 'cash_value_life',
     type: 'fieldset',
     data: {
-      setview: 'Circle',
+      view: 'Circle',
       center: { x: 980, y: 490 },
       attributes: {
         ...offenseDefaultAttrs
@@ -240,7 +223,7 @@ const MetaData =  [
     id: 'ira_roth',
     type: 'fieldset',
     data: {
-      setview: 'Circle',
+      view: 'Circle',
       center: { x: 1010, y: 544 },
       attributes: {
         ...offenseDefaultAttrs
@@ -251,7 +234,7 @@ const MetaData =  [
     id: 'k_401',
     type: 'fieldset',
     data: {
-      setview: 'Circle',
+      view: 'Circle',
       center: { x: 1045, y: 490 },
       attributes: {
         ...offenseDefaultAttrs
@@ -262,7 +245,7 @@ const MetaData =  [
     id: 'annuity',
     type: 'fieldset',
     data: {
-      setview: 'Circle',
+      view: 'Circle',
       center: { x: 1032, y: 592 },
       attributes: {
         ...offenseSmallAttrs
@@ -273,7 +256,7 @@ const MetaData =  [
     id: 'stock_option',
     type: 'fieldset',
     data: {
-      setview: 'Circle',
+      view: 'Circle',
       center: { x: 1069, y: 560 },
       attributes: {
         ...offenseSmallAttrs
@@ -284,7 +267,7 @@ const MetaData =  [
     id: 'investment_real_estate',
     type: 'fieldset',
     data: {
-      setview: 'Circle',
+      view: 'Circle',
       center: { x: 1095, y: 520 },
       attributes: {
         ...offenseSmallAttrs
@@ -295,7 +278,7 @@ const MetaData =  [
     id: 'deffered_comp',
     type: 'fieldset',
     data: {
-      setview: 'Circle',
+      view: 'Circle',
       center: { x: 1106, y: 474 },
       attributes: {
         ...offenseSmallAttrs
@@ -306,14 +289,13 @@ const MetaData =  [
     id: 'net_worth',
     type: 'fieldset',
     data: {
-      setview: 'GlowingEllipse',
+      view: 'Ellipse',
       center: { x: 880, y: 428 },
       zoom: {
         scale: 2.3
       },
       attributes: {
         ...parentDefaultAttrs,
-        path: 'M629,430.638262 L 878.611509,399.411159 L1126.163759,425.812255 L 878.611509 461.865365 z'
       }
     }
   },
@@ -332,6 +314,13 @@ const MetaData =  [
     }
   },
   {
+    id: 'monthly_contribution_total',
+    type: 'field',
+    data: {
+      alwaysDisplay: true
+    }
+  },
+  {
     id: 'defense_allocation_monthly_total',
     type: 'field',
     data: {
@@ -343,7 +332,7 @@ const MetaData =  [
     type: 'field',
     data: {
       alwaysDisplay: true,
-      options: {}
+      options: [ 'None', 'Complete', 'Incomplete', 'Needs Update' ],
     }
   },
   {
@@ -431,14 +420,14 @@ const MetaData =  [
     }
   },
   {
-    id: 'plan_529_individal_value',
+    id: 'investment_account_value',
     type: 'field',
     data: {
       alwaysDisplay: true
     }
   },
   {
-    id: 'investment_account_value',
+    id: 'investment_account_lump',
     type: 'field',
     data: {
       alwaysDisplay: true
@@ -495,6 +484,4 @@ const MetaData =  [
   }
 ];
 
-// Backfill our data.
-// const MetaData = DataUtils.backfillSetData(data, fragmentDefaults);
 export default MetaData;

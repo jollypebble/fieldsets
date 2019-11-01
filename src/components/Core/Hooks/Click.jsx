@@ -7,15 +7,15 @@ export const useClickEvents = (onClick, onDoubleClick) => {
 
   const delay = n => new Promise(resolve => setTimeout(resolve, n));
 
-  const handleClick = () => {
+  const handleClick = (e) => {
     queue.clearPendingPromises();
     const waitForClick = PromiseHandler(delay(300));
     queue.appendPendingPromise(waitForClick);
 
     return waitForClick.promise
-      .then(() => {
+      .then((e) => {
         queue.removePendingPromise(waitForClick);
-        onClick();
+        onClick(e);
       })
       .catch(errorInfo => {
         queue.removePendingPromise(waitForClick);
@@ -25,9 +25,9 @@ export const useClickEvents = (onClick, onDoubleClick) => {
       });
   };
 
-  const handleDoubleClick = () => {
+  const handleDoubleClick = (e) => {
     queue.clearPendingPromises();
-    onDoubleClick();
+    onDoubleClick(e);
   };
 
   return [ handleClick, handleDoubleClick ];

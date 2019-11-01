@@ -3,7 +3,8 @@ import {
   TextField
 } from 'react-md';
 
-const Default = ({id, name, value, account, member, options, onChange}) => {
+const Date = ({id, name, value, account, member, options, onChange}) => {
+  
   return (
     <React.Fragment>
       <TextField
@@ -17,4 +18,4 @@ const Default = ({id, name, value, account, member, options, onChange}) => {
   );
 }
 
-export default Default;
+export default Date;

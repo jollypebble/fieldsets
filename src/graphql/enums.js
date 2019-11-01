@@ -6,11 +6,6 @@ export const MetaTypes = [
   'set',
   'fieldset',
   'field',
-  'diagram',
-  'interface',
-  'sheet',
-  'container',
-  'filter',
   'account',
   'member',
   'role',
@@ -25,6 +20,8 @@ export const FieldTypes = [
   'decimal',
   'center',
   'coordinate',
+  'location',
+  'array',
   'list',
   'dictionary',
   'object',
@@ -33,7 +30,8 @@ export const FieldTypes = [
   'date',
   'time',
   'formula',
-  'function'
+  'function',
+  'callback'
 ];
 
 export const SetTypes = [
@@ -45,6 +43,9 @@ export const SetTypes = [
   'filter',
   'diagram',
   'interface',
+  'layout',
+  'chart',
+  'worksheet',
   'sheet',
   'custom'
 ];

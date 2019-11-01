@@ -1,4 +1,3 @@
-import { getDataCacheService } from 'components/Core/DataCache/DataCacheService';
 import { callCache } from 'components/Core/DataCache/reducers/datacache';
 import DataCacheDefault from 'components/Core/DataCache/DataCacheDefault';
 import { fragmentDefaults } from 'graphql/fragments/defaults';
@@ -16,23 +15,25 @@ export const Initialize = ( call ) => {
   const key = call.key;
   switch (call.target) {
     // Initialize using the call id
+    case 'Diagram':
     case 'diagram':
       // Get default data for the call diagram type which the defaults are stored as the call id.
-      // TODO: Check localforage for a saved state and use that instead of defaults.
       const setData = DataCacheDefault( { id: id, type: 'set' } );
+      // Field values will be updated in the default function from our last local store write.
       const fieldData = DataCacheDefault( { id: id, type: 'field' } );
       const metaData = DataCacheDefault( { id: id, type: 'meta' } );
-      const meta = { ...call.meta, setview: id };
+      const meta = { ...call.meta, setview: id, __typename: 'Meta' };
       const name = call.name;
 
       // Write our diagram fieldset as a special type.
       // Write our container fieldset that called this init
       const fieldset = callCache(
         {id: key, action: 'defaults', target: 'diagram'},
-        {id: key, name: name, type: 'diagram', parent: 'container', meta:meta }
+        {id: key, name: name, type: 'diagram', parent: 'container', meta: meta }
       );
 
       initializeFieldSets( { id: key, container: 'diagram', data: { sets: setData, fields: fieldData, meta: metaData } } );
+
 
       // Our fragments have all been written. Refetch fragment to return as a result and update the root query.
       const diagram = callCache({id: key, target: 'diagram', action: 'fetch'});
@@ -51,8 +52,6 @@ export const Initialize = ( call ) => {
  * Initialize and write all the fragments we will use to query our application
  */
 export const initializeFieldSets = ({ id, container = 'container', data = [] }) => {
-  const client = getDataCacheService();
-
   const sets = data.sets;
   const fields = data.fields;
   const meta = data.meta;
@@ -63,16 +62,16 @@ export const initializeFieldSets = ({ id, container = 'container', data = [] }) 
 }
 
 export const initializeSetData = ({ id, container = 'container', data = [] }) => {
-  const client = getDataCacheService();
   data.map((set) => {
     if ( set.id ) {
       // Check if the fragment exists already
       const setID = set.id;
 
       // Write the defaults
-      let setFragment = callCache({id: setID, action: 'defaults', target: 'fieldset'},set);
+      set.fields = (set.fields && set.fields.length) ? set.fields : [];
+      let setFragment = callCache({id: setID, action: 'defaults', target: 'fieldset'}, {...set});
       // Write the fragment
-      callCache({id: setID, target: 'fieldset', action: 'update'}, setFragment);
+      callCache({id: setID, target: 'fieldset', action: 'update'}, {...setFragment});
 
       // Write our child fragments.
       if (set.children && set.children.length) {
@@ -95,18 +94,16 @@ export const initializeSetData = ({ id, container = 'container', data = [] }) =>
 
 export const initializeFieldData = ({ id, container = 'container', data = [] }) => {
   if (!data.length) return;
-
-  const client = getDataCacheService();
   // Get your fields here. This is defined as a static json, but could be modified here to get remote field type definitions.
   data.map((field) => {
     if (field.id) {
       const fieldID = field.id;
-      const fieldFragment = callCache( {id: fieldID, action: 'defaults', target: 'field'}, field );
-
-      callCache({id: fieldID, target: 'field', action: 'update'}, fieldFragment);
+      const fieldFragment = callCache( {id: fieldID, action: 'defaults', target: 'field'}, {...field} );
+      callCache({id: fieldID, target: 'field', action: 'update'}, { ...fieldFragment });
 
       // Field parents are arrays as a fields can belong to multiple sets.
       // Make sure we push to the top level id that was initialized as well, but don't classify it as a parent fieldset to the field.
+      field.fieldsets = (field.fieldsets) ? [...field.fieldsets] : [];
       for ( let fieldSetID of field.fieldsets ) {
         callCache({id: fieldSetID, target: 'fieldset', action: 'update', filter: 'fields'}, fieldID);
       }
@@ -119,8 +116,6 @@ export const initializeFieldData = ({ id, container = 'container', data = [] }) 
 }
 
 export const initializeMetaData = ({ data = [] }) => {
-
-  const client = getDataCacheService();
   data.map((meta) => {
     if (meta.id) {
       const metaID = meta.id;
@@ -131,9 +126,8 @@ export const initializeMetaData = ({ data = [] }) => {
       }
       const metatype = meta.type;
 
-      const metaFragment = callCache( {id: metaID, action: 'defaults', target: 'meta'}, meta );
-
-      callCache({id: metaID, target: 'meta', type: metatype, action: 'update'}, metaFragment);
+      const metaFragment = callCache( {id: metaID, action: 'defaults', target: 'meta'}, {...meta} );
+      callCache({id: metaID, target: 'meta', type: metatype, action: 'update'}, {...metaFragment});
     }
   });
 }

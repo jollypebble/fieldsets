@@ -1,6 +1,6 @@
 import React from 'react';
 
-import SheetTab from 'components/Core/Sheet/SheetTab';
+import SheetTab from './SheetTab';
 import { TabsContainer, Tabs, Tab } from 'react-md';
 
 export class TabbedSheet extends React.Component {

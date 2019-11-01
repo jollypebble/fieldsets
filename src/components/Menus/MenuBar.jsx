@@ -16,7 +16,7 @@ const MenuBar = ({ title, alwaysVisible, menuIcon, actionIcon, inprogressIcon, m
 
 
 
-  useEffect( () => {
+  useLayoutEffect( () => {
       // Since icon is the only state of this component, initialize the icon to the default action icon after a render. This removes the sync icon.
       const actionIcon = (actionIcon) ? actionIcon : 'save';
       if ( icon !== actionIcon ) {

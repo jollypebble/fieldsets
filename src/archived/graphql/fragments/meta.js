@@ -1,6 +1,7 @@
 export const meta = `
-  fragment meta on MetaData @client {
+  fragment meta on Meta @client(always: true) {
     id
-    meta
+    type
+    data
   }
 `;

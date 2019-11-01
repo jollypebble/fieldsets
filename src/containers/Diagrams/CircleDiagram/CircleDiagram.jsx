@@ -1,17 +1,16 @@
-import React, { useLayoutEffect, useEffect, useState, useRef } from 'react';
-import ZoomViewer from 'components/Core/Diagram/SVG/ZoomViewer';
-import { Button } from 'react-md';
+import React, { useLayoutEffect, useEffect, useState } from 'react';
+import ZoomViewer from 'components/Core/Containers/Diagram/SVG/ZoomViewer';
 
 import { FieldSet } from 'components/Core';
 import { DialogSheet } from 'components/Sheets';
-import {useFocus, useStatus, useViewerDimensions} from 'components/Core/Hooks';
+import {useFocus, useStatus, useViewerDimensions, useClickEvents} from 'components/Core/Hooks';
 import { callCache } from 'components/Core/DataCache/reducers/datacache';
 
 /**
  * This is the container for our main diagram. It has direct access to the apollo cache so it can track foucs of it's child sets.
  */
 const CircleDiagram =  ({ id, name, type, meta: metaInit, data = [] } ) => {
-  const [{status, message}, updateStatus] = useStatus();
+  const [{status}, updateStatus] = useStatus();
   const [loaded, updateLoaded] = useState(false);
   const [focus, updateFocus] = useFocus();
   const { height, width } = useViewerDimensions();
@@ -53,7 +52,6 @@ const CircleDiagram =  ({ id, name, type, meta: metaInit, data = [] } ) => {
     attributes.height = height;
 
     metadata.attributes = attributes;
-    console.log(metadata);
     updateMeta(metadata);
   }
 
@@ -63,7 +61,6 @@ const CircleDiagram =  ({ id, name, type, meta: metaInit, data = [] } ) => {
   useEffect(
     () => {
       if ( ! loaded ) {
-        console.log(`Circle Diagram Post Render Status: ${status}`);
         switch (status) {
           case 'loaded':
             setStatus('rendering', `Rendering ${id}`);
@@ -107,7 +104,29 @@ const CircleDiagram =  ({ id, name, type, meta: metaInit, data = [] } ) => {
     () => {
       updateDialog({id: focus.focusID});
     },
-    [focus]
+    [focus.focusID]
+  );
+
+  /**
+   * Pan to new center.
+   */
+  useLayoutEffect(
+    () => {
+      if (Viewer) {
+        switch (status) {
+          case 'rendered':
+            Viewer.setPointOnViewerCenter(focus.center.x, focus.center.y, focus.zoom.scale);
+            break;
+          case 'resetting':
+            Viewer.setPointOnViewerCenter(meta.focus.center.x, meta.focus.center.y, meta.zoom.scale);
+            setStatus('rendered');
+            break;
+          default:
+            break;
+        }
+      }
+    },
+    [focus.center]
   );
 
   /**
@@ -116,28 +135,43 @@ const CircleDiagram =  ({ id, name, type, meta: metaInit, data = [] } ) => {
   useEffect(
     () => {
       if (Viewer) {
-        if ( 'rendering' === status ) {
+        if ( 'focused' === status ) {
           Viewer.setPointOnViewerCenter(focus.center.x, focus.center.y, meta.zoom.scale);
         }
       }
     },
-    [loaded]
+    [loaded, status]
   );
 
 
-  const handleClick = () => {
+  const onClick = () => {
 
   }
 
-  const handleDoubleClick = () => {
-
+  const onDoubleClick = () => {
+    // resetFocus();
   }
 
-  const updateZoom = () => {
+  // Our hook for registering clicks and double clicks separately.
+  const [handleClick, handleDoubleClick] = useClickEvents(onClick, onDoubleClick);
+
+  /**
+   * Triggered when using wheel or pinch (manual zoom only, not programatically).
+   */
+  const handleZoom = () => {
+    // console.log('Zooming')
+  }
+
+  /**
+   * Triggered when canvas is moved (including programatically).
+   */
+  const handlePan = () => {
+    // console.log('Panning')
   }
 
   const resetFocus = () => {
-
+    setStatus('resetting');
+    changeFocus(meta.focus);
   }
 
   const openDialog = () => {
@@ -150,23 +184,43 @@ const CircleDiagram =  ({ id, name, type, meta: metaInit, data = [] } ) => {
 
   if ( loaded ) {
     return (
+
       <div className="diagramviewer">
         <div className="viewer">
           <ZoomViewer
-            width={ meta.attributes.width }
-            height={ meta.attributes.height }
+            background="white"
+            width={ width }
+            height={ height }
             scaleFactor={ meta.zoom.scale }
             ref={(refViewer) => {Viewer = refViewer}}
-            onClick={ handleClick }
-            onZoom={ updateZoom }
-            onDoubleClick={ handleDoubleClick }
+            // onClick={ handleClick }
+            // onDoubleClick={ handleDoubleClick }
+            onPan={ handlePan }
+            onZoom={ handleZoom }
           >
             <svg
-              id="circlediagram"
-              viewBox={`0 0 ${meta.attributes.width} ${meta.attributes.height}`}
-              preserveAspectRatio="xMidYMid meet"
+              id="circle-diagram"
+              width={ width }
+              height={ height }
             >
-              <g id="diagramGroup">
+              <g id="diagram-background">
+                <defs>
+                  <radialGradient cx="50%" cy="50%" fx="50%" fy="50%" id={`${id}-radialgradient`} className="radialgradient">
+                    <stop className="gradient-start" offset="0%"></stop>
+                    <stop className="gradient-stop" offset="100%"></stop>
+                  </radialGradient>
+                  {/** TODO: Scale from a relative center so we can scale foreignobjects **/}
+                  <ellipse
+                    id={`${id}-background`}
+                    cx={ 880 }
+                    cy={ 428 }
+                    rx={200}
+                    ry={125}
+                  />
+                </defs>
+                <use xlinkHref={`#${id}-background`} style={{ fill: `url(#${id}-radialgradient)`, pointerEvents: 'none' }} />
+              </g>
+              <g id="diagram-group">
                 {
                   data.map((fieldset) => {
                     return(

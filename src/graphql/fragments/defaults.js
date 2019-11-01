@@ -1,16 +1,14 @@
 /**
- * This file contains the default data shape for our fragments. We can use these when we initialize fragments that have not been created.
+ * This file contains the default data shape and values for our graphql query fragments. We can use these when we initialize fragments that have not been created.
  */
 export const fragmentDefaults = {
-  account:{
-    id: 'default',
+  account: {
     name: '',
     type: 'account',
     parent: '',
     children: [],
     members: [],
     meta: {
-      id: 'default',
       type: 'account',
       data: { __typename: 'JSONObject' },
       __typename: 'Meta'
@@ -18,19 +16,17 @@ export const fragmentDefaults = {
     __typename: 'Account'
   },
   field: {
-    id: 'default',
     name: '',
     description: '',
-    parent: '',
-    sets: [],
+    parent: [],
+    fieldsets: [],
     value: null,
     type: 'default',
     callback: false,
     owner: '',
     order: 0,
-    dependencies: [],
+    children: [],
     meta: {
-      id: 'default',
       type: 'field',
       data: { __typename: 'JSONObject' },
       __typename: 'Meta'
@@ -38,14 +34,12 @@ export const fragmentDefaults = {
     __typename: 'Field'
   },
   fieldset: {
-    id: 'default',
     name: '',
     type: 'fieldset',
     parent: '',
     children: [],
     fields: [],
     meta: {
-      id: 'default',
       type: 'fieldset',
       data: { __typename: 'JSONObject' },
       __typename: 'Meta'
@@ -53,14 +47,12 @@ export const fragmentDefaults = {
     __typename: 'FieldSet'
   },
   diagram: {
-    id: 'default',
     name: '',
     type: 'diagram',
     parent: 'container',
     children: [],
     fields: [],
     meta: {
-      id: 'default',
       type: 'diagram',
       data: { __typename: 'JSONObject' },
       __typename: 'Meta'
@@ -68,13 +60,11 @@ export const fragmentDefaults = {
     __typename: 'FieldSet'
   },
   member: {
-    id: 'default',
     name: '',
     parent: '',
     children: [],
     roles: [],
     meta: {
-      id: 'default',
       type: 'member',
       data: { __typename: 'JSONObject' },
       __typename: 'Meta'
@@ -85,83 +75,97 @@ export const fragmentDefaults = {
     interface: {
       focus: null,
       notes: [],
-      attributes: null,
-      options: null,
-      filters: null,
-      className: '',
+      attributes: {
+        __typename: 'JSONObject'
+      },
+      options: [],
+      filters: [],
+      className: 'fieldset interface',
+      __typename: 'JSONObject'
     },
     diagram: {
-      setview: '',
+      view: '',
       focus: null,
       notes: [],
       attributes: {
         __typename: 'JSONObject'
       },
       zoom: {
-        scale: 1,
+        scale: 2.3,
         __typename: 'JSONObject'
       },
       center: { __typename: 'JSONObject' },
-      options: null,
-      filters: null,
-      className: ''
+      options: [],
+      filters: [],
+      className: 'fieldset diagram',
+      __typename: 'JSONObject'
     },
     fieldset: {
       notes: [],
       center: { __typename: 'JSONObject' },
       visible: true,
       depth: 0,
-      setview: 'Circle',
+      view: 'Circle',
       attributes: {
         __typename: 'JSONObject'
       },
-      className: '',
-      options: null,
+      options: [],
       zoom: {
-        scale: 1,
+        scale: 3.75,
         __typename: 'JSONObject'
       },
-      filters: null
+      filters: [],
+      className: 'fieldset',
+      __typename: 'JSONObject'
     },
     field: {
       notes: [],
-      attributes: null,
-      options: null,
-      filters: null,
+      attributes: {
+        __typename: 'JSONObject'
+      },
+      options: [],
+      filters: [],
       alwaysDisplay: false,
-      className: ''
+      className: 'field',
+      __typename: 'JSONObject'
     },
     account: {
       notes: [],
-      attributes: null,
-      options: null,
-      filters: null,
-      className: ''
+      attributes: {
+        __typename: 'JSONObject'
+      },
+      options: [],
+      filters: [],
+      className: 'account',
+      __typename: 'JSONObject'
     },
     member: {
       notes: [],
-      attributes: null,
-      options: null,
-      filters: null,
-      className: ''
+      attributes: {
+        __typename: 'JSONObject'
+      },
+      options: [],
+      filters: [],
+      className: 'member',
+      __typename: 'JSONObject'
     },
     role: {
       notes: [],
-      attributes: null,
-      options: null,
-      filters: null,
-      permissions: null,
-      className: ''
+      attributes: {
+        __typename: 'JSONObject'
+      },
+      options: [],
+      filters: [],
+      className: 'role',
+      __typename: 'JSONObject'
     }
   },
   role: {
-    id: 'default',
     name: '',
     type: 'role',
     parent: '',
     children: [],
     meta: {
-      id: 'default',
       type: 'role',
       data: { __typename: 'JSONObject' },
       __typename: 'Meta'

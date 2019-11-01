@@ -5,15 +5,19 @@ import { fragments } from '../fragments';
  * Fetch all the fields of a fieldset
  */
 export const fetchFields = gql`
-  query FetchFields {
-    fetchFields @client(always: true)
+  query FetchFields( $data: Array ) {
+    fetchFields( data: $data ) @client(always: true) {
+      ...field
+    }
   }
   ${fragments.field}
 `;
 
 export const updateField = gql`
-  mutation UpdateField($data: Array) {
-    updateField(data: $data) @client(always: true)
+  mutation UpdateFields( $data: Array ) {
+    updateFields( data: $data ) @client(always: true) {
+      ...field
+    }
   }
   ${fragments.field}
 `;

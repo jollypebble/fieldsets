@@ -10,13 +10,13 @@ const _ = require('lodash');
 const mergeObjectParams = ( object, defaults ) => {
 	const backfilled = _.defaultsDeep( _.cloneDeep(object), defaults );
 	if ( backfilled.meta ) {
-		if ( backfilled.meta.setview ) {
-			const setview = backfilled.meta.setview.charAt(0).toUpperCase() + backfilled.meta.setview.slice(1);
-			const setviewDefaults = SetViewDefaults[setview];
+		if ( backfilled.meta.view ) {
+			const view = backfilled.meta.view.charAt(0).toUpperCase() + backfilled.meta.view.slice(1);
+			const viewDefaults = SetViewDefaults[view];
 			if ( ! backfilled.meta.attributes ) {
 				backfilled.meta.attributes = {};
 			}
-			backfilled.meta.attributes = _.defaultsDeep( backfilled.meta.attributes, setviewDefaults );
+			backfilled.meta.attributes = _.defaultsDeep( backfilled.meta.attributes, viewDefaults );
 		}
 	}
 	return backfilled;

@@ -252,196 +252,37 @@ caption,
   font-weight: 100;
   src: url("/assets/fonts/OpenSans-Light.ttf"); }
 
-#defense_allocation-group .set-group ellipse {
-  fill: rgba(244, 70, 71, 0.75);
-  stroke: #f44647; }
+fieldset {
+  background: transparent;
+  border: solid 1px transparent;
+  margin: 0;
+  padding: 0;
+  font-size: 0.35vw;
+  height: 100%;
+  width: 100%; }
+  fieldset legend {
+    text-align: center;
+    margin: 0;
+    padding: 0.3vw 0.3vw 0 0.3vw;
+    cursor: default; }
+  fieldset ul {
+    margin: 0;
+    padding: 0 0.3vw; }
 
-#defense_allocation-group .set-group circle {
-  fill: rgba(244, 70, 71, 0.75);
-  stroke: #f44647; }
+.view-rectangle-text .view-legend {
+  font-size: 0.45vw;
+  font-weight: bold;
+  text-transform: uppercase; }
 
-#defense_allocation-group .set-group tspan {
-  fill: #515359; }
+.view-ellipse-text .view-legend {
+  font-size: 0.5vw;
+  font-weight: bold;
+  text-transform: uppercase; }
 
-#offense_allocation-group .set-group ellipse {
-  fill: rgba(109, 184, 254, 0.75);
-  stroke: #6db8fe; }
-
-#offense_allocation-group .set-group tspan {
-  fill: #515359; }
-
-#net_worth-group .set-group #net_worth {
-  fill: rgba(239, 239, 65, 0.5);
-  stroke: #efef41; }
-
-#net_worth-group .set-group tspan {
-  fill: #515359; }
-
-#short_term_money-group .set-group circle, #short_term_money-group .set-group rect {
-  fill: transparent;
-  stroke: #6db8fe; }
-
-#short_term_money-group .set-group tspan {
-  fill: #515359; }
-
-#mid_term_money-group .set-group circle, #mid_term_money-group .set-group ellipse {
-  fill: transparent;
-  stroke: #6db8fe; }
-
-#mid_term_money-group .set-group tspan {
-  fill: #515359; }
-
-#long_term_money-group .set-group circle, #long_term_money-group .set-group rect {
-  fill: transparent;
-  stroke: #6db8fe; }
-
-#long_term_money-group .set-group tspan {
-  fill: #515359; }
-
-#monthly_contribution-group .set-group rect, #lump_sums-group .set-group rect {
-  fill: rgba(239, 239, 65, 0.5);
-  stroke: #efef41; }
-
-#monthly_contribution-group .set-group tspan, #lump_sums-group .set-group tspan {
-  fill: #515359; }
-
-.radialDialog > div {
-  width: 600px;
-  height: 600px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  text-align: center;
-  border-radius: 50%;
-  padding: 20px 0; }
-  .radialDialog > div > h2 {
-    font-size: 22px;
-    font-weight: bold; }
-  .radialDialog > div > section {
-    padding: 0 80px 30px !important;
-    margin: 0 !important; }
-  .radialDialog > div > footer {
-    display: block;
-    padding-left: 20px;
-    margin-bottom: 20px; }
-    .radialDialog > div > footer > button {
-      margin: 0 !important; }
-
-.circleset.ellipse {
-  transition: rx 0.15s, ry 0.15s !important; }
-
-.circleset.rectangle {
-  transition: width 0.15s, height 0.15s !important; }
-
-.circle-group.parent-set {
-  animation: initShowUp 1s; }
-
-.circle-group.child-set {
-  opacity: 0;
-  pointer-events: none; }
-  .circle-group.child-set.shown {
-    display: inline;
-    animation: showUp 0.5s;
-    opacity: 1;
-    pointer-events: auto; }
-    .circle-group.child-set.shown .circleset {
-      transition: cx 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), cy 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), r 0.15s, stroke-width 0.15s; }
-  .circle-group.child-set.hidden {
-    animation: hideAway 0.25s;
-    opacity: 0; }
-    .circle-group.child-set.hidden .circleset {
-      transition: cx 1s cubic-bezier(0.19, 1, 0.22, 1), cy 1s cubic-bezier(0.19, 1, 0.22, 1), r 0.15s, stroke-width 0.15s; }
-  .circle-group.child-set.afterHidden {
-    display: none; }
-
-.circletext {
-  opacity: 0;
-  transition: opacity 0.5s; }
-  .circletext tspan {
-    line-height: 1pt; }
-  .circletext.shown {
-    opacity: 1; }
-  .circletext.hidden {
-    opacity: 1;
-    display: none; }
-
-/** Showing up an element */
-@keyframes showUp {
-  0% {
-    opacity: 0; }
-  100% {
-    opacity: 1; } }
-
-/** Hiding an element */
-@keyframes hideAway {
-  0% {
-    opacity: 1; }
-  50% {
-    opacity: 0; } }
-
-/** Showing up an element with a little delay at the beginning */
-@keyframes initShowUp {
-  0% {
-    opacity: 0; }
-  25% {
-    opacity: 0; }
-  100% {
-    opacity: 1; } }
-
-#short_term_money-gradientcone .gradient-start {
-  stop-color: #b8e7f5;
-  stop-opacity: 1; }
-
-#short_term_money-gradientcone .gradient-stop {
-  stop-color: #f7fcff;
-  stop-opacity: 0.5; }
-
-#mid_term_money-gradientcone .gradient-start {
-  stop-color: #eff8fb;
-  stop-opacity: 1; }
-
-#mid_term_money-gradientcone .gradient-stop {
-  stop-color: #89c8e5;
-  stop-opacity: 0.5; }
-
-#long_term_money-gradientcone .gradient-start {
-  stop-color: #4fc6f5;
-  stop-opacity: 1; }
-
-#long_term_money-gradientcone .gradient-stop {
-  stop-color: #f7fcff;
-  stop-opacity: 0.5; }
-
-#monthly_contribution {
-  fill: rgba(239, 239, 65, 0.5);
-  stroke: #efef41; }
-
-#lump_sums {
-  fill: rgba(239, 239, 65, 0.5);
-  stroke: #efef41; }
-
-#defense_allocation-group #defense_allocation-parent #defense_allocation {
-  fill: rgba(244, 70, 71, 0.75);
-  stroke: #f44647; }
-
-#defense_allocation-group #defense_allocation-children circle {
-  fill: transparent; }
-
-#offense_allocation-group #offense_allocation-parent ellipse {
-  fill: rgba(109, 184, 254, 0.75);
-  stroke: #6db8fe; }
-
-#net_worth-group #net_worth-parent #net_worth {
-  fill: rgba(239, 239, 65, 0.5);
-  stroke: #efef41; }
-
-#net_worth-group #net_worth-parent #net_worth-radialgradient .gradient-start {
-  stop-color: rgba(239, 239, 65, 0.5);
-  stop-opacity: 1; }
-
-#net_worth-group #net_worth-parent #net_worth-radialgradient .gradient-stop {
-  stop-color: #FFF;
-  stop-opacity: 0.5; }
+.view-circle-text .view-legend {
+  font-size: 0.4vw;
+  font-weight: bold;
+  text-transform: uppercase; }
 
 #tabs-wrapper {
   text-align: center;
@@ -618,14 +459,128 @@ caption,
 .diagramviewer {
   overflow: hidden;
   width: 100vw;
-  height: 98vh;
+  height: 100vh;
   z-index: -100; }
-  .diagramviewer .storeFieldData {
-    position: absolute;
-    right: 20px;
-    bottom: 20px;
-    font-weight: bold;
-    letter-spacing: 0.8; }
+
+.labelsheet-item .field {
+  padding: 0 0 0.15vw 0; }
+  .labelsheet-item .field div {
+    margin-left: 0.15vw; }
+    .labelsheet-item .field div .md-text-field-message {
+      margin-left: 0.3vw; }
+
+.labelsheet-item .fieldtype-select {
+  padding-left: 0.2vw;
+  padding-right: 0.1vw;
+  width: 95%; }
+  .labelsheet-item .fieldtype-select div {
+    margin-left: 0; }
+    .labelsheet-item .fieldtype-select div i {
+      margin: 0; }
+    .labelsheet-item .fieldtype-select div span.md-icon-text:first-child {
+      font-size: 0.35vw;
+      padding-right: 0.35vw; }
+  .labelsheet-item .fieldtype-select ul {
+    padding: 0; }
+
+.labelsheet-item div {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-size: inherit; }
+  .labelsheet-item div label {
+    font-size: 0.35vw;
+    left: 0.45vw;
+    -webkit-transform: translate3d(0, 0.65vw, 0);
+    transform: translate3d(0, 0.65vw, 0); }
+  .labelsheet-item div input {
+    margin: 0 0.4vw 0 0;
+    font-size: 0.35vw; }
+  .labelsheet-item div i {
+    margin-bottom: 0.1vw;
+    font-size: 0.35vw; }
+  .labelsheet-item div hr {
+    margin: 0 0.4vw 0 0;
+    height: 0.05vw; }
+
+#defense_allocation .view-ellipse {
+  fill: rgba(244, 70, 71, 0.75);
+  stroke: #f44647; }
+
+#defense_allocation-group .set-group .set-parent .view {
+  stroke: #f44647; }
+
+#defense_allocation-children .set-group .set-parent .view-circle {
+  fill: transparent; }
+
+#defense_allocation-children .set-group .set-parent.active .view-circle {
+  fill: rgba(244, 70, 71, 0.75); }
+
+#defense_allocation-children fieldset {
+  border: solid 1px transparent; }
+
+#offense_allocation .view {
+  fill: rgba(109, 184, 254, 0.75);
+  stroke: #6db8fe; }
+
+#offense_allocation-children fieldset {
+  border: solid 1px transparent; }
+
+#offense_allocation-group .set-group ellipse {
+  fill: transparent;
+  stroke: #6db8fe; }
+
+#offense_allocation-group .set-group svg.active circle {
+  fill: rgba(109, 184, 254, 0.75); }
+
+#offense_allocation-group .view-circle-legend {
+  font-size: 0.3vw; }
+
+#net_worth .view {
+  fill: rgba(239, 239, 65, 0.5);
+  stroke: #efef41; }
+
+.radialgradient .gradient-start {
+  stop-color: rgba(239, 239, 65, 0.5);
+  stop-opacity: 1; }
+
+.radialgradient .gradient-stop {
+  stop-color: #FFF;
+  stop-opacity: 0.5; }
+
+#econcircle-app-active-background {
+  fill: 'transparent';
+  stroke-width: 0; }
+  #econcircle-app-active-background.active {
+    stroke-width: 500;
+    stroke-dasharray: '780 1500'; }
+
+#short_term_money-group .set-group circle {
+  fill: transparent;
+  stroke: #6db8fe; }
+
+#mid_term_money-group .set-group circle {
+  fill: transparent;
+  stroke: #6db8fe; }
+
+#long_term_money-group .set-group circle {
+  fill: transparent;
+  stroke: #6db8fe; }
+
+#monthly_contribution .view, #lump_sums .view {
+  fill: rgba(66, 172, 10, 0.5);
+  stroke: #42ac0a; }
+
+#monthly_contribution-group .set-group rect, #lump_sums-group .set-group rect {
+  fill: rgba(66, 172, 10, 0.5);
+  stroke: #42ac0a; }
+
+#will_status-toggle div {
+  padding: 0; }
+
+#will_status-toggle i {
+  font-size: 0.35vw; }
 
 body {
   margin: 0;

@@ -14,13 +14,6 @@ import { useViewerDimensions } from 'components/Core/Hooks';
  */
 const App = (props) => {
   const { height, width } = useViewerDimensions();
-
-  /** Zoom of the main diagram */
-  const diagramZoom = 2.5;
-  /** Width of the main diagram */
-  const diagramWidth = width * diagramZoom;
-  const diagramHeight = height * diagramZoom;
-
   const startX = width/2;
   const startY = height/2;
 
@@ -36,15 +29,12 @@ const App = (props) => {
             name="Econ Circles"
             meta={{
               attributes: {
-                width: diagramWidth,
-                height: diagramHeight
+                width: width,
+                height: height
               },
               center: {
                 x: startX,
                 y: startY
-              },
-              zoom: {
-                scale: diagramZoom
               }
             }}
             defaultFocus={true}

@@ -11,36 +11,37 @@ import {
 } from 'graphql/queries';
 
 /**
- * Our Cache Write Wrapper
+ * Our Cache Update Wrapper and merge with previous values.
  */
 export const Update = ( call, data ) => {
   if ( data ) {
     const client = getDataCacheService();
     const id = call.id;
-    const key = (call.key) ? call.key : call.id;
+    const key = (call.key) ? call.key : id;
     const filter = (call.filter) ? call.filter : '';
     let type = (call.type) ? call.type : call.target;
 
-    // To get our previous result, remove the filter so we can apply the filter update later on the full fragment.
-    let noFilterCall = call;
+    let noFilterCall = {...call};
     noFilterCall.filter = '';
+
+    if ( 'meta' === call.target && 'meta' === type) {
+      type = ( data.type ) ? data.type : 'fieldset';
+    }
 
     // Key is set to id if not specified.
     if (key) {
-      let previous = Fetch(noFilterCall);
       let fragmentID = '';
       let fragmentQuery = '';
       let fragmentName = call.target;
+      let defaults = {};
+      let previous = {};
 
-      let defaults;
-      if ( 'meta' === type ) {
-        type = ( data.type ) ? data.type : '';
+      // To get our previous result, remove the filter so we can apply the filter update later on the full fragment.
+      if ( 'meta' === call.target ) {
+        previous = Fetch({ ...noFilterCall, ...{ target: type, type: null } });
+      } else {
+        previous = Fetch({...noFilterCall});
       }
-
-      defaults = fragmentDefaults[type];
-
-      defaults.meta.data = fragmentDefaults.meta[type];
-      previous = (previous) ? previous : defaults;
 
       // Ensure our IDs are correct since may have grabbed defaults.
       // Ensure if we used defaults, we ov
@@ -55,6 +56,7 @@ export const Update = ( call, data ) => {
           __typename: 'Meta'
         }
       };
+
 
       // Our fetch single calls
       switch (call.target) {
@@ -116,7 +118,6 @@ export const Update = ( call, data ) => {
           break;
         case 'subsets':
         case 'children':
-        case 'sets':
         case 'accounts':
         case 'subaccounts':
           previous.children.push(data);
@@ -124,7 +125,7 @@ export const Update = ( call, data ) => {
         case 'fieldsets':
           // Fields have a fieldsets list of ids. Push the id accordingly.
           if ('field' === call.target) {
-            previous.sets.push(data);
+            previous.fieldsets.push(data);
           } else if ( 'fieldset' === call.target ) {
             // Order only matters on fieldsets that aren't containers.
             const order = (data.order) ? data.order : 0;
@@ -138,9 +139,29 @@ export const Update = ( call, data ) => {
           }
           break;
         default:
-          // The filter should exist as a property of our result, otherwise just return the entire result as the filter may be on meta data that is not a proper JSON object.
-          if ( previous[filter] ) {
+          if ( 'meta' === call.target ) {
+            if ( previous.meta[filter] ) {
+              if (typeof previous.meta[filter] === 'object') {
+                previous.meta[filter] = { ...previous.meta[filter], ...data }
+              } else {
+                previous.meta[filter] = data;
+              }
+            } else if ( previous.meta.data[filter] ) {
+              if (typeof previous.meta.data[filter] === 'object') {
+                previous.meta.data[filter] = { ...previous.meta.data[filter], ...data }
+              } else {
+                previous.meta.data[filter] = data;
+              }
+            } else {
+              const newdata = { [filter] : data };
+              previous.meta.data = { ...previous.meta.data, ...newdata };
+            }
+          } else if ( previous[filter] ) {
+            previous[filter] = (previous[filter]) ? previous[filter] : [];
+            // The filter should exist as a property of our result, otherwise just return the entire result as the filter may be on meta data that is not a proper JSON object.
             previous[filter].push(data);
+          } else {
+            previous[filter] = data
           }
           break;
       }
@@ -150,14 +171,17 @@ export const Update = ( call, data ) => {
         id: fragmentID,
         fragment: fragmentQuery,
         fragmentName: fragmentName,
-        data: previous
+        data: { ...previous }
       });
+      return client.readFragment({
+        id: fragmentID,
+        fragment: fragmentQuery,
+        fragmentName: fragmentName
+      });
+
     } else {
       throw new Error('You must specify an id or key to write to.');
     }
-
-    const result = Fetch(noFilterCall);
-    return result;
   } else {
     throw new Error('Cache write called with empty data.');
   }

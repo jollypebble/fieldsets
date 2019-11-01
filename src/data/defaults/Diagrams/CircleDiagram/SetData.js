@@ -68,7 +68,7 @@ const SetData = [
           },
           {
             id: 'liabilities_debt',
-            name: 'Liabilities/Debt',
+            name: 'Liabilities / Debt',
             parent: 'short_term_money',
           },
         ]

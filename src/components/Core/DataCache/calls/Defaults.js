@@ -1,5 +1,6 @@
-import { callCache } from 'components/Core/DataCache/reducers/datacache';
+import { Fetch, Write } from 'components/Core/DataCache/calls';
 import { fragmentDefaults } from 'graphql/fragments/defaults';
+
 
 /**
  * Back fill data with defaults and a shallow merge with the spread operator.
@@ -9,14 +10,15 @@ export const Defaults = ( call, data ) => {
   if ( data ) {
     const id = call.id;
     const key = (call.key) ? call.key : call.id;
-    const type = (data.type) ? data.type : call.target;
+    const type = (data.type && 'field' !== call.target) ? data.type : call.target;
+
     // Key is set to id if not specified.
+    let fragment = null;
 
     if (key && type) {
-      let fragment;
       const metatype = ( 'meta' === type ) ? call.parent : type;
-      let metadata = fragmentDefaults.meta[metatype];
-      const metafields = fragmentDefaults.meta[metatype];
+      let metadata = { ...fragmentDefaults.meta[metatype] };
+      const metafields = { ...fragmentDefaults.meta[metatype] };
 
       for (let metafield in metafields) {
         let newMeta = {};
@@ -44,8 +46,9 @@ export const Defaults = ( call, data ) => {
         }
       }
 
-      let previous = callCache({id: id, target: call.target, action: 'fetch'});
-      previous = (previous) ? previous : {};
+      let previous = Fetch({id: id, target: call.target});
+      previous = (previous) ? { ...previous } : { ...fragmentDefaults[type] };
+
       if ( 'meta' === call.target ) {
         fragment = {
           ...previous,
@@ -61,7 +64,6 @@ export const Defaults = ( call, data ) => {
         };
       } else {
         fragment = {
-          ...fragmentDefaults[type],
           ...previous,
           ...data,
           id: key,
@@ -77,9 +79,7 @@ export const Defaults = ( call, data ) => {
           }
         };
       }
-
-      callCache({id: key, target: call.target, action: 'update'}, fragment);
-      return fragment;
+      return Write({id: key, target: call.target}, {...fragment});
     }
   }
   return;

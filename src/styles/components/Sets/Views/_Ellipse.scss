@@ -1,22 +1,7 @@
-#defense_allocation-group {
-  #defense_allocation-parent {
-    #defense_allocation {
-      fill: $defense-fill;
-      stroke: $defense-stroke;
-    }
-  }
-  #defense_allocation-children {
-    circle {
-      fill: $transparent;
-    }
-  }
-}
-
-#offense_allocation-group {
-  #offense_allocation-parent {
-    ellipse {
-      fill: $offense-fill;
-      stroke: $offense-stroke;
-    }
+.view-ellipse-text {
+  .view-legend {
+    font-size: 0.5vw;
+    font-weight: bold;
+    text-transform: uppercase;
   }
 }

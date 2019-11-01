@@ -9,6 +9,7 @@ import { callCache } from 'components/Core/DataCache/reducers/datacache';
  * Each set will check its own field set data and will iteratively call itself if there are children.
  */
 const FieldSet = ({ id, children }) => {
+  const [isActive, updateActive] = useState(false);
   const [{status, message}, updateStatus] = useStatus();
   const [loaded, updateLoaded] = useState(false);
   /**
@@ -58,13 +59,18 @@ const FieldSet = ({ id, children }) => {
 
   // Iteratively build our set heirarchy beore render.
   const renderNestedSets = (set) => {
-    const setview = set.meta.data.setview.toLowerCase();
+    const settype = (set.type) ? set.type : 'fieldset';
+    const view = set.meta.data.view;
     return (
       <SetGroup
-        id={`${set.id}-group`}
+        id={`${set.id}`}
         key={`${set.id}-group`}
-        setview={set.meta.data.setview}
-        className={`set-group`}
+        type={settype}
+        group={'group'}
+        view={set.meta.data.view}
+        className={`set-group ${set.id}-group${(isActive)? ' active' : ''}`}
+        onEnter={() => {updateActive(true)}}
+        onExit={() => {updateActive(false)}}
       >
         <Set
           key={ set.id }

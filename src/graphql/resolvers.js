@@ -1,4 +1,4 @@
-import GraphQLJSON, { GraphQLJSONObject } from 'graphql-type-json';
+import { GraphQLJSON, GraphQLJSONObject } from 'graphql-type-json';
 import { fetchMeta, fetchFocus, fetchField, fetchFieldSet, fetchContainer } from './queries';
 import { defaults } from './defaults';
 
@@ -37,59 +37,29 @@ export const resolvers = {
       client.writeQuery({query: fetchContainer, data: {container: container}});
       const refetch = client.readQuery({query: fetchContainer});
       return refetch.container;
-    },
-    updateFieldSets: ( object, { data }, { client, getCacheKey } ) => {
-      return;
-    },
-    updateField: ( object, { data }, { client, getCacheKey } ) => {
-      const id = getCacheKey({ __typename: 'Field', id: data.id });
-      const fieldData = client.readFragment({ id, fragment: fetchFieldSet, fragmentName: 'field' });
-      const updatedFieldData = {
-        ...fieldData,
-        value: data.value
-      };
-      client.writeFragment({
-        id,
-        fragment: fetchFieldSet,
-        fragmentName: 'field',
-        data: updatedFieldData
-      });
-
-      return updatedFieldData;
-    },
-    updateFieldSet: ( object, { data }, { client, getCacheKey } ) => {
-      let result = [];
-      data.forEach(item => {
-        const id = getCacheKey({ __typename: 'Field', id: item.id });
-        const fieldData = client.readFragment({ id, fragment: fetchFieldSet, fragmentName: 'field' });
-        client.writeFragment({
-          id,
-          fragment: fetchFieldSet,
-          fragmentName: 'field',
-          data: {
-            ...fieldData,
-            value: item.value
-          }
-        });
-        result.push(fieldData.parent);
-      });
-
-      return result;
-    },
-    updateMeta: ( object, { data }, { client, getCacheKey } ) => {
-      return;
-    },
-    updateMember: ( object, { data }, { client, getCacheKey } ) => {
-      return;
-    },
-    updateAccount: ( object, { data }, { client, getCacheKey } ) => {
-      return;
-    },
-    updateRole: ( object, { data }, { client, getCacheKey } ) => {
-      return;
     }
   },
   Query: {
+    fetchContainerData: ( object, data, { client, getCacheKey } ) => {
+      const container = client.readQuery({query: fetchContainer});
+      let fieldsets = [];
+      container.container.children.map(
+        (fieldsetID) => {
+          const fieldset = client.readFragment({
+            id: getCacheKey({ __typename: 'FieldSet', id: fieldsetID }),
+            fragment: fetchFieldSet,
+            fragmentName: 'fieldset'
+          });
+          fieldsets.push(fieldset);
+        }
+      );
+
+      const startingsets = fieldsets.filter( ( fieldset ) => {
+        return fieldset.parent === '';
+      });
+      return startingsets;
+
+    },
     fetchFieldSets: ( object, { data }, { client, getCacheKey } ) => {
       const container = client.readQuery({query: fetchContainer});
       let fieldsets = [];
@@ -112,17 +82,47 @@ export const resolvers = {
           return parents;
         }
       }
+
       return fieldsets;
     },
     fetchFields: ( object, { data }, { client, getCacheKey } ) => {
-    },
-    fetchAccounts: ( object, { data }, { client, getCacheKey } ) => {
-    },
-    fetchAccount: ( object, { data }, { client, getCacheKey } ) => {
-    },
-    fetchMembers: ( object, { data }, { client, getCacheKey } ) => {
-    },
-    fetchRoles: ( object, { data }, { cache, getCacheKey } ) => {
+      let fields = [];
+      data.fields.map(
+        (fieldID) => {
+          const field = client.readFragment({
+            id: getCacheKey({ __typename: 'Field', id: fieldID }),
+            fragment: fetchField,
+            fragmentName: 'field'
+          });
+          fields.push(field);
+        }
+      );
+      // We allow for specific filters here.
+      let filtered = [];
+      let isFiltered = false;
+
+      if ( data ) {
+        if (data.hasOwnProperty('parent')) {
+          isFiltered = true;
+          const parents = fields.filter( ( field ) => {
+            return field.parent === data.parent;
+          });
+          filtered = [...filtered, ...parents];
+        }
+        if (data.hasOwnProperty('alwaysDisplay')) {
+          isFiltered = true;
+          const alwaysvisible = fields.filter( ( field ) => {
+            return field.meta.alwaysDisplay === data.alwaysDisplay;
+          });
+          filtered = [...filtered, ...alwaysvisible];
+        }
+      }
+
+      if ( isFiltered ) {
+        return filtered;
+      }
+
+      return fields;
     }
   },
   Set: {

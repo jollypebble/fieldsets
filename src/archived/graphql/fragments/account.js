@@ -1,44 +1,31 @@
-import { meta } from './meta'
-
 export const account = `
-  fragment member on Member @client {
+  fragment account on Account @client(always: true) {
+    id
+    name
+    type
+    parent
+    children
+    members
+  }
+`;
+
+export const member = `
+  fragment member on Member @client(always: true) {
     id
     name
     parent
+    type
+    children
     roles
-    meta
   }
+`;
 
-  fragment account on Account @client {
+export const role = `
+  fragment role on Role @client(always: true) {
     id
     name
     type
     parent
-    children {
-      ...account
-    }
-    members {
-      ...members
-    }
-    roles {
-      ...role
-    }
-    meta {
-      ...meta
-    }
+    children
   }
-
-  fragment role on Role @client {
-    id
-    name
-    type
-    parent
-    children {
-      ...role
-    }
-    meta {
-      ...meta
-    }
-  }
-  ${meta}
 `;

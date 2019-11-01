@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 
 /**
- * Handle Cancelation of promises
+ * Handle Cancelation of promises. Usefull for handling double clicks or other user interactions.
  */
 export const usePromiseQueue = () => {
   const pendingPromises = useRef([]);

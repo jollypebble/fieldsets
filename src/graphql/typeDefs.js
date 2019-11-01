@@ -47,12 +47,13 @@ export const typeDefs = `
   type Field {
     id: ID!
     name: String
-    label: String
-    parent: ID
+    description: String
+    parent: [ID]
+    children: [ID]
     fieldsets: [ID]
     value: JSON
     type: FieldType
-    dependencies: [ID]
+    callback: JSONObject
     order: Int
     owner: Member
     meta: Meta
@@ -83,36 +84,55 @@ export const typeDefs = `
   type Focus {
     id: ID!
     name: String
+    focusID: ID
+    focusGroup: ID
     parent: ID
     center: JSONObject
+    container: JSONObject
     depth: Int
+    expanded: Boolean
     zoom: JSONObject
+  }
+
+  input ContainerData {
+    id: ID!
+    name: String
+    type: String
+    parent: ID
+    children: [ID]
+    fields: [ID]
+  }
+
+  input Fields {
+    fields: [ID]
+  }
+
+  inputFieldData {
+    id: ID!
+    name: String
+    description: String
+    parent: [ID]
+    children: [ID]
+    fieldsets: [ID]
+    value: JSON
+    type: FieldType
+    callback: JSONObject
+    order: Int
+    owner: Member
+    meta: Meta
   }
 
   type Mutation {
     updateFocus(id: ID!): Focus
-    updateContainer(data: JSONObject): [FieldSet]
-    updateField(id: ID!): Field!
-    updateFieldSet(id: ID): FieldSet
-    updateFieldSets(id: ID): [FieldSet]
-    updateMeta(id: ID): Meta
-    updateMember(id: ID): Member
-    updateAccount(id: ID): Account
-    updateRole(id: ID): Role
+    updateContainer(data: ContainerData): [FieldSet]
+    updateFields(data: FieldData): [Field]
   }
 
   type Query {
     fetchFocus: Focus
     fetchContainer: FieldSet
-    fetchFieldSets(data: JSONObject): [FieldSet]
-    fetchFieldSet(id: ID): FieldSet
-    fetchFields(id: ID): [Field]
-    fetchField(id: ID): Field
-    fetchMeta(id: ID): Meta
-    fetchAccounts(data: JSONObject): [Account]
-    fetchAccount(id: ID): Account
-    fetchMembers(data: JSONObject): [Member]
-    fetchRoles(data: JSONObject): [Role]
+    fetchContainerData: [FieldSet]
+    fetchFields(data: Fields): [Field]
   }
 
   enum FieldType {

@@ -1,43 +1,49 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
+import { useLazyQuery } from '@apollo/react-hooks';
+import { getDataCacheService } from 'components/Core/DataCache/DataCacheService';
 import PropTypes from 'prop-types';
 import SheetType from './SheetType';
+import {
+  fetchFields
+} from 'graphql/queries';
 import { callCache } from 'components/Core/DataCache/reducers/datacache';
 
-export const Sheet = ({id, type, name, options, children}) => {
-  const [status, updateStatus] = useState('initializing');
-  const [data, updateData] = useState({
-    id: id,
-    fields: {},
-    sets: {},
-    meta: {}
+import { useStatus } from 'components/Core/Hooks';
+
+export const Sheet = ({id, type, active, visible, variables, children}) => {
+  const propTypes = {
+    id: PropTypes.string.isRequired
+  };
+  const [{status, message}, updateStatus] = useStatus();
+
+  // Get our fields for the corresponding fieldset.
+  const [fetchSheetFields, { loading, called, data }] = useLazyQuery(fetchFields, {
+    client: getDataCacheService(),
+    variables: {data: {fields: variables.fields}}
   });
 
-  const onChange = () => {
-
-  }
-
-  const onSave = () => {
-
-  }
-
-  return (
-    <SheetType
-      id={id}
-      type={type}
-      data={data}
-      onChange={onChange}
-      onSave={onSave}
-      options={options}
-    >
-      {children}
-    </SheetType>
+  useLayoutEffect(
+    () => {
+      fetchSheetFields();
+    },
+    []
   );
-}
 
-Sheet.propTypes = {
-  id: PropTypes.string.isRequired,
-  name: PropTypes.string,
-  data: PropTypes.array
-};
+  if ( called && ! loading && data.fetchFields.length > 0) {
+    return (
+      <SheetType
+        id={id}
+        type={type}
+        active={active}
+        visible={visible}
+        fields={data.fetchFields}
+      >
+        {children}
+      </SheetType>
+    );
+  }
+
+  return null;
+}
 
 export default Sheet;

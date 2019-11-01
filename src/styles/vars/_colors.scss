@@ -6,20 +6,10 @@ $app-white: #FFF;
 $app-blue: #6db8fe;
 $app-red: #f44647;
 $app-yellow: #efef41;
+$app-green: #42ac0a;
 
 $transparent: transparent;
 $default-text-color: #515359;
-
-
-// Set Views
-
-// Gradient Cone
-$short-term-money-gradientcone-start: #b8e7f5;
-$short-term-money-gradientcone-stop: #f7fcff;
-$mid-term-money-gradientcone-start: #eff8fb;
-$mid-term-money-gradientcone-stop: #89c8e5;
-$long-term-money-gradientcone-start: #4fc6f5;
-$long-term-money-gradientcone-stop: #f7fcff;
 
 // Descriptive variable names for easier assignment
 $defense-fill: rgba($app-red, 0.75);
@@ -49,6 +39,6 @@ $longterm-text: $default-text-color;
 $net_worth-fill: rgba($app-yellow, 0.5);
 $net_worth-stroke: $app-yellow;
 
-$contribution-fill: rgba($app-yellow, 0.5);
-$contribution-stroke: $app-yellow;
+$contribution-fill: rgba($app-green, 0.5);
+$contribution-stroke: $app-green;
 $contribution-text: $default-text-color;

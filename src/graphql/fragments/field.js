@@ -4,13 +4,13 @@ export const field = `
     name
     description
     parent
+    children
     value
     type
     callback
     owner
     order
-    dependencies
-    sets
+    fieldsets
     meta {
       ...meta
     }

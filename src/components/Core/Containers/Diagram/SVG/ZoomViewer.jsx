@@ -32,7 +32,7 @@ const ZoomViewer = (props,ref) => {
   }));
   return (
     <UncontrolledReactSVGPanZoom
-      background="white"
+      background={(props.background) ? props.background : "white"}
       tool="auto"
       toolbarProps={{
         position: "none"

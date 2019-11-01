@@ -1,4 +1,4 @@
-import { getDataCacheService } from 'components/Core/DataCache/DataCacheService';
+import { getDataCacheService, getDataCacheStore } from 'components/Core/DataCache/DataCacheService';
 import {
   fetchField,
   fetchFieldSet,
@@ -14,7 +14,7 @@ import {
 export const Fetch = ( call ) => {
   const client = getDataCacheService();
   const id = call.id;
-  const key = (call.key) ? call.key : call.id;
+  const key = (call.key) ? call.key : id;
   const filter = (call.filter) ? call.filter : '';
 
   let result = null;
@@ -77,37 +77,31 @@ export const Fetch = ( call ) => {
         case 'sets':
         case 'accounts':
         case 'subaccounts':
-          result = result.children;
+          result = [...result.children];
           break;
         case 'fieldsets':
           // Fields have a fieldsets list of ids. Return those fieldsets if this call targets a field instead of a set.
           // Both of these result lists are not lists of fieldsets. So we iterate through them to generate our list.
           let resultList = [];
-          if ('field' === call.target && result.sets) {
-            for ( let fieldsetID of result.sets ) {
-              const fieldset = client.readFragment({
-                id: `FieldSet:${fieldsetID}`,
-                fragment: fetchFieldSet,
-                fragmentName: 'fieldset'
-              });
-              resultList.push(fieldset);
-            }
-            result = resultList;
-          } else {
-            for ( let subset of result.children ) {
-              const fieldset = client.readFragment({
-                id: `FieldSet:${subset.id}`,
-                fragment: fetchFieldSet,
-                fragmentName: 'fieldset'
-              });
-              resultList.push(fieldset);
-            }
+
+          for ( let fieldsetID of result.fieldsets ) {
+            const fieldset = client.readFragment({
+              id: `FieldSet:${fieldsetID}`,
+              fragment: fetchFieldSet,
+              fragmentName: 'fieldset'
+            });
+            resultList.push(fieldset);
           }
-          result = resultList;
+          result = [...resultList];
           break;
         default:
-          // The filter should exist as a property of our result, otherwise just return the entire result as the filter may be on meta data that is not a proper JSON object.
-          result = (result[filter]) ? result[filter] : result;
+          // Assume query is asking for a filter of the data json object.
+          if ( 'meta' === call.target && 'data' !== filter) {
+            result = (result.data[filter]) ? result.data[filter] : null;
+          } else {
+            // The filter should exist as a property of our result, otherwise just return the entire result as the filter may be on meta data that is not a proper JSON object.
+            result = (result[filter]) ? result[filter] : null;
+          }
           break;
       }
     }

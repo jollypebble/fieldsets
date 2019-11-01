@@ -19,14 +19,19 @@ export const fragments = {
     ${fieldset}
     ${meta}`,
   member: gql`
-    ${meta}
-    ${role}`,
+    ${account},
+    ${member},
+    ${role},
+    ${meta}`,
   account: gql`
-    ${meta},
-    ${member}
-    ${role}`,
+    ${account},
+    ${member},
+    ${role},
+    ${meta}`,
   role: gql`
-    ${role}
+    ${account},
+    ${member},
+    ${role},
     ${meta}`,
   meta: gql`
     ${meta}`,

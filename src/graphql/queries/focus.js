@@ -10,12 +10,14 @@
     focus @client(always: true) {
       id
       focusID
+      focusGroup
       container {
         containerID
         type
       }
       type
       depth
+      expanded
       center {
         x
         y

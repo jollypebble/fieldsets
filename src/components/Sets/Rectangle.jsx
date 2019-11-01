@@ -1,54 +1,57 @@
 import React from 'react';
-import SVGLabel from './Labels/SVGLabel';
+import { SetLabel, Sheet } from 'components/Core';
 
-const Rectangle = ({id, active, variables}) => {
+const Rectangle = ({id, view, active, variables}) => {
   const defaults = {
     width: 120,
     height: 36,
-    rotate: 0,
     ratio: 1,
     strokeWidth: 1
   };
+  let {ratio, width, height, textX, textY, strokeWidth} = {...defaults, ...variables.attributes};
+  const {center, visible} = variables;
+  const centerX = center.x;
+  const centerY = center.y;
 
-  const {width, height, rotate, ratio, strokeWidth} = {...defaults, ...variables.attributes};
-  let {radiusX, radiusY, textX, textY} = variables.attributes;
-  const {center, parent} = variables;
-  let visible = variables.visible;
+  textX = (textX) ? textX : centerX;
+  textY = (textY) ? textY : centerY;
 
-  const hasParent = (parent && parent !== '') ? true : false;
-  let centerX = center.x;
-  let centerY = center.y;
+  width = (active) ? width * ratio : width;
+  height = (active) ? height * ratio : height;
 
-  /**
-   * Rectangle Text does not align without delaring center text.
-   */
-  textX = (textX) ? textX : centerX + (width/2);
-  textY = (textY) ? textY : centerY + (height/2);
   variables.attributes.textX = textX;
   variables.attributes.textY = textY;
 
+  // Lowercase view for className
+  const view_lower = view.toLowerCase();
   return (
     <React.Fragment>
       <rect
         id={id}
-        className="setview rectangle-setview rectangle"
+        className={`view view-${view_lower}`}
         x={centerX}
         y={centerY}
         width={width}
         height={height}
-        transform={`rotate(${rotate ? rotate : 0})`}
-        rx={radiusX}
-        ry={radiusY}
         strokeWidth={strokeWidth ? strokeWidth : 1}
       />
-      <SVGLabel
+      <SetLabel
         id={`${id}-label`}
-        className="setview-label setview-circle-label"
+        type={'FieldSetLabel'}
+        className={`view-label view-${view_lower}-label`}
         name={variables.name}
         active={active}
         visible={visible}
         variables={variables}
-      />
+      >
+        <Sheet
+          id={id}
+          type="LabelSheet"
+          active={active}
+          visible={visible}
+          variables={variables}
+        />
+      </SetLabel>
     </React.Fragment>
   );
 }

@@ -16,7 +16,7 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
   introspectionQueryResultData
 });
 
-let cache = new InMemoryCache({ fragmentMatcher });
+const cache = new InMemoryCache({ fragmentMatcher });
 let DataCacheService;
 let DataCacheStore;
 
@@ -45,7 +45,8 @@ export const getDataCacheStore = async () => {
       DataCacheStore = await new CachePersistor({
         cache,
         storage: localForage,
-        key: 'fieldsets-cache-persist',
+        key: 'fieldsets-datacache-persist',
+        maxSize: 10485760, // 10MB maxSize. This was arbitrarily set. If problems arise, change as needed.
         debug: true
       });
     } catch (error) {
@@ -62,14 +63,15 @@ export const getDataCacheService = () => {
   if (! DataCacheService) {
     getDataCacheStore();
     DataCacheService = new ApolloClient({
+      name: 'fieldsets-datacache',
       link: new HttpLink({
         uri: `${GRAPHQL_SERVER}/graphql`
       }),
+      connectToDevTools: true,
       cache,
       resolvers,
       typeDefs,
     });
-
     cache.writeData({
       data: defaults
     });

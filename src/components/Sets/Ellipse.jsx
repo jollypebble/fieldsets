@@ -1,11 +1,11 @@
 import React from 'react';
-import SVGLabel from './Labels/SVGLabel';
+import { SetLabel, Sheet } from 'components/Core';
 
-const Ellipse = ({id, active, variables}) => {
+const Ellipse = ({id, view, active, variables}) => {
   const defaults = {
-    radiusX: 9,
-    radiusY: 1.8,
-    ratio: 1.1,
+    radiusX: 75,
+    radiusY: 15,
+    ratio: 1,
     strokeWidth: 1
   };
 
@@ -13,11 +13,7 @@ const Ellipse = ({id, active, variables}) => {
   radiusX = (active) ? radiusX * ratio : radiusX;
   radiusY = (active) ? radiusY * ratio : radiusY;
 
-  const visible = variables.visible;
-
-  const {center, parent} = variables;
-  const hasParent = (parent && parent !== '') ? true : false;
-
+  const {center, visible} = variables;
   const centerX = center.x;
   const centerY = center.y;
 
@@ -30,26 +26,36 @@ const Ellipse = ({id, active, variables}) => {
   variables.attributes.textX = textX;
   variables.attributes.textY = textY;
 
+  // Lowercase view for className
+  const view_lower = view.toLowerCase();
   return (
     <React.Fragment>
       <ellipse
         id={id}
-        className="setview-ellipse"
+        className={`view view-${view_lower}`}
         cx={centerX}
         cy={centerY}
         rx={radiusX}
         ry={radiusY}
         strokeWidth={strokeWidth}
-        onClick={() => {return}}
       />
-      <SVGLabel
+      <SetLabel
         id={`${id}-label`}
-        className="setview-label setview-circle-label"
+        type='FieldSetLabel'
+        className={`view-label view-${view_lower}-label`}
         name={variables.name}
         active={active}
         visible={visible}
         variables={variables}
-      />
+      >
+        <Sheet
+          id={id}
+          type='LabelSheet'
+          active={active}
+          visible={visible}
+          variables={variables}
+        />
+      </SetLabel>
     </React.Fragment>
   );
 }

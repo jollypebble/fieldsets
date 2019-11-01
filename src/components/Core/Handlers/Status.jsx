@@ -1,6 +1,6 @@
 import React, {createContext, useReducer, useState, useDebugValue} from 'react';
 
-// Our context.
+// Our contexts.
 export const StatusContext = createContext({});
 
 export const Status = ({children}) => {
@@ -18,7 +18,7 @@ export const Status = ({children}) => {
     hidden: ['connected', 'ready', 'idle', 'loaded', 'default', 'done', 'complete'],
     visible: ['initializing', 'priming', 'saving'],
     nochange: ['updating', 'fetching', 'connecting']
-  }
+  };
 
   const setStatus = (current, call) => {
     if ( call ) {

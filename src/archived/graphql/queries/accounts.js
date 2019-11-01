@@ -1,57 +1,66 @@
 import gql from 'graphql-tag';
-import { account } from '../fragments'
+import { fragments } from '../fragments';
 
-export const fetchAllAccounts = gql`
-  query FetchAllAccounts @client {
-    account {
-      ...account
+/**
+ * Fetch All
+ */
+export const fetchAccounts = gql`
+  query FetchAccounts {
+    fetchAccounts {
+      ...member
     }
   }
-  ${account}
+  ${fragments.account}
 `;
 
-export const fetchAllMembers = gql`
-  query FetchAllMembers @client {
-    member {
-      ...account
-    }
-  }
-  ${account}
-`;
-
-export const fetchSubAccounts = gql`
-  query FetchSubAccounts($id: ID!) @client {
-    account(parent: $id) {
-      ...account
-    }
-  }
-  ${account}
-`;
-
-
-export const fetchAccount = gql`
-  query FetchAccount($id: ID!) @client {
-    account(id: $id) {
-      ...account
-    }
-  }
-  ${account}
-`;
-
+/**
+ * Fetch All
+ */
 export const fetchMembers = gql`
-  query FetchMembers($id: ID!) @client {
-    member
+  query FetchMembers {
+    fetchMembers {
+      ...member
+    }
   }
-  ${account}
+  ${fragments.member}
+`;
+
+/**
+ * Fetch All
+ */
+export const fetchRoles = gql`
+  query FetchRoles {
+    fetchRoles {
+      ...role
+    }
+  }
+  ${fragments.role}
 `;
 
 export const updateMember = gql`
-  ${account}
+  mutation UpdateMember($data: Array) {
+    updateMember(data: $data) @client
+  }
+  ${fragments.member}
 `;
 
 export const updateAccount = gql`
-  ${account}
+  mutation UpdateAccount($data: Array) {
+    updateAccount(data: $data) @client
+  }
+  ${fragments.account}
 `;
 
+export const updateRole = gql`
+  mutation UpdateRole($data: Array) {
+    updateRole(data: $data) @client
+  }
+  ${fragments.role}
+`;
 
-export const fetchMember = gql`${account}`;
+/**
+ * Fetch by id.
+ */
+export const fetchRole = gql`${fragments.role}`;
+export const fetchAccount = gql`${fragments.account}`;
+export const fetchMember = gql`${fragments.member}`;

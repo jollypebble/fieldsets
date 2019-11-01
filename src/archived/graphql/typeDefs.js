@@ -1,138 +1,127 @@
+import {MetaTypes, SetTypes, FieldTypes} from './enums';
+const metatypes = MetaTypes.join(" \n");
+const settypes = SetTypes.join(" \n");
+const fieldtypes = FieldTypes.join(" \n");
+
 export const typeDefs = `
-  type Set implements Sets {
+
+  type Member implements Set {
     id: ID!
     name: String
     type: SetType
     parent: ID
-    children: [Set]
-    meta: [Meta]
+    children: [ID]
+    meta: Meta
+    roles: [ID]
   }
 
-  type Account implements Sets {
+  type Account implements Set {
     id: ID!
     name: String!
-    type: String
+    type: SetType
     parent: ID
-    children: [Account]
-    members: [Member]
-    roles: [Role]
-    meta: [Meta]
+    children: [ID]
+    members: [ID]
+    meta: Meta
   }
 
-  type Member implements Sets {
-    id: ID!
-    name: String
-    type: String
-    parent: ID
-    children: [Member]
-    meta: [Meta]
-    roles: [Role]
-  }
-
-  type Role implements Sets {
-    id: ID!
-    name: String
-    type: String
-    parent: ID
-    children: [Role]
-    meta: [Meta]
-  }
-
-  type FieldSet implements Sets {
+  type Role implements Set {
     id: ID!
     name: String
     type: SetType
     parent: ID
-    children: [Set]
-    fields: [Field]
-    meta: [Meta]
+    children: [ID]
+    meta: Meta
   }
 
-  type Field implements Data {
+  type FieldSet implements Set {
     id: ID!
     name: String
-    label: String
+    type: SetType
     parent: ID
-    fieldsets: JSON
+    children: [ID]
+    fields: [ID]
+    meta: Meta
+  }
+
+  type Field {
+    id: ID!
+    name: String
+    description: String
+    parent: ID
+    children: [ID]
+    fieldsets: [ID]
     value: JSON
-    type: DataType
-    dependencies: [Field]
+    type: FieldType
+    dependencies: [ID]
+    callback: String
     order: Int
-    owner: [Member]
-    meta: [Meta]
+    owner: Member
+    meta: Meta
+  }
+
+  type Zoom implements Coordinate {
+    x: Int
+    y: Int
+    Scale: Int
+  }
+
+  type Center implements Coordinate {
+    x: Int
+    y: Int
   }
 
   type Meta {
     id: ID!
-    meta: JSON
+    type: MetaType
+    data: JSONObject
+  }
+
+  interface Coordinate {
+    x: Int
+    y: Int
   }
 
   type Focus {
     id: ID!
     name: String
     parent: ID
-    coordinate: JSON
+    center: JSONObject
     depth: Int
+    zoom: JSONObject
   }
 
   type Mutation {
-    updateFocus(id: ID!): Set
-    updateField(id: ID!, type: String!, value: Value!, formula: String): Field!
+    updateFocus(id: ID!): Focus
+    updateContainer(data: JSONObject): [FieldSet]
   }
 
   type Query {
-    fieldsets: [FieldSet]
-    fieldsets(id: ID!): FieldSet
-    fetchFieldSets: [FieldSet]
+    fetchFocus: Focus
+    fetchContainer: FieldSet
+    fetchFieldSets(data: JSONObject): [FieldSet]
   }
 
-  enum DataType {
-    default
-    text
-    number
-    currency
-    decimal
-    coordinate
-    list
-    dictionary
-    object
-    search
-    bool
-    date
-    time
-    formula
-    function
+  enum FieldType {
+    ${fieldtypes}
   }
 
   enum SetType {
-    account
-    member
-    role
-    container
-    fieldset
-    diagram
-    interface
-    data
-    meta
-    custom
+    ${settypes}
+  }
+
+  enum MetaType {
+    ${metatypes}
   }
 
   scalar JSON
   scalar JSONObject
 
-  interface Sets {
+  interface Set {
     id: ID!
-    name: String
     type: SetType
     parent: ID
-    children: [Sets]
-    meta: [Data]
-  }
-
-  interface Data {
-    id: ID!
-    label: String
-    type: DataType
-    value: JSON
+    children: [ID]
+    meta: Meta
   }
 `;

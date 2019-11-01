@@ -1,20 +1,16 @@
 // The default place holders. These might not be needed after we do a cache prime and can most likely be removed from index.js.
-import { fragmentDefaults } from './fragments/defaults';
 export const defaults = {
-  account: {
-    ...fragmentDefaults.account,
-    id: 'current',
-    accountID: 'default',
-  },
   focus: {
     id: 'current',
     focusID: 'default',
+    focusGroup: '',
     type: '',
     container: {
       containerID: 'default',
       type: 'container',
       __typename: 'JSONObject'
     },
+    expanded: false,
     center: { x: 0, y: 0, __typename: 'JSONObject' },
     depth: 0,
     zoom: { scale: 1, __typename: 'JSONObject' },

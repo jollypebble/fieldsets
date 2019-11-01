@@ -1,39 +1,21 @@
 import gql from 'graphql-tag';
-import { field, fieldset } from '../fragments';
-
-/**
- * Fetch all defined fields
- */
-export const fetchAllFields = gql`
-  query FetchAllFields @client {
-    fields {
-      ...field
-    }
-  }
-  ${field}
-`;
+import { fragments } from '../fragments';
 
 /**
  * Fetch all the fields of a fieldset
  */
 export const fetchFields = gql`
-  query FetchFields($id: ID!) {
-    fieldsets(id: $id) @client {
-      children {
-        ...field
-      }
-    }
+  query FetchFields {
+    fetchFields @client(always: true)
   }
-  ${field}
+  ${fragments.field}
 `;
 
 export const updateField = gql`
   mutation UpdateField($data: Array) {
-    updateField(data: $data) @client {
-      id
-    }
+    updateField(data: $data) @client(always: true)
   }
-  ${field}
+  ${fragments.field}
 `;
 
-export const fetchField = gql`${field}`;
+export const fetchField = gql`${fragments.field}`;

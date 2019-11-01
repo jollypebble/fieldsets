@@ -1,16 +1,32 @@
 import gql from 'graphql-tag';
-import { fieldset } from '../fragments';
+import { fragments } from '../fragments';
 
 /**
- * Fetch the Child fieldsets of a given ID.
+ * Fetch fieldsets from active container.
  */
 export const fetchFieldSets = gql`
-  query FetchFieldSets @client {
-    fieldsets {
+  query FetchFieldSets( $data: Array ) {
+    fetchFieldSets(data: $data) @client(always: true) {
       ...fieldset
     }
   }
-  ${fieldset}
+  ${fragments.fieldset}
 `;
 
-export const fetchFieldSet = gql`${fieldset}`;
+export const updateFieldSets = gql`
+  mutation UpdateFieldSets($data: Array) {
+    updateFieldSets(data: $data) @client(always: true) {
+      ...fieldset
+    }
+  }
+  ${fragments.fieldset}
+`;
+
+
+export const updateFieldSet = gql`
+  mutation UpdateFieldSet($data: Array) {
+    updateFieldSet(data: $data) @client(always: true)
+  }
+`;
+
+export const fetchFieldSet = gql`${fragments.fieldset}`;
