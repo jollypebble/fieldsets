@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { SetLabel, Sheet } from 'components/Core';
+import { SetLabel, FieldSet } from 'components/Core';
 
 const Circle = ({id, view, active, variables}) => {
   const defaults = {
@@ -45,7 +45,7 @@ const Circle = ({id, view, active, variables}) => {
         visible={visible}
         variables={variables}
       >
-        <Sheet
+        <FieldSet
           id={id}
           type='LabelSheet'
           active={active}

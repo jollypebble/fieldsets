@@ -1,19 +1,15 @@
-import React, {useRef} from 'react';
-import {
-  TextField
-} from 'react-md';
+import React from 'react';
 
-const Text = ({id, view, field, events}, ref) => {
-  const fieldRef = useRef(ref);
+const Text = ({id, view, field, events}) => {
   return (
     <React.Fragment>
-      <TextField
+      <label for={id}>{field.name}</label>
+      <input
         id={id}
-        placeholder={(field && field.value) ? field.value.toString() : null }
-        value={field.value}
-        className="field fieldtype-default"
+        defaultValue={(field.value > 0) ? field.value : ''}
+        className={`field fieldtype-${field.type}`}
+        type="text"
         {...events}
-        ref={fieldRef}
       />
     </React.Fragment>
   );

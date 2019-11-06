@@ -61,7 +61,6 @@ const DiagramViewer =  ({ default: id, meta: metaInit, children } ) => {
   useEffect(
     () => {
       if ( ! loaded ) {
-        console.log(status);
         switch (status) {
           case 'loaded':
             setStatus('rendering', `Rendering ${id}`);

@@ -101,7 +101,7 @@ export const Update = ( call, data ) => {
             previous = {
               ...previous.meta,
               ...data,
-              data: metadata
+              data: {...metadata}
             };
           } else {
             const metadata = { ...previous.meta.data, ...data.meta.data };
@@ -111,7 +111,7 @@ export const Update = ( call, data ) => {
               meta: {
                 ...previous.meta,
                 ...data.meta,
-                data: metadata
+                data: {...metadata}
               }
             };
           }

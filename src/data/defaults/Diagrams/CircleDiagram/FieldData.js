@@ -1,3 +1,5 @@
+import { callCache } from 'components/Core/DataCache/reducers/datacache';
+
 // Callbacks are set when the value is being handled by our react app.
 // At some point we will move the hacky excel functions to react callbacks and push this json data to an official data store/relational db
 export default [
@@ -5,9 +7,10 @@ export default [
     id: 'net_worth_total',
     name: 'Total',
     value: 0,
-    type: 'function',
+    type: 'currency',
     callback: 'networth',
-    fieldsets: ['net_worth']
+    fieldsets: ['net_worth'],
+    children: ['defense_allocation_monthly_total', 'offense_allocation_monthly_total']
   },
   {
     id: 'monthly_contribution_total',
@@ -214,7 +217,8 @@ export default [
     id: 'utmas_individal_value',
     name: 'Individual Value',
     value: [],
-    type: 'currency',
+    callback: 'sum',
+    type: 'array',
     fieldsets: ['utmas'],
     order: 1
   },
@@ -244,8 +248,8 @@ export default [
   {
     id: 'plan_529_individal_value',
     name: 'Individual Value',
-    value: 0,
-    type: 'currency',
+    value: [],
+    type: 'array',
     fieldsets: ['plan_529'],
     order: 1
   },

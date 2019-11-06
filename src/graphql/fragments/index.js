@@ -13,8 +13,8 @@ export const fragments = {
     ${account}
     ${role}`,
   field: gql`
-    ${meta}
-    ${field}`,
+    ${field}
+    ${meta}`,
   fieldset: gql`
     ${fieldset}
     ${meta}`,

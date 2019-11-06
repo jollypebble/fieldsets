@@ -1,8 +1,13 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useLayoutEffect, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import FieldView from './FieldView';
-import { callCache } from 'components/Core/DataCache/reducers/datacache';
-import { isPrimitive } from 'components/Core/utils';
+import { isPrimitive, updateField } from 'components/Core/utils';
+import { useLazyQuery } from '@apollo/react-hooks';
+import { getDataCacheService } from 'components/Core/DataCache/DataCacheService';
+import {
+  fetchFields
+} from 'graphql/queries';
+
 
 /**
  * A field is a single data value in a set.
@@ -15,54 +20,73 @@ const Field = ({ id, view = null, data, children }) => {
     children: PropTypes.node
   };
 
-  const [field, updateField] = useState(data);
-  const [dependencies, fetchDependencies] = useState({});
+  const [loaded, updateLoaded] = useState(false);
+
+  // Get our dependencies for the corresponding field.
+  const [fetchDependencies, dependencies] = useLazyQuery(fetchFields, {
+    displayName: `fetchFieldDependencies ${id}`,
+    client: getDataCacheService(),
+    variables: {data: {fields: data.children}},
+    onCompleted: (result) => {
+      if (!loaded && result.fetchFields && result.fetchFields.length > 0) {
+        updateLoaded(true);
+      }
+    }
+  });
+
 
   // Data will initially come in with defaults, so this implies that this field will always need to be handled in the same manner, so it can be memoized.
-  const hasDependencies = useMemo( () => { return ( data.children && data.children.length ) }, [data.children] );
-  const isDependency = useMemo( () => { return ( data.parent && data.parent.length ) }, [data.parent] );
+  const hasDependencies = useMemo( () => { return ( data.children && data.children.length > 0 ) }, [data.children] );
 
-  const calculateValue = (value) => {
-    // Ensure our value is a primitive data type, otherwise, we will need to calculate the value on dependencies.
-    if ( hasDependencies ) {
-      // TODO: Calculate value base on dependencies.
-    }
+  /**
+   * Execute our lazyQuery before rendering.
+   */
+  useLayoutEffect(
+    () => {
+      if (hasDependencies && !dependencies.loaded && !dependencies.called && !dependencies.loading) {
+        fetchDependencies();
+      }
+    },
+    [hasDependencies,loaded,dependencies]
+  );
 
-    // Dependcies and depenets are not mutually exclusive, so put them in separate if statements for instances where a field has both.
-    if ( isDependency ) {
+  /**
+   * Recalculate our value when dependencie data changes.
+   */
+   useEffect(
+     () => {
+       if (hasDependencies && dependencies.data) {
+         const value = calculateValue();
+         const updatedField = {...data, value: value};
+         updateField(id, updatedField);
+       }
+     },
+     [dependencies.data]
+   );
 
-    }
-    let updatedField = { ...field, value: value };
-    if ( isPrimitive(value) ) {
-      updatedField = { ...field, value: value };
-    } else {
-      // Loop through array of objects.
-      //const calculatedValue = data.callback(data.children)
-      //value.map(
-      //  (dependent) => {
-      //    return dependent;
-      //  }
-      //);
-    }
-    return updatedField;
 
+  /**
+   * Check all field values and dependencies and return final primitive result.
+   */
+  const calculateValue = () => {
+    let value = data.value;
+    const deps = [...dependencies.data.fetchFields];
+    console.log(data);
+    deps.map( () => {
+
+    });
+
+
+
+    return value;
   };
 
   const updateCache = (newvalue, event) => {
-    // TODO: Validate field.
-    // TODO: Calculate value base on dependencies.
-    if (hasDependencies) {
-      newvalue = calculateValue(newvalue);
-    }
-
-    const updatedField = {...field, value: newvalue};
-    updateField(updatedField);
-    // All queries are set to watch only cache data. So changes to the cache directly will prompt a refetch of the fieldset fields.
-    callCache({id: id, target: 'field', action: 'update'}, updatedField);
+    const updatedField = {...data, value: newvalue};
+    updateField(id, updatedField);
     return updatedField;
   };
 
-  const getFieldValue = useCallback( calculateValue(field.value), [dependencies] );
 
   /**
    * We don't want input field clicks to shift focus, so we stop propagation.

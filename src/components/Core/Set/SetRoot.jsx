@@ -5,10 +5,14 @@ import {useStatus} from 'components/Core/Hooks';
 import { callCache } from 'components/Core/DataCache/reducers/datacache';
 
 /**
- * Sets are state data components that represent groupings of field data and a users interactions with that data.
- * Each set will check its own field set data and will iteratively call itself if there are children.
+ * Root Sets are state data components that represent top level grouping of set data and a users interactions with that data.
+ * Each root set will check its own children set data and will iteratively call itself on it's children children.
  */
-const FieldSet = ({ id, children }) => {
+const SetRoot = ({ id, children }) => {
+  const propTypes = {
+    id: PropTypes.string.isRequired
+  };
+
   const [isActive, updateActive] = useState(false);
   const [{status, message}, updateStatus] = useStatus();
   const [loaded, updateLoaded] = useState(false);
@@ -96,8 +100,4 @@ const FieldSet = ({ id, children }) => {
   return null;
 }
 
-FieldSet.propTypes = {
-  id: PropTypes.string.isRequired
-};
-
-export default FieldSet;
+export default SetRoot;

@@ -70,12 +70,17 @@ export const initializeSetData = ({ id, container = 'container', data = [] }) =>
       // Write the defaults
       set.fields = (set.fields && set.fields.length) ? set.fields : [];
       let setFragment = callCache({id: setID, action: 'defaults', target: 'fieldset'}, {...set});
+
+      // Iterating over children appends the id to our array, so we can set our array to empty.
+      setFragment.children = [];
+
       // Write the fragment
       callCache({id: setID, target: 'fieldset', action: 'update'}, {...setFragment});
 
       // Write our child fragments.
       if (set.children && set.children.length) {
-        initializeSetData({id, container, data: set.children});
+        const children = [...set.children];
+        initializeSetData({id, container, data: [...set.children]});
       }
 
       // Now append this set to the parent fieldset list

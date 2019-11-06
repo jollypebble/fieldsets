@@ -55,7 +55,7 @@ export const typeDefs = `
     type: FieldType
     callback: JSONObject
     order: Int
-    owner: Member
+    owner: ID
     meta: Meta
   }
 
@@ -107,7 +107,7 @@ export const typeDefs = `
     fields: [ID]
   }
 
-  inputFieldData {
+  input FieldData {
     id: ID!
     name: String
     description: String
@@ -118,8 +118,14 @@ export const typeDefs = `
     type: FieldType
     callback: JSONObject
     order: Int
-    owner: Member
-    meta: Meta
+    owner: ID
+    meta: MetaData
+  }
+
+  input MetaData {
+    id: ID!
+    type: MetaType
+    data: JSONObject
   }
 
   type Mutation {

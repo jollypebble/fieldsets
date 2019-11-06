@@ -60,31 +60,6 @@ export const resolvers = {
       return startingsets;
 
     },
-    fetchFieldSets: ( object, { data }, { client, getCacheKey } ) => {
-      const container = client.readQuery({query: fetchContainer});
-      let fieldsets = [];
-      container.container.children.map(
-        (fieldsetID) => {
-          const fieldset = client.readFragment({
-            id: getCacheKey({ __typename: 'FieldSet', id: fieldsetID }),
-            fragment: fetchFieldSet,
-            fragmentName: 'fieldset'
-          });
-          fieldsets.push(fieldset);
-        }
-      );
-      // We allow for specific filters here.
-      if ( data ) {
-        if (data.hasOwnProperty('parent')) {
-          const parents = fieldsets.filter( ( fieldset ) => {
-            return fieldset.parent === data.parent;
-          });
-          return parents;
-        }
-      }
-
-      return fieldsets;
-    },
     fetchFields: ( object, { data }, { client, getCacheKey } ) => {
       let fields = [];
       data.fields.map(
@@ -97,6 +72,7 @@ export const resolvers = {
           fields.push(field);
         }
       );
+
       // We allow for specific filters here.
       let filtered = [];
       let isFiltered = false;
@@ -121,7 +97,6 @@ export const resolvers = {
       if ( isFiltered ) {
         return filtered;
       }
-
       return fields;
     }
   },

@@ -1,8 +1,8 @@
 import React, { useLayoutEffect, useEffect, useState } from 'react';
 import ZoomViewer from 'components/Core/Containers/Diagram/SVG/ZoomViewer';
 
-import { FieldSet } from 'components/Core';
-import { DialogSheet } from 'components/Sheets';
+import { SetRoot } from 'components/Core';
+import { DialogSheet } from 'components/FieldSets';
 import {useFocus, useStatus, useViewerDimensions, useClickEvents} from 'components/Core/Hooks';
 import { callCache } from 'components/Core/DataCache/reducers/datacache';
 
@@ -222,9 +222,10 @@ const CircleDiagram =  ({ id, name, type, meta: metaInit, data = [] } ) => {
               </g>
               <g id="diagram-group">
                 {
+                  // We map our root sets only here as they will iterate all of the child sets.
                   data.map((fieldset) => {
                     return(
-                      <FieldSet
+                      <SetRoot
                         id={ fieldset.id }
                         key={ fieldset.id }
                       />

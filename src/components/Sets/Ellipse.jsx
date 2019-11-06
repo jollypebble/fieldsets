@@ -1,5 +1,5 @@
 import React from 'react';
-import { SetLabel, Sheet } from 'components/Core';
+import { SetLabel, FieldSet } from 'components/Core';
 
 const Ellipse = ({id, view, active, variables}) => {
   const defaults = {
@@ -48,7 +48,7 @@ const Ellipse = ({id, view, active, variables}) => {
         visible={visible}
         variables={variables}
       >
-        <Sheet
+        <FieldSet
           id={id}
           type='LabelSheet'
           active={active}

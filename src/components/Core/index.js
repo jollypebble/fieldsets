@@ -3,8 +3,8 @@ export { default as Set } from './Set/Set';
 export { default as SetGroup } from './Set/SetGroup';
 export { default as SetLabel } from './Set/SetLabel';
 export { default as SetView } from './Set/SetView';
-export { default as FieldSet } from './Set/FieldSet';
-export { default as Sheet } from './Sheet/Sheet';
+export { default as SetRoot } from './Set/SetRoot';
+export { default as FieldSet } from './FieldSet/FieldSet';
 
 export { default as DataCache } from './DataCache/DataCache';
 export { default as Account } from './Account/Account';

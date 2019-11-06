@@ -34,8 +34,6 @@ const SetGroup = (props, ref) => {
   // Set the viewbox after the render for next load.
   useEffect(
     () => {
-      console.log(attributes);
-
       if (setRef.current) {
         if ('parent' === group) {
           const vb = getGroupViewBox();

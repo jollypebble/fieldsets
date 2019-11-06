@@ -1,4 +1,5 @@
 import React, { useRef, forwardRef, useImperativeHandle } from 'react';
+// TODO: Get rid of react-pan-zoom. Has unnecessary bloat even as an uncontrolled component.
 import {
   UncontrolledReactSVGPanZoom,
   setPointOnViewerCenter,

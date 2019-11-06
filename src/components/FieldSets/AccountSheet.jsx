@@ -13,10 +13,10 @@ import {
   Toolbar
 } from 'react-md';
 
-import MemberSheet from 'components/Sheets/MemberSheet';
+import MemberSheet from 'components/FieldSets/MemberSheet';
 
-import TableActions from 'components/Sheets/Tables/TableActions';
-import MemberRow from 'components/Sheets/Tables/Rows/MemberRow';
+import TableActions from 'components/FieldSets/Tables/TableActions';
+import MemberRow from 'components/FieldSets/Tables/Rows/MemberRow';
 
 const AccountSheet = ({id, name, data, options, onChange, onSave}) => {
   const [account, setAccount] = useState(id);

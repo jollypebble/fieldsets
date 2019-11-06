@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { MenuBar } from 'components/Menus';
 import { TabbedDrawer, MenuDrawer } from 'components/Drawers';
-import { Sheet } from 'components/Core';
+import { FieldSet } from 'components/Core';
 
 const Dashboard = () => {
   const [isMenuOpen, updateMenu] = useState(false);
@@ -15,7 +15,7 @@ const Dashboard = () => {
 
   const renderSheet = (sheet) => {
     return (
-      <Sheet
+      <FieldSet
         id={sheet}
         type={sheet}
       />
