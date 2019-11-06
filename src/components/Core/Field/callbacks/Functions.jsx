@@ -4,7 +4,7 @@ import { fetchFieldValue } from 'components/Core/utils';
 // Our contexts.
 export const FunctionsContext = createContext({});
 
-const Functions = (props) => {
+export const Functions = (props) => {
 
   /**
    * Find numeric value of an input.
@@ -41,33 +41,30 @@ const Functions = (props) => {
       case 'bigint':
       case 'string':
         try {
-          const number = castNumeric(field);
+          return castNumeric(field);
         } catch (e) {
           console.error(`${calledby}Primitive value passed cannot be cast. ${e.message}`);
           return;
         }
-        return number;
         break;
       case 'function':
         const fieldvalue = field();
         try {
-          const number = castNumeric(fieldvalue);
+          return castNumeric(fieldvalue);
         } catch (e) {
           console.error(`${calledby}Function called returns an invalid value. ${e.message}`);
           return;
         }
-        return number;
         break;
       case 'object':
-        if ( 'field' === field.__typename ) {
+        if ( 'field' === field.__typename.toLowerCase() ) {
           if (field.value) {
             try {
-              const number = castNumeric(field.value);
+              return castNumeric(field.value);
             } catch (e) {
               console.error(`${calledby}Field Object passed cotains an invalid value. ${e.message}`);
               return;
             }
-            return number;
           } else {
             try {
               throw new Error(`${calledby}Field Object passed does not have the value property.`);
@@ -102,70 +99,74 @@ const Functions = (props) => {
    */
   const functions = useMemo(
     () => {
-      cast: (field, type) => {
-        const lctype = type.toLowerCase()
-        switch (lctype) {
-          case 'number':
-          case 'numeric':
-          case 'num':
-          case 'float':
-          case 'int':
-          case 'integer':
-          case 'decimal':
-          case 'currency':
-            return getNumericValue(field, 'cast');
-            break;
-          case 'string':
-          case 'char':
-          case 'varchar':
-          case 'text':
-            return String(field);
-            break;
-          default:
-            try {
-              throw new Error(`Function "cast": ${typeof type} is not a supported type for casting.`);
-            } catch (e) {
-              console.error( e.message );
-              return field;
+      return(
+        {
+          cast: (field, type) => {
+            const lctype = type.toLowerCase()
+            switch (lctype) {
+              case 'number':
+              case 'numeric':
+              case 'num':
+              case 'float':
+              case 'int':
+              case 'integer':
+              case 'decimal':
+              case 'currency':
+                return getNumericValue(field, 'cast');
+                break;
+              case 'string':
+              case 'char':
+              case 'varchar':
+              case 'text':
+                return String(field);
+                break;
+              default:
+                try {
+                  throw new Error(`Function "cast": ${typeof type} is not a supported type for casting.`);
+                } catch (e) {
+                  console.error( e.message );
+                  return field;
+                }
+                break;
             }
-            break;
+          },
+          sum: (data) => {
+            // Add all data values.
+            if (data && data.length > 0) {
+              let sum = 0;
+              data.map( (field) => {
+                const number = getNumericValue(field, 'sum');
+                sum = sum + number;
+              });
+              return sum;
+            }
+          },
+          diff: (data) => {
+            // Will subtract remaining data values from first data value.
+            if (data && data.length > 0) {
+              let diff = getNumericValue(data[0], 'diff');
+              data.slice(1).map( (field) => {
+                const number = getNumericValue(field, 'sum');
+                diff = diff - number;
+              });
+              return diff;
+            }
+          },
+          avg: (data) => {
+            // Returns the average of all data values.
+            if (data && data.length > 0) {
+              let sum = 0;
+              let count = 0;
+              data.map( (field) => {
+                const number = getNumericValue(field, 'sum');
+                sum = sum + number;
+                count = count + 1;
+              });
+              return sum/count;
+            }
+          }
         }
-      },
-      sum: (data) => {
-        // Add all data values.
-        if (data & data.length > 0) {
-          let sum = 0;
-          data.map( (field) => {
-            const number = getNumericValue(field, 'sum');
-            sum = sum + number;
-          });
-          return sum;
-        }
-      },
-      diff: (data) => {
-        // Will subtract remaining data values from first data value.
-        if (data & data.length > 0) {
-          let diff = getNumericValue(data[0], 'diff');
-          data.slice(1).map( (field) => {
-            const number = getNumericValue(field, 'sum');
-            diff = diff - number;
-          });
-          return diff;
-        }
-      },
-      avg: () => {
-        // Returns the average of all data values.
-        if (data & data.length > 0) {
-          let sum = 0;
-          let count = 0;
-          data.map( (field) => {
-            const number = getNumericValue(field, 'sum');
-            sum = sum + number;
-            count = count + 1;
-          });
-          return sum/count;
-        }
-      }
+      );
     },
     []
   );
@@ -177,4 +178,3 @@ const Functions = (props) => {
     </FunctionsContext.Provider>
   )
 }
-export default Functions;

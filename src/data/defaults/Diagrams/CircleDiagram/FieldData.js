@@ -8,7 +8,7 @@ export default [
     name: 'Total',
     value: 0,
     type: 'currency',
-    callback: 'networth',
+    callback: 'sum',
     fieldsets: ['net_worth'],
     children: ['defense_allocation_monthly_total', 'offense_allocation_monthly_total']
   },

@@ -20,6 +20,7 @@ const Currency = ({id, view, field, events}) => {
   return (
     <TextField
       id={id}
+      name={id}
       placeholder={field.value.toString()}
       defaultValue={(field.value > 0) ? field.value : ''}
       className={`field fieldtype-${field.type}`}

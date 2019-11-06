@@ -6,6 +6,7 @@ const Text = ({id, view, field, events}) => {
       <label for={id}>{field.name}</label>
       <input
         id={id}
+        name={id}
         defaultValue={(field.value > 0) ? field.value : ''}
         className={`field fieldtype-${field.type}`}
         type="text"

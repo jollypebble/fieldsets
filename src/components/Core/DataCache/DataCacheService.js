@@ -9,8 +9,8 @@ import { defaults } from 'graphql/defaults';
 import { resolvers } from 'graphql/resolvers';
 import { typeDefs } from 'graphql/typeDefs';
 
-import { Config } from 'config/config';
-const GRAPHQL_SERVER = Config.servers.graphql;
+const config = require('config.json');
+const GRAPHQL_SERVER = config.servers.graphql;
 
 const fragmentMatcher = new IntrospectionFragmentMatcher({
   introspectionQueryResultData

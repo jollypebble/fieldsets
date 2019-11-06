@@ -5,6 +5,7 @@ const DropDown = ({id, view, field, events}) => {
   return (
     <SelectField
       id={id}
+      name={id}
       defaultValue={field.value}
       menuItems={field.meta.data.options}
       className={`field fieldtype-${field.type}`}

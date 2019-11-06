@@ -7,6 +7,7 @@ import { getDataCacheService } from 'components/Core/DataCache/DataCacheService'
 import {
   fetchFields
 } from 'graphql/queries';
+import { useFunctions } from 'components/Core/Hooks';
 
 
 /**
@@ -21,6 +22,7 @@ const Field = ({ id, view = null, data, children }) => {
   };
 
   const [loaded, updateLoaded] = useState(false);
+  const [functions, updateFunctionList] = useFunctions();
 
   // Get our dependencies for the corresponding field.
   const [fetchDependencies, dependencies] = useLazyQuery(fetchFields, {
@@ -55,7 +57,7 @@ const Field = ({ id, view = null, data, children }) => {
    */
    useEffect(
      () => {
-       if (hasDependencies && dependencies.data) {
+       if (hasDependencies && dependencies.data && dependencies.data.fetchFields) {
          const value = calculateValue();
          const updatedField = {...data, value: value};
          updateField(id, updatedField);
@@ -71,12 +73,12 @@ const Field = ({ id, view = null, data, children }) => {
   const calculateValue = () => {
     let value = data.value;
     const deps = [...dependencies.data.fetchFields];
-    console.log(data);
-    deps.map( () => {
-
-    });
-
-
+    // Callback correspond to keys in our functions hook
+    if (data.callback && functions.hasOwnProperty(data.callback)) {
+      const callback = functions[data.callback];
+      value = callback(deps);
+      value = Number.isNaN(value) ? 0 : value;
+    };
 
     return value;
   };
@@ -130,6 +132,7 @@ const Field = ({ id, view = null, data, children }) => {
       onChange={updateCache}
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
+      hasDependencies={hasDependencies}
     >
       {children}
     </FieldView>

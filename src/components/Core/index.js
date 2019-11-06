@@ -1,3 +1,4 @@
+export { default as FieldSetsApp } from './FieldSetsApp';
 export { default as Field } from './Field/Field';
 export { default as Set } from './Set/Set';
 export { default as SetGroup } from './Set/SetGroup';
@@ -11,4 +12,5 @@ export { default as Account } from './Account/Account';
 export { default as Member } from './Account/Member';
 export { default as Interface } from './Containers/Interface/Interface';
 export { default as Diagram } from './Containers/Diagram/Diagram';
-export { Focus, Status } from './Handlers';
+export { default as Hooks } from './Hooks/Hooks';
+export { Focus, Status } from './Hooks/Handlers';

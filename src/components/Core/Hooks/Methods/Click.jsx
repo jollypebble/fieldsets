@@ -1,6 +1,6 @@
 import React from 'react';
 import {usePromiseQueue} from './Promises';
-import {PromiseHandler} from 'components/Core/Handlers/Promise';
+import {PromiseHandler} from '../Handlers/Promise';
 
 export const useClickEvents = (onClick, onDoubleClick) => {
   const queue = usePromiseQueue();
