@@ -1,7 +1,7 @@
-# React Visual Fieldsets
-React Visual Fieldsets is a data visualization framework used to help develop react based data visualization applications.
+# Visual Fieldsets
+Visual Fieldsets is the data visualization component of the Fieldsets Full Stack Framework. It is written in React and is used to help develop data visualization applications, allowing for greater flexibilty around what 3rd party visualization software is used. This app is agnostic to whether you use SVG, HTML5, Canvas or any frameworks around core visualization approaches to the modern browser.
 
-React Visual Fieldsets is both a UI and a data abstraction layer. It will provide you [Material Design Components](https://react-md.mlaursen.com/) to wrap around your data visualization diagram as well as a flexible abstract data layer which can be pulled into any data visualization framework of your choice. Originally funded by [Econ Circles](https://www.econcircles.com), this framework was built to be able to quickly generate a diverse set of data visualizations for non standardized data sets and sources.
+Visual Fieldsets is both a UI and a data abstraction layer. It will provide you [Material Design Components](https://react-md.mlaursen.com/) to wrap around your data visualization diagram as well as a flexible abstract data layer which can be pulled into any data visualization framework of your choice. Originally funded by [Econ Circles](https://www.econcircles.com), this framework was built to be able to quickly generate a diverse set of data visualizations for non standardized data sets and sources.
 
 # Default Example
 As our proof of concept, we will draw a circle diagram that can render a visualization for how to best invest in the future. It is used as a sales tool and is used to help clients see how their income and savings are grouped and determine the best path forward with any additional resources.
