@@ -1,50 +1,44 @@
 // React-md variables
 $md-light-theme: true; // optional for light theme
 $md-primary-color: $md-blue-grey-500;
-$md-secondary-color: $md-orange-a-700;
 
 $app-white: #FFF;
-$app-blue: $md-primary-color;
+$app-blue: #6db8fe;
+$app-red: #f44647;
+$app-yellow: #efef41;
+$app-green: #42ac0a;
 
-// Circle defaults
-$circle-fill: #ffffad;
-$circle-stroke: #efef41;
-$circle-text: #515359;
+$transparent: transparent;
+$default-text-color: #515359;
 
 // Descriptive variable names for easier assignment
-$defense-fill: #f9bcc0;
-$defense-stroke: #f44647;
-$defense-text: $circle-text;
+$defense-fill: rgba($app-red, 0.75);
+$defense-stroke: $app-red;
+$defense-text: $default-text-color;
 
-$offense-fill: #5fc6f5;
-$offense-stroke: $circle-stroke;
-$offense-text: $circle-text;
+$offense-fill: rgba($app-blue, 0.75);
+$offense-stroke: $app-blue;
+$offense-text: $default-text-color;
 
-$networth-fill: $circle-fill;
-$networth-stroke: $circle-stroke;
-$networth-text: $circle-text;
+$networth-fill: rgba($app-yellow, 0.5);
+$networth-stroke: $app-yellow;
+$networth-text: $default-text-color;
 
-$shortterm-fill: #83c5e4;
-$shortterm-stroke: #6bb6f8;
-$shortterm-text: $circle-text;
+$shortterm-fill: $transparent;
+$shortterm-stroke: $app-blue;
+$shortterm-text: $default-text-color;
 
-$midterm-fill: #b3e7ff;
-$midterm-stroke: #6db8fe;
-$midterm-text: $circle-text;
+$midterm-fill: $transparent;
+$midterm-stroke: $app-blue;
+$midterm-text: $default-text-color;
 
-$longterm-fill: #90c5f5;
-$longterm-stroke: #44c1ff;
-$longterm-text: $circle-text;
+$longterm-fill: $transparent;
+$longterm-stroke: $app-blue;
+$longterm-text: $default-text-color;
 
-$defense_parent-fill: #f9bcc0;
-$defense_parent-stroke: #f44647;
+$net_worth-fill: rgba($app-yellow, 0.5);
+$net_worth-stroke: $app-yellow;
 
-$offense_parent-fill: #b3e7ff;
-$offense_parent-stroke: #63b2ff;
-
-$net_worth-fill: #82db83;
-$net_worth-stroke: #42ac09;
-
-$contribution-fill: $circle-fill;
-$contribution-stroke: $circle-stroke;
-$contribution-text: $circle-text;
+$contribution-fill: rgba($app-green, 0.5);
+$contribution-stroke: $app-green;
+$contribution-text: $default-text-color;

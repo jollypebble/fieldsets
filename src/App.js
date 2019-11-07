@@ -1,44 +1,45 @@
-import React, { Component } from 'react';
-import { withApollo } from 'react-apollo';
+import React from 'react';
 
 // Custom Components
-import { Dashboard } from './containers/UI'
-import { CircleDiagram } from './containers/Diagrams/CircleDiagram';
+import { FieldSetsApp, Interface, Diagram } from 'components/Core';
 
-import DiagramEvents from './utils/DiagramEvents'
+// Grab the size of our viewport
+import { useViewerDimensions } from 'components/Core/Hooks';
 
 /**
  * The basic UI components and all visualization areas are added here
  */
-class App extends Component {
-  componentDidMount() {
-    DiagramEvents.init()
-  }
+const App = (props) => {
+  const { height, width } = useViewerDimensions();
+  const startX = width/2;
+  const startY = height/2;
 
-  render() {
-    /** Zoom of the main diagram */
-    let diagramZoom = 2.5;
-    // let diagramZoom = 30;
-    /** Width of the main diagram */
-    let diagramWidth = 1920;
-    /** The screen width. We need it for setting startX in the middle of the screen */
-    let screenWidth = window.innerWidth ? window.innerWidth : 750; // 750 is fallback
-
-    return (
-      <React.Fragment>
-        <div id="econcircleapp">
-          <CircleDiagram
-            width={diagramWidth}
-            height={1080}
-            zoom={diagramZoom}
-            startX={880 + (diagramWidth - screenWidth) / diagramZoom * 0.5} // here we calculate the point which means the center of the screen (the first "magic number" is unknown shift which puts "0" of diagram to "0" of the screen)
-            startY={490}
-          />
-        </div>
-        <Dashboard />
-      </React.Fragment>
-    );
-  }
+  // The status bar is cosumed by the data cache so we need to ensure it is rendered.
+  return (
+    <FieldSetsApp>
+      <Diagram
+        id="econcircle-app"
+        type="CircleDiagram"
+        name="Econ Circles"
+        meta={{
+          attributes: {
+            width: width,
+            height: height
+          },
+          center: {
+            x: startX,
+            y: startY
+          }
+        }}
+        defaultFocus={true}
+      />
+      <Interface
+        id="econcircle-dashboard"
+        type="Dashboard"
+        name="Econ Circles"
+      />
+    </FieldSetsApp>
+  );
 }
 
-export default withApollo(App);
+export default App;

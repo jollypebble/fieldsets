@@ -1,0 +1,52 @@
+export default [
+  {
+    id: 'family_name',
+    owner: '',
+    name: 'Family Name',
+    parent: '',
+    fields: [],
+    children: [],
+  },
+  {
+    id: 'owner_1',
+    name: 'Client 1',
+    parent: 'family_name',
+    fields: [],
+    children: [],
+  },
+  {
+    id: 'owner_2',
+    name: 'Client Two',
+    parent: 'family_name',
+    fields: [],
+    children: [],
+  },
+  {
+    id: 'child_1',
+    name: 'Child 1: ',
+    parent: ['owner_1', 'owner_2'],
+    fields: [],
+    children: [],
+  },
+  {
+    id: 'child_2',
+    name: 'Child 2',
+    parent: ['owner_1', 'owner_2'],
+    fields: [],
+    children: [],
+  },
+  {
+    id: 'child_3',
+    name: 'Child',
+    parent: ['owner_1', 'owner_2'],
+    fields: [],
+    children: [],
+  },
+  {
+    id: 'child_4',
+    name: 'Child 4',
+    parent: ['owner_1', 'owner_2'],
+    fields: [],
+    children: [],
+  },
+];
