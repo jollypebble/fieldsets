@@ -1,7 +1,9 @@
 const fetch = require('node-fetch');
 const fs = require('fs');
+const config = require('./config.json');
 
-fetch(`http://localhost:3000/graphql`, {
+const graphqlserver = config.servers.graphql;
+fetch(`${graphqlserver}/graphql`, {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
@@ -28,7 +30,7 @@ fetch(`http://localhost:3000/graphql`, {
     type => type.possibleTypes !== null,
   );
   result.data.__schema.types = filteredData;
-  fs.writeFile('./fragmentTypes.json', JSON.stringify(result.data), err => {
+  fs.writeFile('./src/fragmentTypes.json', JSON.stringify(result.data), err => {
     if (err) {
       console.error('Error writing fragmentTypes file', err);
     } else {

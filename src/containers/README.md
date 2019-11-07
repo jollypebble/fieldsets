@@ -1,6 +1,4 @@
-# Containers#
-In the visual field sets framework, containers are groupings of components. The following container types exist.
+# Containers
+Containers can be though of as top level data sets. A single container will only interact with the set of data assigned to it.
 
-* Sheets - Sheets are groupings of Fields/Fieldsets
-* UI - UI containers are grid based groupings of components. These interfaces typically conform to organizing components defined by react-md and establishing interactions with them and other containers/components in the app.
-* Diagrams - Diagram components are data driven organization of components and use a x,y coordinate system for placement of items in the diagram.
+Containers are developer defined collections of components and data points. Theoretically the application itself can be coded using containers and passing props to each of the components in the container. There are probably many places where this is not true, but the goal is to abstract components away enough that was can assemble various data visualizations by defining multiple containers within an app.

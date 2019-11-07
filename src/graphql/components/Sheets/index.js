@@ -1,1 +1,0 @@
-export { getClients, getClientList } from './clients';

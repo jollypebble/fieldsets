@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Toolbar, Drawer, Button } from 'react-md';
+import { Toolbar, Drawer, Button, FontIcon } from 'react-md';
 
 export default class TabbedDrawer extends PureComponent {
   constructor(props) {
@@ -44,17 +44,14 @@ export default class TabbedDrawer extends PureComponent {
       position,
       type,
       title,
-      saveCallback,
       renderContent
     } = this.props;
 
     const drawerid=`tabbed-drawer-menu--${icon}`
     const { visible } = this.state;
-    const isLeft = position === 'left';
-    const hasSave = saveCallback !== (null || undefined);
 
-    const closeBtn = <Button className="closeBtn" icon onClick={this.closeDrawer}>close</Button>;
-    const saveBtn = hasSave ? <Button icon onClick={saveCallback}>save</Button> : null;
+    const closeBtn = <Button className="closeBtn" icon onClick={this.closeDrawer}>arrow_forward</Button>;
+    const tabBtn = <Button icon>{icon}</Button>;
 
     return (
       <React.Fragment>
@@ -67,7 +64,7 @@ export default class TabbedDrawer extends PureComponent {
               icon
               onClick={ this.toggleDrawer }
             >
-              { this.props.icon} 
+              { icon }
             </Button>
           </div>
           <Drawer
@@ -82,8 +79,8 @@ export default class TabbedDrawer extends PureComponent {
             header={ (
               <Toolbar
                 colored
-                nav={ isLeft ? saveBtn : closeBtn }
-                actions={ isLeft ? closeBtn : saveBtn }
+                nav={ tabBtn }
+                actions={ closeBtn }
                 className="md-divider-border md-divider-border--bottom tapHeader"
               >
                 <span>{ title }</span>
@@ -103,7 +100,6 @@ TabbedDrawer.propTypes = {
   position: PropTypes.string,
   title: PropTypes.string,
   type: PropTypes.string,
-  saveCallback: PropTypes.func,
   renderContent: PropTypes.func,
   top: PropTypes.string
 };
