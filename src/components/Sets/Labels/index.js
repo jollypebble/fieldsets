@@ -1,1 +1,1 @@
-export { default as FieldSetLabel } from './FieldSetLabel';
+export { default as FieldsetLabel } from './FieldsetLabel';

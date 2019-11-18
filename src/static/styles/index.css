@@ -689,11 +689,11 @@ text.setAttributesBase {
   font-size: 20px;
   transition: top 0.2s; }
   .AppBarInner.hidden {
-    top: -64px; }
+    opacity: 0; }
   .AppBarInner.visible {
-    top: 0; }
+    opacity: 1; }
   .AppBarInner .hidden {
-    display: none; }
+    opacity: 0; }
   .AppBarInner .centered {
     margin: 0 auto; }
     .AppBarInner .centered .contributions {

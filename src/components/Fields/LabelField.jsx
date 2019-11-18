@@ -3,7 +3,7 @@ import { Currency, DropDown } from 'components/Fields';
 import {
   FontIcon
 } from 'react-md';
-import { Output } from 'components/Core/Field/Views';
+import { Output } from 'lib/fieldsets/Field/Views';
 
 const LabelField = ({id, view, field, hasDependencies = false, events}) => {
   if (hasDependencies) {

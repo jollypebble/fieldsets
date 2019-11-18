@@ -1,5 +1,5 @@
 import React from 'react';
-import { SetLabel } from 'components/Core';
+import { SetLabel } from 'lib/fieldsets';
 
 const Label = ({id, view, active, variables, children}) => {
   return (
