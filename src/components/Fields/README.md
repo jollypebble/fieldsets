@@ -1,2 +1,2 @@
 # Fields
-This components directory contains app specific fieldtypes that can either extend the [core fieldtypes](../Core/Field/FieldTypes) or be a custom fieldtype.
+This components directory contains app specific field views that can either extend the [core field views](../../lib/fieldsets/Field/Views) or be a custom field view.

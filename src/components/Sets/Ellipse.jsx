@@ -1,5 +1,5 @@
 import React from 'react';
-import { SetLabel, FieldSet } from 'components/Core';
+import { SetLabel, FieldGroup } from 'lib/fieldsets';
 
 const Ellipse = ({id, view, active, variables}) => {
   const defaults = {
@@ -41,14 +41,14 @@ const Ellipse = ({id, view, active, variables}) => {
       />
       <SetLabel
         id={`${id}-label`}
-        type='FieldSetLabel'
+        type='FieldsetLabel'
         className={`view-label view-${view_lower}-label`}
         name={variables.name}
         active={active}
         visible={visible}
         variables={variables}
       >
-        <FieldSet
+        <FieldGroup
           id={id}
           type='LabelSheet'
           active={active}

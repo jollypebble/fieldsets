@@ -1,5 +1,5 @@
 import React from 'react';
-import {useViewerDimensions} from 'components/Core/Hooks';
+import {useViewerDimensions} from 'lib/fieldsets/Hooks';
 
 /**
  * This is the container for our main diagram. It has direct access to the apollo cache so it can track foucs of it's child sets.

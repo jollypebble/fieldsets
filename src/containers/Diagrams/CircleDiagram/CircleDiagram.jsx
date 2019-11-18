@@ -1,16 +1,16 @@
 import React, { useLayoutEffect, useEffect, useState } from 'react';
-import ZoomViewer from 'components/Core/Containers/Diagram/SVG/ZoomViewer';
+import ZoomViewer from './ZoomViewer';
 
-import { SetRoot } from 'components/Core';
-import { DialogSheet } from 'components/FieldSets';
-import {useFocus, useStatus, useViewerDimensions, useClickEvents} from 'components/Core/Hooks';
-import { callCache } from 'components/Core/DataCache/reducers/datacache';
+import { SetRoot } from 'lib/fieldsets';
+import { DialogSheet } from 'components/Fields/Groups';
+import {useFocus, useStatus, useViewerDimensions, useClickEvents} from 'lib/fieldsets/Hooks';
+import { Fetch } from 'lib/fieldsets/DataCache/calls';
 
 /**
  * This is the container for our main diagram. It has direct access to the apollo cache so it can track foucs of it's child sets.
  */
 const CircleDiagram =  ({ id, name, type, meta: metaInit, data = [] } ) => {
-  const [{status}, updateStatus] = useStatus();
+  const [{status, message, stage}, updateStatus] = useStatus();
   const [loaded, updateLoaded] = useState(false);
   const [focus, updateFocus] = useFocus();
   const { height, width } = useViewerDimensions();
@@ -23,17 +23,10 @@ const CircleDiagram =  ({ id, name, type, meta: metaInit, data = [] } ) => {
   let Viewer = null;
 
   /**
-   * Our generic status helper function to improve code readability.
-   */
-  const setStatus = (newStatus, newMessage = '') => {
-    updateStatus({id: id, status: newStatus, message: newMessage, action: 'update'});
-  }
-
-  /**
    * A helper function to set the dialog and the focus concurrently..
    */
   const changeFocus = (newfocus) => {
-    const focusmeta = callCache({id: newfocus.focusID, target: 'meta', action: 'fetch', filter: 'data'});
+    const focusmeta = Fetch({id: newfocus.focusID, target: 'meta', filter: 'data'});
     newfocus.center = focusmeta.center;
     newfocus.zoom = focusmeta.zoom;
     updateFocus({action: 'focus', data: newfocus});
@@ -58,16 +51,13 @@ const CircleDiagram =  ({ id, name, type, meta: metaInit, data = [] } ) => {
   /**
    * Use our status to determine our render state.
    */
-  useEffect(
+  useLayoutEffect(
     () => {
       if ( ! loaded ) {
         switch (status) {
-          case 'loaded':
-            setStatus('rendering', `Rendering ${id}`);
-            let diagrammeta = callCache({id: id, target: 'meta', action: 'fetch'});
-            setDiagramMeta(diagrammeta.data);
-            break;
           case 'rendering':
+            let diagrammeta = Fetch({id: id, target: 'meta'});
+            setDiagramMeta(diagrammeta.data);
             updateLoaded(true);
             break;
           default:
@@ -119,7 +109,7 @@ const CircleDiagram =  ({ id, name, type, meta: metaInit, data = [] } ) => {
             break;
           case 'resetting':
             Viewer.setPointOnViewerCenter(meta.focus.center.x, meta.focus.center.y, meta.zoom.scale);
-            setStatus('rendered');
+            updateStatus('rendered');
             break;
           default:
             break;
@@ -170,7 +160,7 @@ const CircleDiagram =  ({ id, name, type, meta: metaInit, data = [] } ) => {
   }
 
   const resetFocus = () => {
-    setStatus('resetting');
+    updateStatus('resetting');
     changeFocus(meta.focus);
   }
 

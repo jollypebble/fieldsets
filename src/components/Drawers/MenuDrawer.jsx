@@ -54,6 +54,7 @@ const MenuDrawer = ({ position, type, title, isVisible, saveCallback, toggleDraw
     <Drawer
       id="menu-drawer"
       type={ type }
+      defaultVisible={false}
       visible={ isVisible }
       position={ position }
       onVisibilityChange={ toggleDrawer }
