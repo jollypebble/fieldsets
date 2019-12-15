@@ -28,7 +28,7 @@ export const fragmentDefaults = {
   account: {
     name: '',
     type: 'account',
-    parent: '',
+    parent: [],
     children: [],
     members: [],
     meta: {
@@ -41,7 +41,7 @@ export const fragmentDefaults = {
   field: {
     name: '',
     description: '',
-    parent: [],
+    parent: '',
     fieldsets: [],
     value: null,
     type: 'default',
@@ -59,7 +59,7 @@ export const fragmentDefaults = {
   fieldset: {
     name: '',
     type: 'fieldset',
-    parent: '',
+    parent: [],
     children: [],
     fields: [],
     meta: {
@@ -82,9 +82,48 @@ export const fragmentDefaults = {
     },
     __typename: 'FieldSet'
   },
+  sheet: {
+    name: '',
+    type: 'sheet',
+    parent: 'container',
+    children: [],
+    fields: [],
+    meta: {
+      type: 'sheet',
+      data: { __typename: 'JSONObject' },
+      __typename: 'Meta'
+    },
+    __typename: 'FieldSet'
+  },
+  interface: {
+    name: '',
+    type: 'interface',
+    parent: 'controller',
+    children: [],
+    fields: [],
+    meta: {
+      type: 'interface',
+      data: { __typename: 'JSONObject' },
+      __typename: 'Meta'
+    },
+    __typename: 'FieldSet'
+  },
+  chart: {
+    name: '',
+    type: 'chart',
+    parent: 'container',
+    children: [],
+    fields: [],
+    meta: {
+      type: 'chart',
+      data: { __typename: 'JSONObject' },
+      __typename: 'Meta'
+    },
+    __typename: 'FieldSet'
+  },
   member: {
     name: '',
-    parent: '',
+    parent: [],
     children: [],
     roles: [],
     meta: {
@@ -121,6 +160,42 @@ export const fragmentDefaults = {
       options: [],
       filters: [],
       className: 'fieldset diagram',
+      __typename: 'JSONObject'
+    },
+    interface: {
+      view: '',
+      focus: null,
+      notes: [],
+      attributes: {
+        __typename: 'JSONObject'
+      },
+      options: [],
+      filters: [],
+      className: 'fieldset interface',
+      __typename: 'JSONObject'
+    },
+    sheet: {
+      view: '',
+      focus: null,
+      notes: [],
+      attributes: {
+        __typename: 'JSONObject'
+      },
+      options: [],
+      filters: [],
+      className: 'fieldset sheet',
+      __typename: 'JSONObject'
+    },
+    chart: {
+      view: '',
+      focus: null,
+      notes: [],
+      attributes: {
+        __typename: 'JSONObject'
+      },
+      options: [],
+      filters: [],
+      className: 'fieldset chart',
       __typename: 'JSONObject'
     },
     fieldset: {
@@ -186,7 +261,7 @@ export const fragmentDefaults = {
   role: {
     name: '',
     type: 'role',
-    parent: '',
+    parent: [],
     children: [],
     meta: {
       type: 'role',
@@ -241,14 +316,9 @@ export const SetTypes = [
   'account',
   'member',
   'role',
-  'container',
   'fieldset',
   'filter',
-  'diagram',
   'interface',
-  'layout',
-  'chart',
-  'worksheet',
-  'sheet',
+  'controller',
   'custom'
 ];

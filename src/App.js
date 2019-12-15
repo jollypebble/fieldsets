@@ -1,7 +1,7 @@
 import React from 'react';
 
 // If you want custom control over the default data values, use the DataLayer & InitLayer components instead of FieldSetsApp
-import { FieldSetsApp, Interface, Diagram } from 'lib/fieldsets';
+import { FieldSetsApp, Interface, Diagram, Sheet } from 'lib/fieldsets';
 
 // Grab the size of our viewport
 import { useViewerDimensions } from 'lib/fieldsets/Hooks';
@@ -14,22 +14,25 @@ const App = (props) => {
   const startX = width/2;
   const startY = height/2;
 
-  // The status bar is cosumed by the data cache so we need to ensure it is rendered.
   return (
     <FieldSetsApp>
       <Interface
         id="econcircle-interface-controller"
+        portal="controller"
         type="MainNav"
         name="CPAF Data Visualization"
+        visible={true}
       >
         <Interface
           id="econcircle-dashboard"
           type="DiagramNav"
           name="Econ Circles"
+          visible={true}
         >
           <Diagram
             id="econcircle-app"
-            type="CircleDiagram"
+            type="Svg"
+            view="CircleDiagram"
             name="Econ Circles"
             meta={{
               attributes: {
@@ -41,9 +44,22 @@ const App = (props) => {
                 y: startY
               }
             }}
-            defaultFocus={true}
+            visible={true}
           />
         </Interface>
+        <Sheet
+          id="econcircle-balancesheet"
+          type="HandsOnTable"
+          view="BalanceSheet"
+          name="Balance Sheet"
+          meta={{
+            attributes: {
+              width: width,
+              height: height
+            }
+          }}
+          visible={false}
+        />
       </Interface>
     </FieldSetsApp>
   );

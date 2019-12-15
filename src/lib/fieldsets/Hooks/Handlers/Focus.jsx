@@ -23,7 +23,7 @@ export const FocusContext = createContext({});
 export const Focus = ( {children} ) => {
   const client = getDataCacheService();
 
-  const [{status, message, stage}, updateStatus] = useStatus();
+  const [{stage, status, message}, updateStatus] = useStatus();
   const [defaults, updateDefaults] = useDefaults();
 
   /**
@@ -45,6 +45,7 @@ export const Focus = ( {children} ) => {
    */
   const [updateFocusData] = useMutation(updateFocus, {
     client: client,
+    refetchQueries: [{query:fetchFocus}],
     awaitRefetchQueries: true
   });
 
@@ -53,6 +54,7 @@ export const Focus = ( {children} ) => {
    */
   const [updateContainerData] = useMutation(updateContainer, {
     client: client,
+    refetchQueries: [{query:fetchContainer}],
     awaitRefetchQueries: true
   });
 
@@ -63,7 +65,7 @@ export const Focus = ( {children} ) => {
 
     if ( 'default' !== newContainer.containerID ) {
       updateContainerData({ variables: { data: newContainer } });
-      fetchFocusedContainer();
+      //fetchFocusedContainer();
     }
 
     return newContainer;

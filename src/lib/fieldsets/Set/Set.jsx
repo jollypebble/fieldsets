@@ -1,117 +1,188 @@
-import React, { useEffect, useLayoutEffect, useState, useRef } from 'react';
+import React, { Suspense, useLayoutEffect, useEffect, useState, useMemo, useCallback, useTransition, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { SetView, SetGroup } from 'lib/fieldsets';
-import {useFocus, useStatus } from 'lib/fieldsets/Hooks';
-import { callCache } from 'lib/fieldsets/DataCache/reducers/datacache';
+import {useFocus, useStatus, useController} from 'lib/fieldsets/Hooks';
+import { Fetch } from 'lib/fieldsets/DataCache/calls';
+
+const SetGroup = React.lazy(() => import('lib/fieldsets/Set/SetGroup'));
+const SubSet = React.lazy(() => import('lib/fieldsets/Set/SubSet'));
+const SetView = React.lazy(() => import('lib/fieldsets/Set/SetView'));
 
 /**
- * Sets are state data components that represent groupings of field data and a users interactions with that data.
- * Each set will check its own field set data and will iteratively call itself if there are children.
+ * Root Sets are state data components that represent top level grouping of set data and a users interactions with that data.
+ * Each root set will check its own children set data and will iteratively call itself on it's children children.
  */
-
-const Set = ({ id, data, children }) => {
+const Set = ({ id, children }) => {
   const propTypes = {
-    id: PropTypes.string.isRequired,
-    data: PropTypes.object,
-    children: PropTypes.node
+    id: PropTypes.string.isRequired
   };
+
+  const stageName = 'render';
+  // The lifecycle stages that must be complete before rendering.
+  const stageDeps = ['defaults', 'datacache', 'controller', 'container'];
+
+  const [containers, controller] = useController();
   const [isActive, updateActive] = useState(false);
-  const [isVisible, updateVisibility] = useState(true);
 
-  const [{status, message, stage}, updateStatus] = useStatus();
+  const [current, updateStatus, lifecycle] = useStatus();
+  const [{stage, status, message, complete}, setStatus] = useState({stage: '', status: '', message: '', complete: false});
+  const [initialized, updateInitialized] = useState(false);
+
+  const [applyChange, pending] = useTransition({timeoutMs: 5000});
   const [focus, updateFocus] = useFocus();
-  const [rendered, updateRendered] = useState(false);
-
-  const setRef = useRef({});
 
   /**
    * Stateful latest data for this set from our cache
    */
-  const [fieldset, updateFieldSet] = useState(data);
+  const [fieldset, updateFieldSet] = useState({id: null, children: [], parent: '', meta: {id: null, data: {}}});
+  const [depth, updateDepth] = useState(0);
+
+  const setRef = useRef({});
 
   /**
-   * On focus changes grab latests set cache before render.
+   * Fetch the latest values of this set from the cache fragments.
    */
-  useEffect(
+  const fetchSetData = useCallback(
     () => {
-      switch (status) {
-        case 'focused':
-          const visible = (fieldset.meta.data.visible) ? true : false;
-          updateVisibility(visible);
-          updateRendered(true);
-          updateStatus('rendered');
-          break;
-        default:
-          break;
+      if (isReady && stage === stageName) {
+          const fetchset = Fetch({ id: id, target: 'fieldset'});
+          const fetchmeta = Fetch({ id: id, target: 'meta'});
+          const updatedFieldset = {
+            ...fetchset,
+            meta: {
+              ...fetchmeta
+            }
+          };
+          updateFieldSet({...updatedFieldset});
+          return {...updatedFieldset};
       }
     },
-    [status]
+    [isReady, stage]
   );
 
   /**
-   * After initial render, handle re-renders
+   * If the global stage is set to render, we then pass off status management to the this rendered setroot.
    */
   useLayoutEffect(
     () => {
-      switch (status) {
-        case 'rendered':
-          // Ensure we are always rendering if status is set.
-          updateRendered(true);
-          break;
-        default:
-          break;
+      if (stageName === current.stage) {
+        applyChange( () => {
+          setStatus({...current});
+        });
       }
     },
-    [status]
+    [current]
   );
 
-  const hasParent = () => {
-    return fieldset.parent && (fieldset.parent !== '' && fieldset.parent !== 0);
+  /**
+   * Tells us if the controller loaded all of this container's dependencies.
+   */
+  const isReady = useMemo(
+    () => {
+      if (complete) {
+        return true;
+      }
+      let depsMet = true;
+      for (const dep of stageDeps) {
+        if ( lifecycle[dep] ) {
+          depsMet = lifecycle[dep].complete;
+        } else {
+          depsMet = false;
+        }
+        if (!depsMet) {
+          break;
+        }
+      }
+      return depsMet;
+    },
+    [lifecycle]
+  );
+
+  useEffect(
+    () => {
+      if ( isReady && ! complete && stage === stageName ) {
+        applyChange( () => {
+          switch (status) {
+            case 'initializing':
+              setStatus({stage, status: 'initialized', message: `Set ${id} initialized for render`, complete: false});
+              break;
+            case 'initialized':
+              // Switch the global state to rendering.
+              updateStatus('rendering', `Rendering ${id} set & subsets`);
+              break;
+            case 'rendering':
+              // For any subsets loaded after the top level set, we simply need to
+              updateInitialized(true);
+              // Refetch data when rendering starts
+              fetchSetData(id);
+              break;
+            default:
+              break;
+          }
+        });
+      }
+    },
+    [isReady, stage, status, complete]
+  );
+
+  const setActive = useCallback(
+    () => {
+      applyChange( () => {
+        updateActive(true);
+      });
+    },
+    []
+  );
+
+  const setInactive = useCallback(
+    () => {
+      applyChange( () => {
+        updateActive(false);
+      });
+    },
+    []
+  );
+
+  const subset = useMemo(
+    () => {
+      if (isReady && fieldset && fieldset.children && fieldset.children.length > 0) {
+        return (
+          <SubSet
+            id={ `${fieldset.id}` }
+            key={ `${fieldset.id}-subset` }
+            data={ {...fieldset} }
+          />
+        );
+      }
+      return null;
+    },
+    [isReady, fieldset]
+  );
+
+  if (!isReady || !initialized) {
+    return null;
   }
 
-
-  if (rendered) {
-    /**
-     * If a child, grab parent data so we can pass render info to view.
-     */
-    let setDepth = 0;
-    let parent = {};
-    if ( fieldset.parent.length ) {
-      const parentMeta = callCache({ id: fieldset.parent, target: 'meta', action: 'fetch' });
-      parent.id = fieldset.parent
-      parent.depth = parentMeta.data.depth;
-      parent.center = parentMeta.data.center;
-      setDepth = parentMeta.data.depth + 1;
-      // TODO Fix the depth updating.
-      // callCache({ id: id, target: 'meta', action: 'update', filter: 'depth' }, setDepth );
-    }
-
-    const view = fieldset.meta.data.view;
-
-    // Don't render a group for children if empty
-    const subsets = ( children && children.length ) ?
+  // Build a nested Set Component render tree.
+  return(
+    <Suspense>
       <SetGroup
         id={`${id}`}
-        key={`${id}-children`}
-        type={fieldset.type}
-        group={'children'}
+        key={`${id}-group`}
+        type={(fieldset.type) ? fieldset.type : 'fieldset'}
+        group={'group'}
         view={fieldset.meta.data.view}
-        className={`view-${view} set-children ${id}-group`}
+        className={`set-group ${fieldset.id}-group${(isActive)? ' active' : ''}`}
+        onEnter={setActive}
+        onExit={setInactive}
       >
-        {children}
-      </SetGroup>
-    : null;
-
-    return (
-      <React.Fragment>
         <SetGroup
-          id={id}
-          key={id}
+          id={`${id}`}
+          key={`${id}-parent`}
           type={fieldset.type}
           group={'parent'}
-          view={view}
+          view={fieldset.meta.data.view}
           active={isActive}
-          className={`view-${view} set-parent ${id}-group${(isActive)? ' active' : ''}`}
+          className={`view-${fieldset.meta.data.view} set-parent ${id}-group${(isActive)? ' active' : ''}`}
           onClick={() => {
             if ( id !== focus.focusID ) {
               updateFocus({ action: 'focus', data: { id: 'current', focusID: id, focusGroup: fieldset.parent, type: fieldset.type, center: fieldset.meta.data.center, zoom: fieldset.meta.data.zoom, depth: fieldset.meta.data.depth, expanded: false }});
@@ -126,24 +197,23 @@ const Set = ({ id, data, children }) => {
         >
           <SetView
             id={id}
-            view={view}
+            view={fieldset.meta.data.view}
             active={isActive}
             variables={{
               ...fieldset.meta.data,
               name: fieldset.name,
-              depth: setDepth,
-              parent: parent,
-              visible: isVisible,
-              view: view,
+              depth: depth,
+              parent: fieldset.parent,
+              visible: true, //TODO: Pull from controller.
+              view: fieldset.meta.data.view,
               fields: fieldset.fields
             }}
           />
         </SetGroup>
-        {subsets}
-      </React.Fragment>
-    );
-  }
-  return null;
+        {subset}
+      </SetGroup>
+    </Suspense>
+  );
 }
 
 export default Set;

@@ -18,13 +18,15 @@ export const Fetch = ( call ) => {
   const filter = (call.filter) ? call.filter : '';
 
   let result = null;
+
   // These are our fetchAll queries
   // Key is set to id if not specified.
   if (key) {
     let fragmentID = '';
     let fragmentQuery = '';
     let fragmentName = call.target;
-    if ( 'diagram' === fragmentName || 'interface' === fragmentName ) {
+    // TODO: Check these types against defaults SetTypes
+    if ( 'diagram' === fragmentName || 'interface' === fragmentName || 'sheet' === fragmentName || 'chart' === fragmentName || 'controller' === fragmentName) {
       fragmentName = 'fieldset';
     }
     // Our fetch single calls
@@ -32,12 +34,6 @@ export const Fetch = ( call ) => {
       case 'field':
         fragmentID = `Field:${key}`;
         fragmentQuery = fetchField;
-        break;
-      case 'diagram':
-      case 'interface':
-      case 'fieldset':
-        fragmentID = `FieldSet:${key}`;
-        fragmentQuery = fetchFieldSet;
         break;
       case 'meta':
         fragmentID = `Meta:${key}`;
@@ -55,8 +51,13 @@ export const Fetch = ( call ) => {
         fragmentID = `Role:${key}`;
         fragmentQuery = fetchRole;
         break;
+      case 'diagram':
+      case 'interface':
+      case 'sheet':
+      case 'fieldset':
       default:
-        throw new Error(`The fetch target "${call.target}" does not exist.`);
+        fragmentID = `FieldSet:${key}`;
+        fragmentQuery = fetchFieldSet;
         break;
     }
     // Get our Result!

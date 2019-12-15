@@ -1,5 +1,5 @@
-export { Defaults } from './Defaults';
-export { Portals } from './Portals';
+export {default as Defaults} from './Defaults';
+export {default as Portals} from './Portals';
 export { Focus } from './Focus';
-export { Status } from './Status';
+export {default as Status} from './Status';
 export { PromiseHandler } from './Promise';

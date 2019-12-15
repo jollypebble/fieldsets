@@ -1,5 +1,6 @@
 import React, { createContext, useMemo, useState } from 'react';
-import { fetchFieldValue } from 'lib/fieldsets/utils';
+import { getNumericValue } from 'lib/fieldsets/utils';
+import {CustomFunctions} from 'utils/callbacks';
 
 // Our contexts.
 export const FunctionsContext = createContext({});
@@ -7,99 +8,13 @@ export const FunctionsContext = createContext({});
 export const Functions = (props) => {
 
   /**
-   * Find numeric value of an input.
-   * Will allow field id's and look up corresponding values
-   * Will cast null values as 0.
-   */
-  const castNumeric = (value) => {
-    let number = Number(value);
-    if ( Number.isNaN(number) ) {
-      // If we don't have a number, test to see if it is a cached field id
-      const fieldvalue = fetchFieldValue(value);
-      // Means we have a cache hit.
-      if (fieldvalue !== null) {
-        number = Number(fieldvalue);
-        if ( Number.isNaN(number) ) {
-          return Error(`Field ${value} has a value of ${fieldvalue} which cannot be cast to a number.`);
-        }
-      } else {
-        return Error(`${value} cannot be cast to a number and is not a valid field id.`);
-      }
-    }
-    return number;
-  }
-
-  /**
-   * Check our type of field return corresponding numeric value.
-   */
-  const getNumericValue = (field, calledby = '') => {
-    if (calledby.length > 0) {
-      calledby = `function ${calledby}(): `;
-    }
-    switch ( typeof field ) {
-      case 'numeric':
-      case 'bigint':
-      case 'string':
-        try {
-          return castNumeric(field);
-        } catch (e) {
-          console.error(`${calledby}Primitive value passed cannot be cast. ${e.message}`);
-          return;
-        }
-        break;
-      case 'function':
-        const fieldvalue = field();
-        try {
-          return castNumeric(fieldvalue);
-        } catch (e) {
-          console.error(`${calledby}Function called returns an invalid value. ${e.message}`);
-          return;
-        }
-        break;
-      case 'object':
-        if ( 'field' === field.__typename.toLowerCase() ) {
-          if (field.hasOwnProperty('value')) {
-            try {
-              return castNumeric(field.value);
-            } catch (e) {
-              console.error(`${calledby}Field Object passed cotains an invalid value. ${e.message}`);
-              return;
-            }
-          } else {
-            try {
-              throw new Error(`${calledby}Field Object passed does not have the value property.`);
-            } catch (e) {
-              console.error( e.message );
-              return;
-            }
-          }
-        } else {
-          try {
-            throw new Error(`${calledby}Object passed does not have the property __typename === 'field'.`);
-          } catch (e) {
-            console.error( e.message );
-            return;
-          }
-        }
-        break;
-      default:
-        try {
-          throw new Error(`${calledby}Field of ${field} is not a valid data type and returns ${typeof field}`);
-        } catch (e) {
-          console.error( e.message );
-          return;
-        }
-        break;
-    }
-  };
-
-
-  /**
    * our default set of functions on our fields and their values.
    * If you'd like to add custom callbacks, use the `useFunctions` hook.
    */
   const functions = useMemo(
     () => {
+      let custom = CustomFunctions();
+      custom = (custom) ? custom : {};
       return(
         {
           cast: (field, type) => {
@@ -165,7 +80,8 @@ export const Functions = (props) => {
               });
               return sum/count;
             }
-          }
+          },
+          ...custom
         }
       );
     },

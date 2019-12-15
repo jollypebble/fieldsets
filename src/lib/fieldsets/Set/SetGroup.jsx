@@ -1,8 +1,8 @@
-import React, { useEffect, useMemo, useCallback, useState, useRef, forwardRef } from 'react';
+import React, { useEffect, useMemo, useCallback, useState, useRef, forwardRef, useTransition } from 'react';
 import * as Groups from './Groups';
 import * as CustomGroups from 'components/Sets/Groups';
 import { useInputEvents, useClickEvents } from 'lib/fieldsets/Hooks';
-import { callCache } from 'lib/fieldsets/DataCache/reducers/datacache';
+import { Fetch, Update } from 'lib/fieldsets/DataCache/calls';
 
 const SetGroup = (props, ref) => {
   const {id, view, type, group = 'group'} = {...props}
@@ -13,9 +13,15 @@ const SetGroup = (props, ref) => {
     filter: 'attributes'
   };
 
+  const [applyChange, pending] = useTransition({timeoutMs: 5000});
+
   const [attributes, updateAttributes] = useState( () => {
-    return callCache({...cacheKey, action: 'fetch'});
+    applyChange( () => {
+      return Fetch({...cacheKey});
+    });
   });
+
+
   const [handleOnChange] = useInputEvents(props.onChange);
   const [handleClick, handleDoubleClick] = useClickEvents(props.onClick, props.onDoubleClick);
   const setRef = useRef(ref);
@@ -35,17 +41,19 @@ const SetGroup = (props, ref) => {
   useEffect(
     () => {
       if (setRef.current) {
-        if ('parent' === group) {
-          const vb = getGroupViewBox();
-          if (vb.width > 0 && vb.height > 0) {
-            const newAttributes = callCache({...cacheKey, action: 'update'}, { width: vb.width, height: vb.height, viewbox: {...vb} });
+        applyChange(() => {
+          if ('parent' === group) {
+            const vb = getGroupViewBox();
+            if (vb && vb.width > 0 && vb.height > 0) {
+              const newAttributes = Update({...cacheKey}, { width: vb.width, height: vb.height, viewbox: {...vb} });
+              updateAttributes({...newAttributes});
+            }
+          } else if ('children' === group) {
+            const groupCenter = getGroupCenter();
+            const newAttributes = Update({...cacheKey}, { group: { ...groupCenter } });
             updateAttributes({...newAttributes});
           }
-        } else if ('children' === group) {
-          const groupCenter = getGroupCenter();
-          const newAttributes = callCache({...cacheKey, action: 'update'}, { group: { ...groupCenter } });
-          updateAttributes({...newAttributes});
-        }
+        });
       }
     },
     [setRef.current]
@@ -53,50 +61,57 @@ const SetGroup = (props, ref) => {
 
   const getBoundingBox = useCallback(
     () => {
-      if ('group' !== group ) {
-        const bbox = setRef.current.getBBox();
-        return { x: bbox.x, y: bbox.y, width: bbox.width, height: bbox.height, __typename: 'JSONObject' };
-      }
+      applyChange(() => {
+        if ('group' !== group ) {
+          const bbox = setRef.current.getBBox();
+          return { x: bbox.x, y: bbox.y, width: bbox.width, height: bbox.height, __typename: 'JSONObject' };
+        }
+      });
     },
     [setRef.current]
   );
 
   const getGroupViewBox = useCallback(
     () => {
-      if (attributes && attributes.viewbox) {
-        return attributes.viewbox;
-      }
+      applyChange(() => {
+        if (attributes && attributes.viewbox) {
+          return attributes.viewbox;
+        }
 
-      const bbox = getBoundingBox();
+        const bbox = getBoundingBox();
 
-      if (bbox && bbox.width && bbox.height) {
-        const vb = { x: bbox.x, y: bbox.y, width: bbox.width, height: bbox.height, __typename: 'JSONObject' };
-        return {...vb};
-      }
+        if (bbox && bbox.width && bbox.height) {
+          const vb = { x: bbox.x, y: bbox.y, width: bbox.width, height: bbox.height, __typename: 'JSONObject' };
+          return {...vb};
+        }
+      });
     }, [setRef.current]
   );
 
   const getGroupCenter = useCallback(
     () => {
-      if (attributes && attributes.group && attributes.group.center) {
-        return attributes.group.center;
-      }
+      applyChange(() => {
+        if (attributes && attributes.group && attributes.group.center) {
+          return attributes.group.center;
+        }
 
-      const bbox = getBoundingBox();
+        const bbox = getBoundingBox();
 
-      if (bbox && bbox.width && bbox.height) {
-        const rx = bbox.width / 2;
-        const ry = bbox.height / 2;
-        const cx = bbox.x + rx;
-        const cy = bbox.y + ry;
-        const center = {
-          x: cx,
-          y: cy,
-          __typename: 'Center'
-        };
-        return { width: bbox.width, height: bbox.height, radiusX: rx, radiusY: ry, center: {...center}, __typename: 'JSONObject' };
-      }
-    }, [setRef.current]
+        if (bbox && bbox.width && bbox.height) {
+          const rx = bbox.width / 2;
+          const ry = bbox.height / 2;
+          const cx = bbox.x + rx;
+          const cy = bbox.y + ry;
+          const center = {
+            x: cx,
+            y: cy,
+            __typename: 'Center'
+          };
+          return { width: bbox.width, height: bbox.height, radiusX: rx, radiusY: ry, center: {...center}, __typename: 'JSONObject' };
+        }
+      });
+    },
+    [setRef.current]
   );
 
   if (props.view) {

@@ -582,6 +582,17 @@ fieldset {
 #will_status-toggle i {
   font-size: 0.35vw; }
 
+#view-bar-wrapper {
+  position: fixed;
+  bottom: 0;
+  width: 100vw; }
+  #view-bar-wrapper.hidden {
+    opacity: 0; }
+  #view-bar-wrapper.visible {
+    opacity: 1; }
+  #view-bar-wrapper .hidden {
+    opacity: 0; }
+
 body {
   margin: 0;
   padding: 0;

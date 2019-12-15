@@ -1,7 +1,7 @@
-import React, { useLayoutEffect, useEffect, useState } from 'react';
+import React, { useLayoutEffect, useEffect, useState, useCallback, useTransition } from 'react';
 import ZoomViewer from './ZoomViewer';
 
-import { SetRoot } from 'lib/fieldsets';
+import { Set } from 'lib/fieldsets';
 import { DialogSheet } from 'components/Fields/Groups';
 import {useFocus, useStatus, useViewerDimensions, useClickEvents} from 'lib/fieldsets/Hooks';
 import { Fetch } from 'lib/fieldsets/DataCache/calls';
@@ -10,10 +10,11 @@ import { Fetch } from 'lib/fieldsets/DataCache/calls';
  * This is the container for our main diagram. It has direct access to the apollo cache so it can track foucs of it's child sets.
  */
 const CircleDiagram =  ({ id, name, type, meta: metaInit, data = [] } ) => {
-  const [{status, message, stage}, updateStatus] = useStatus();
+  const [{stage, status, message, complete}, updateStatus, lifecycle] = useStatus();
   const [loaded, updateLoaded] = useState(false);
   const [focus, updateFocus] = useFocus();
   const { height, width } = useViewerDimensions();
+  const [applyChange, pending] = useTransition({timeoutMs: 5000});
 
   const [dialog, updateDialog] = useState({
     id: focus.focusID
@@ -33,39 +34,31 @@ const CircleDiagram =  ({ id, name, type, meta: metaInit, data = [] } ) => {
     updateDialog({id: newfocus.focusID});
   }
 
-/**
- * A helper function that alters the meta data based on current viewport width and sets diagram units based on that.
- */
-  const setDiagramMeta = (metadata) => {
-    // Update our diagram meta to include some calculated units and use the most recent viewport dimenions.
-    let attributes = metadata.attributes;
-
-    // Set our height based on the current veiwport.
-    attributes.width = width;
-    attributes.height = height;
-
-    metadata.attributes = attributes;
-    updateMeta(metadata);
-  }
-
   /**
    * Use our status to determine our render state.
    */
-  useLayoutEffect(
+  useEffect(
     () => {
-      if ( ! loaded ) {
-        switch (status) {
-          case 'rendering':
-            let diagrammeta = Fetch({id: id, target: 'meta'});
-            setDiagramMeta(diagrammeta.data);
-            updateLoaded(true);
-            break;
-          default:
-            break;
+      applyChange( () => {
+        if ( ! loaded && 'render' === stage ) {
+          switch (status) {
+            case 'initializing':
+              let diagramMeta = Fetch({id: id, target: 'meta'});
+              // Alters the meta data based on current viewport width and sets diagram units based on that.
+              if (diagramMeta.data.attributes) {
+                diagramMeta.data.attributes.width = width;
+                diagramMeta.data.attributes.height = height;
+              }
+              updateMeta({...diagramMeta.data});
+              updateLoaded(true);
+              break;
+            default:
+              break;
+          }
         }
-      }
+      });
     },
-    [status]
+    [status, stage]
   );
 
   /**
@@ -215,9 +208,9 @@ const CircleDiagram =  ({ id, name, type, meta: metaInit, data = [] } ) => {
                   // We map our root sets only here as they will iterate all of the child sets.
                   data.map((fieldset) => {
                     return(
-                      <SetRoot
+                      <Set
                         id={ fieldset.id }
-                        key={ fieldset.id }
+                        key={ `${fieldset.id}` }
                       />
                     )
                   })

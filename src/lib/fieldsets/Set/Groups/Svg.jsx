@@ -1,7 +1,7 @@
 import React from 'react';
 
-const SVGGroup = ({id, view, type = 'fieldset', group = 'group', active = false, className, events = {}, children}, ref) => {
-
+const Svg = ({id, view, type = 'fieldset', group = 'group', active = false, className, events = {}, children}, ref) => {
+  
   if ('parent' === group ) {
     return (
       <svg
@@ -26,4 +26,4 @@ const SVGGroup = ({id, view, type = 'fieldset', group = 'group', active = false,
     </g>
   );
 }
-export default SVGGroup;
+export default Svg;

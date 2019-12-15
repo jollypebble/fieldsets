@@ -1,12 +1,26 @@
-import React, { createContext, useMemo, useState, useEffect } from 'react';
+import React, { createContext, useMemo, useState, useEffect, useLayoutEffect, useTransition } from 'react';
 import { rootQueryDefaults, fragmentDefaults, SetTypes, MetaTypes, FieldTypes } from 'lib/fieldsets/graphql/defaults';
 import {useStatus} from 'lib/fieldsets/Hooks';
 
 // Our context.
 export const DefaultsContext = createContext([]);
 
-export const Defaults = (props) => {
-  const [{status, message, stage}, updateStatus] = useStatus();
+const Defaults = (props) => {
+  const stageName = 'defaults';
+  const [current, updateStatus, lifecycle] = useStatus();
+  const [{stage, status, message, complete}, setStatus] = useState({stage: '', status: '', message: '', complete: false});
+  const [applyChange, pending] = useTransition({timeoutMs: 5000});
+
+  useEffect(
+    () => {
+      if (! complete && stageName === current.stage ) {
+        applyChange( () => {
+          setStatus({...current});
+        });
+      }
+    },
+    [current]
+  );
 
   /**
    * Our default values used throughout our code base.
@@ -29,18 +43,30 @@ export const Defaults = (props) => {
 
   const [defaults, updateDefaults] = useState({...defaultValues});
 
+  // Defaults initialize on their own.
+  useEffect(
+    () => {
+      applyChange( () => {
+        updateStatus('initializing', 'Initializing default values', stageName);
+      });
+    },
+    []
+  );
+
   /**
    * Set a stage and status after render that allows to to initialize application specific defaults.
    */
   useEffect(
     () => {
-      if ( 'defaults' === stage && 'initializing' === status ) {
-        updateStatus('initialized', 'Default values initialized', 'defaults');
-      } else if ( 'application' === stage && 'default' === status ) {
-        updateStatus('initializing', 'Initializing default values', 'defaults');
+      if ( ! pending ) {
+        applyChange( () => {
+          if ( stageName === stage && 'initializing' === status ) {
+            updateStatus('complete', 'Default values initialized', stageName, true);
+          }
+        });
       }
     },
-    [stage, status]
+    [stage, status, pending]
   );
 
   /**
@@ -54,7 +80,9 @@ export const Defaults = (props) => {
     } else {
       newValues = {...defaults, ...newDefaults}
     }
-    updateDefaults({...newValues});
+    applyChange(() => {
+      updateDefaults({...newValues});
+    });
     return {...newValues};
   }
 
@@ -64,3 +92,5 @@ export const Defaults = (props) => {
     </DefaultsContext.Provider>
   );
 }
+
+export default Defaults;

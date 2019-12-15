@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import { Button } from 'react-md';
 import Field from 'lib/fieldsets/Field/Field';
-import { FieldData } from 'data/defaults/Diagrams/CircleDiagram';
+import { FieldData } from 'data';
 
 import { fetchFields, updateField } from 'lib/fieldsets/graphql/queries';
 

@@ -6,7 +6,7 @@ export const resolvers = (defaults = {}) => {
     JSON: GraphQLJSON,
     JSONObject: GraphQLJSONObject,
     Mutation: {
-      updateFocus: ( object, { data }, { client, getCacheKey } ) => {
+      updateFocus: ( object, { data }, { client } ) => {
         const newfocus = {
           ...defaults.rootQuery.focus,
           ...data,
@@ -29,8 +29,9 @@ export const resolvers = (defaults = {}) => {
       updateContainer: ( object, { data }, { client, getCacheKey } ) => {
         // Don't use defaults for updates.
         const containerID = data.containerID;
+        const cacheKey = getCacheKey({ __typename: 'FieldSet', id: containerID });
         const container = client.readFragment({
-          id: getCacheKey({ __typename: 'FieldSet', id: containerID }),
+          id: cacheKey,
           fragment: fetchFieldSet,
           fragmentName: 'fieldset'
         });
@@ -45,27 +46,24 @@ export const resolvers = (defaults = {}) => {
         let fieldsets = [];
         container.container.children.map(
           (fieldsetID) => {
+            const cacheKey = getCacheKey({ __typename: 'FieldSet', id: fieldsetID });
             const fieldset = client.readFragment({
-              id: getCacheKey({ __typename: 'FieldSet', id: fieldsetID }),
+              id: cacheKey,
               fragment: fetchFieldSet,
               fragmentName: 'fieldset'
             });
             fieldsets.push(fieldset);
           }
         );
-
-        const startingsets = fieldsets.filter( ( fieldset ) => {
-          return fieldset.parent === '';
-        });
-        return startingsets;
-
+        return fieldsets;
       },
       fetchFields: ( object, { data }, { client, getCacheKey } ) => {
         let fields = [];
         data.fields.map(
           (fieldID) => {
+            const cacheKey = getCacheKey({ __typename: 'Field', id: fieldID });
             const field = client.readFragment({
-              id: getCacheKey({ __typename: 'Field', id: fieldID }),
+              id: cacheKey,
               fragment: fetchField,
               fragmentName: 'field'
             });

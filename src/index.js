@@ -1,12 +1,12 @@
 import React from 'react';
-import { render } from 'react-dom';
+import ReactDOM from 'react-dom';
 
 // Data cache wrapper around our app.
 import App from 'App';
 
 import './static/styles/index.css';
 
-render(
-  <App />,
-  document.getElementById('root'),
-);
+const rootNode = document.getElementById('root');
+// Concurrent Mode Experimental
+ReactDOM.createRoot(rootNode).render(<App />);
+//ReactDOM.render(<App />,rootNode);

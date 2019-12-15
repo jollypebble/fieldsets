@@ -1,15 +1,15 @@
-import React from 'react';
-import { Controller } from 'lib/fieldsets';
-
+import React, {Suspense} from 'react';
+const Controller = React.lazy(() => import('lib/fieldsets/Containers/Controller'));
 /**
  * This layer manages container visualization and interactions with it.
  */
 const VisualLayer = (props) => {
   return (
-    <Controller>
+    <Suspense fallback={<h1>Initializing controller...</h1>}>
+      <Controller>
         {props.children}
-    </Controller>
-
+      </Controller>
+    </Suspense>
   );
 };
 

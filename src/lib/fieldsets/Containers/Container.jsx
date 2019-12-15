@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useLayoutEffect, useReducer, useCallback, useMemo, useState } from 'react';
+import React, { createContext, useEffect, useLayoutEffect, useReducer, useCallback, useMemo, useState, useTransition } from 'react';
 import { useLazyQuery } from '@apollo/react-hooks';
 import PropTypes from 'prop-types';
 import { getDataCacheService } from 'lib/fieldsets/DataCache/DataCacheService';
@@ -8,8 +8,6 @@ import {
   fetchContainerData
 } from 'lib/fieldsets/graphql/queries';
 import {useFocus, useStatus, useViewerDimensions, useDefaults, useController} from 'lib/fieldsets/Hooks';
-import { isPrimitive } from 'lib/fieldsets/utils';
-import localForage from 'localforage';
 
 // Our contexts.
 export const ContainerContext = createContext([
@@ -25,49 +23,148 @@ export const ContainerContext = createContext([
  * This is the generic Fieldset Container which Handles data priming for container types.
  * This component initializes the data cache with data, as well as setting up the underlying coordinate system for tracking interactions.
  */
-const Container = ({id, name, type, view, meta: metadata, defaultFocus = false, children}) => {
+const Container = ({id, name, type = 'container', view, meta: metadata, visible: isVisible = false, children}) => {
   const propTypes = {
     id: PropTypes.string.isRequired,
     name: PropTypes.string,
     type: PropTypes.string.isRequired,
     view: PropTypes.string,
     meta: PropTypes.object,
-    defaultFocus: PropTypes.bool,
+    visible: PropTypes.bool,
     children: PropTypes.node
   };
 
-  const [controller, updateController, prerender] = useController();
-  const [{status, message, stage}, updateStatus] = useStatus();
+  const [containers, controller] = useController();
+
+  const stageName = 'container';
+  // The lifecycle stages that must be complete before rendering.
+  const stageDeps = ['defaults', 'datacache', 'controller'];
+  const [current, updateStatus, lifecycle] = useStatus();
+  const [{stage, status, message, complete}, setStatus] = useState({stage: '', status: '', message: '', complete: false});
+
   const [loaded, updateLoaded] = useState(false);
+  const [initialized, updateInitialized] = useState(false);
+
+  const [applyChange, pending] = useTransition({timeoutMs: 5000});
+
   const [focus, updateFocus] = useFocus();
   const [fieldsets, updateFieldSets] = useState([]);
   const [meta, updateMeta] = useState(metadata);
   const { height, width } = useViewerDimensions();
   const [defaults, updateDefaults] = useDefaults();
+  const [visible, updateVisibility] = useState(isVisible);
 
-  const [containerData, updateContainerData] = useState({fieldsets, meta, loaded});
+  const [containerData, updateContainerData] = useState({id, fieldsets, meta, complete, visible});
 
+  /**
+   * Our lazyloaded query. Will read the root query container children and set the container data accordingly.
+   */
   const [fetchContainerFieldSets, { loading, called, data, refetch }] = useLazyQuery(fetchContainerData, {
     displayName: `fetchContainerFieldSets ${id}`,
     client: getDataCacheService(),
     onCompleted: (result) => {
-      if (!loaded && result.fetchContainerData && result.fetchContainerData.length > 0) {
-        updateFieldSets(result.fetchContainerData);
-        updateStatus('loaded', 'Cache data sucessfully loaded. Ready for rendering.');
+      if (result && result.fetchContainerData && result.fetchContainerData.length > 0) {
+        applyChange( () => {
+          updateFieldSets(result.fetchContainerData);
+          updateLoaded(true);
+        });
       }
     }
   });
 
   /**
-   * Execute our lazyQuery before rendering.
+   * If the global stage is a container, we then pass off status management to the individual container and the controller.
+   */
+  useLayoutEffect(
+    () => {
+      if (stageName === current.stage) {
+        applyChange( () => {
+          setStatus({...current});
+        });
+      }
+    },
+    [current]
+  );
+
+  /**
+   * Make the controller aware of this container.
+   */
+  useLayoutEffect(
+    () => {
+      if ( ! containers.hasOwnProperty(id) ) {
+        applyChange( () => {
+          controller.addContainer(id, view, type, visible);
+        });
+      }
+    },
+    [isReady]
+  );
+
+  /**
+   * Set container local status off of controller status.
+   */
+  useLayoutEffect(
+    () => {
+      if (stageName === current.stage && containers && containers[id] && ! containers[id].complete) {
+        applyChange( () => {
+          setStatus({stage: stageName, status: containers[id].status, message: containers[id].message, complete: false});
+        });
+      }
+    },
+    [containers]
+  );
+
+  /**
+   * Sync controller visibility with current visibility.
+   */
+  useLayoutEffect(
+    () => {
+      if (isReady && loaded) {
+        applyChange( () => {
+          controller.updateVisibility(id, visible);
+        });
+      }
+    },
+    [visible]
+  );
+
+  /**
+   * Tells us if the controller loaded all of this container's dependencies.
+   */
+  const isReady = useMemo(
+    () => {
+      if (complete) {
+        return true;
+      }
+      let depsMet = true;
+      for (const dep of stageDeps) {
+        if ( lifecycle[dep] ) {
+          depsMet = lifecycle[dep].complete;
+        } else {
+          depsMet = false;
+        }
+        if (!depsMet) {
+          break;
+        }
+      }
+      return depsMet;
+    },
+    [lifecycle]
+  );
+
+  /**
+   * Initialize once dependencies are complete.
    */
   useEffect(
     () => {
-      if (!loaded && !called && !loading && 'primed' === status) {
-        fetchContainerFieldSets();
+      if ( isReady && ! complete && ! loaded && ! initialized) {
+        applyChange( () => {
+          updateStatus('initializing', 'Initializing containers', stageName);
+          controller.updateContainerStatus(id, 'priming', `Priming ${name} data`);
+        });
       }
     },
-    [loaded, loading, called, data, status]
+    [isReady, complete]
   );
 
   /**
@@ -76,163 +173,149 @@ const Container = ({id, name, type, view, meta: metadata, defaultFocus = false, 
   useEffect(
     () => {
       if ( loaded && !called && !loading && focus.container.containerID === id) {
-        refetch();
+        applyChange( () => {
+          refetch();
+        });
       }
     },
     [focus.container.containerID]
   );
 
 
-  const getContainerData = useCallback(
+  /**
+   * Once the container is ready, set it's visibility accordinging and set complete to 'true'
+   */
+  useEffect(
     () => {
-      updateContainerData({fieldsets, meta, loaded})
-      return(
-        {fieldsets, meta, loaded}
-      );
+      if ( stageName === current.stage && containers && containers[id] && ! containers[id].complete && 'ready' === containers[id].status && loaded && ! pending ) {
+        applyChange( () => {
+          setStatus({stage, status, message, complete: true});
+          updateVisibility(containers[id].visible);
+        });
+      }
     },
-    [fieldsets, meta, loaded]
+    [containers, loaded, pending]
   );
 
-  const isActive = () => {
-    if (focus & focus.data && focus.data.length > 0) {
-      console.log(`${id} is active focus`);
-      return id === focus.data.focus.container;
-    }
-    return false;
-  }
+  /**
+   * Once complete wait for all other containers to complete before changing status.
+   */
+  useEffect(
+    () => {
+      if (complete && stageName === current.stage) {
+        applyChange( () => {
+          if( Object.values(containers).filter((container) => 'ready' !== container.status).length === 0 ) {
+            updateStatus('complete', 'All containers ready for rendering', stageName);
+          }
+        });
+      }
+    },
+    [containers, complete]
+  );
+
+
+  /**
+   * Set our container data and pass it on for rendering.
+   */
+   useLayoutEffect(
+    () => {
+      if (loaded && complete) {
+        applyChange( () => {
+          updateContainerData({id,fieldsets, meta, complete, visible})
+        });
+      }
+    },
+    [fieldsets, meta, loaded, complete]
+  );
+
+  /**
+   * Active means that the container is visible to the user.
+   */
+  const isActive = useMemo(
+    () => {
+      if (containers && containers[id]) {
+        return containers[id].visible;
+      }
+      return false;
+    },
+    [containers]
+  );
 
   /**
    * Query the last save of the current container and use it to initialize. Otherwise fallback on defaults defined in 'data/defaults'
    */
-  const initContainer = useCallback(
-    async () => {
-      // await before instantiating ApolloClient, else queries might run before the cache is persisted
-      try {
-        let promise = new Promise((resolve, reject) => {
-          resolve( Initialize({key: id, id: view, name: name, meta: meta, target: type, defaults: defaults}));
-        });
-        await promise.then(
-          ()=> {
-            updateStatus('primed', 'Cache primed from defaults', 'container');
-          }
-        );
-      } catch (error) {
-        updateStatus('error', `Initial Data Priming Error: ${error}`, 'container');
-      }
-    },
-    []
-  );
+  const initContainer = async () => {
+    // await before instantiating ApolloClient, else queries might run before the cache is persisted
+    try {
+      let promise = new Promise((resolve, reject) => {
+        resolve( Initialize({key: id, id: view, name: name, meta: meta, target: type, defaults: defaults}));
+      });
+      await promise.then(
+        ()=> {
+          applyChange( () => {
+            controller.updateContainerStatus(id, 'initialized', `${name} initialized`);
+          });
+        }
+      );
+    } catch (error) {
+      console.error( `Container Initilization Error: ${error.message}` );
+      return error;
+    }
+  };
 
   /**
-   * Check our data store for a previous persistant save.
+   * Initialize cache if no local data exists.
    */
-  const loadContainer = useCallback( async () => {
-    // Check localforage for a saved state and use that instead of defaults.
-    // TODO: Make this generic so we can swith to Ionic potentially since it does both web and mobile local storage.
-    // TODO: Fetch data from remote source and populate locally.
-    await localForage.getItem('fieldsets-datacache-persist',
-      async (err, value) => {
-        if (value && value.length) {
-          const store = JSON.parse(value);
-          Object.keys(store).forEach( key => {
-            const fragment = { ...store[key] };
-            if (fragment.id) {
-              Object.keys(fragment).forEach( prop => {
-                if ( ! isPrimitive( fragment[prop] )) {
-                  const fragmentData = {...fragment[prop]};
-                  if (fragmentData.type) {
-                    switch (fragmentData.type) {
-                      case 'json':
-                        if ( fragmentData.json && Array.isArray(fragmentData.json)) {
-                          fragment[prop] = [...fragmentData.json];
-                        } else {
-                          fragment[prop] = {...fragmentData.json}
-                        }
-                        break;
-                      case 'id':
-                      default:
-                        if ( fragmentData.id && store[fragmentData.id] && store[fragmentData.id].__typename && fragmentData.typename && fragmentData.typename === store[fragmentData.id].__typename ) {
-                          const storefragment = {...store[fragmentData.id]};
-                          // Handle meta data
-                          if (storefragment.data && storefragment.data.json && 'json' === storefragment.data.type) {
-                            fragment[prop] = { ...storefragment, data: { ...storefragment.data.json } };
-                          } else {
-                            fragment[prop] = { ...storefragment };
-                          }
-                        }
-                        break;
-                    }
-                  }
-                }
-              });
-              const target = fragment.__typename.toLowerCase();
-              Write({id: fragment.id, target: target}, {...fragment} );
-            }
-          });
-          updateStatus('primed', 'Cache primed from persistant store', 'container');
-        } else {
-          initContainer();
-        }
-      }
-    );
-  },
-  []
-);
-
-  // Wait For cache connection, and then for data to be primed to fetch results.
   useEffect(
     () => {
-      if ( ! loaded ) {
-        if ( 'container' === stage ) {
-          switch (status) {
-            case 'setup':
-              updateStatus('priming', `Priming ${name} Data Cache`, 'container');
-              loadContainer();
-              break;
-            case 'primed':
-              // If this container is flagged as load as default focus, add it to the root query.
-              if (defaultFocus || isActive()) {
-                const containerMeta = Fetch({id: id, target: 'meta'});
-                // Make sure our current meta has all the defaults backfilled.
-                updateMeta({...containerMeta});
-                // Set the data for this container;
-                const center = (containerMeta.data.center) ? containerMeta.data.center : { x: width/2, y: height/2 };
-                const zoom = (containerMeta.data.zoom) ? containerMeta.data.zoom : { scale: 1.0 };
-                const container = { containerID: id, type: containerMeta.type };
-                updateFocus({ action: 'switch', data: { id: 'current', focusID: id, focusGroup: '', expanded: false, type: containerMeta.type, container: {...container}, center: center, zoom: zoom, depth: 0 }});
-              }
-              break;
-            case 'loaded':
-              updateLoaded(true);
-              break;
-            default:
-              break;
+      if (stageName === stage && 'initializing' === status && ! initialized) {
+        applyChange( () => {
+          updateInitialized(true);
+          if ( controller.isPrimed() ) {
+            initContainer();
+          } else {
+            controller.updateContainerStatus(id, 'initialized', `${name} initialized`);
           }
-        }
+        });
       }
     },
-    [status, stage, loaded]
+    [stage, status]
   );
 
-  // Don't render children til data has been loaded.
-  const renderContainer = useMemo(
+
+  // Wait For cache connection, and then for controller to prime data to fetch results.
+  useEffect(
     () => {
-      if (loaded) {
-        getContainerData();
-        return (
-          <React.Fragment>
-            {children}
-          </React.Fragment>
-        );
-      }
-      return null;
+      applyChange( () => {
+        if ( stageName === stage && 'initialized' === status ) {
+          const containerMeta = Fetch({id: id, target: 'meta'});
+          // Make sure our current meta has all the defaults backfilled.
+          if (containerMeta) {
+            updateMeta({...containerMeta});
+          }
+
+          // If this container is flagged as load as default focus, add it to the root query and allow our view render to occur.
+          if (visible) {
+            if ('interface' !== type.toLowerCase()) {
+              fetchContainerFieldSets();
+
+              const center = (containerMeta.data.center) ? containerMeta.data.center : { x: width/2, y: height/2 };
+              const zoom = (containerMeta.data.zoom) ? containerMeta.data.zoom : { scale: 1.0 };
+              const container = { containerID: id, type: containerMeta.type };
+
+              updateFocus({ action: 'switch', data: { id: 'current', focusID: id, focusGroup: '', expanded: false, type: containerMeta.type, container: {...container}, center: center, zoom: zoom, depth: 0 }});
+            }
+          }
+          controller.updateContainerStatus(id, 'ready', `Container ready`);
+        }
+      });
     },
-    [loaded]
+    [status, loaded]
   );
 
   return (
-    <ContainerContext.Provider value={getContainerData}>
-      {renderContainer}
+    <ContainerContext.Provider value={containerData}>
+      {children}
     </ContainerContext.Provider>
   );
 

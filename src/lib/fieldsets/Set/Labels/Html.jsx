@@ -1,6 +1,6 @@
 import React from 'react';
 
-const HTMLLabel = ({id, className, name, active, visible, variables, children}) => {
+const Html = ({id, className, name, active, visible, variables, children}) => {
   // If no label has been set don't render;
   if (! name ) return null;
 
@@ -40,4 +40,4 @@ const HTMLLabel = ({id, className, name, active, visible, variables, children}) 
   );
 }
 
-export default HTMLLabel;
+export default Html;

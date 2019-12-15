@@ -1,77 +1,83 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { Suspense, useState, useCallback, useEffect, useTransition } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import Container from 'lib/fieldsets/Containers/Container';
-import DiagramType from './DiagramType';
-import { useStatus, usePortals } from 'lib/fieldsets/Hooks';
+import { useStatus, useController } from 'lib/fieldsets/Hooks';
+
+const Container = React.lazy(() => import('lib/fieldsets/Containers/Container'));
+const DiagramView = React.lazy(() => import('./DiagramView'));
 
 /**
  * This is the generic Diagram component which is used to build diagram containers.
  * This component initializes the data cache with diagram data, as well as setting up the underlying coordinate system for tracking diagram interactions.
  */
-const Diagram = ({id, name, type, meta, defaultFocus = false, children}) => {
+const Diagram = ({id, name, type, view, meta, visible = false, children}) => {
   const propTypes = {
     id: PropTypes.string.isRequired,
     name: PropTypes.string,
-    type: PropTypes.string.isRequired,
+    type: PropTypes.string,
+    view: PropTypes.string,
     meta: PropTypes.object,
-    defaultFocus: PropTypes.bool,
+    visible: PropTypes.bool,
     children: PropTypes.node
   };
 
-  const [{status, message, stage}, updateStatus] = useStatus();
+  const stageName = 'render';
+  const [{stage, status, message, complete}, updateStatus, lifecycle] = useStatus();
   const [loaded, updateLoaded] = useState(false);
-  const portals = usePortals();
-  const viewerPortal = useRef(portals.viewer.portalRef);
+  const [containers, controller] = useController();
 
+  const [applyChange, pending] = useTransition({timeoutMs: 5000});
+
+  // We use our controller context to trigger our rendering into our portal.
   useEffect(
     () => {
-      if ( ! loaded ) {
-        if ( 'loaded' === status && 'container' === stage ) {
+      if ('container' === stage && complete) {
+        applyChange(() => {
+          updateStatus('initializing', `Initializing diagram ${id}`, stageName);
           updateLoaded(true);
-          updateStatus('rendering', `Rendering ${id}`, 'diagram');
-        }
+        });
       }
     },
-    [status]
+    [stage, status, complete]
   );
 
   const renderDiagram = useCallback(
     () => {
-      if (loaded) {
+      if (stageName === stage && visible && loaded && ! pending) {
         return(
-          ReactDOM.createPortal(
+          <Suspense fallback={<h1>Rendering diagram sets...</h1>}>
             <div id={id}>
-              <DiagramType
+              <DiagramView
                 id={id}
                 name={name}
-                type={type}
+                view={view}
               >
                 {children}
-              </DiagramType>
-            </div>,
-            portals.viewer.portalRef
-          )
+              </DiagramView>
+            </div>
+          </Suspense>
         );
       }
       return null;
     },
-    [loaded]
+    [stage, visible, loaded, pending]
   );
 
-  // TODO: Add in an underlying canvas based X,Y coordinate system which should be more performant for tracking set centers.
   return (
     <React.Fragment>
-      <Container
-        id={id}
-        name={name}
-        type={'Diagram'}
-        view={type}
-        meta={meta}
-        defaultFocus={defaultFocus}
-      >
-        {renderDiagram()}
-      </Container>
+      <Suspense fallback={<h1>Loading diagram data...</h1>}>
+        <Container
+          id={id}
+          name={name}
+          type={'diagram'}
+          view={view}
+          meta={meta}
+          visible={visible}
+        >
+          {renderDiagram()}
+        </Container>
+      </Suspense>
+
     </React.Fragment>
   );
 }

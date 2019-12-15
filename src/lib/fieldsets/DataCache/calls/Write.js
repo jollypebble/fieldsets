@@ -47,6 +47,7 @@ export const Write = ( call, data ) => {
           break;
         case 'diagram':
         case 'interface':
+        case 'sheet':
         case 'fieldset':
         default:
           fragmentID = `FieldSet:${key}`;

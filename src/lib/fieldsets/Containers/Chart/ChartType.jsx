@@ -1,4 +1,4 @@
-import * as DiagramTypes from 'containers/Diagrams';
+import * as DiagramTypes from './Types';
 import { useContainer } from 'lib/fieldsets/Hooks';
 
 const DiagramType = (props) => {

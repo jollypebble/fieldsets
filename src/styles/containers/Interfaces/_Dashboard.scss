@@ -1,0 +1,11 @@
+#view-bar-wrapper{
+  position: fixed;
+  bottom: 0;
+  width: 100vw;
+  &.hidden { opacity: 0; }
+  &.visible { opacity: 1; }
+
+  .hidden {
+    opacity: 0;
+  }
+}

@@ -32,7 +32,6 @@ export const Update = ( call, data ) => {
       let fragmentID = '';
       let fragmentQuery = '';
       let fragmentName = call.target;
-      let defaults = {};
       let previous = {};
 
       // To get our previous result, remove the filter so we can apply the filter update later on the full fragment.
@@ -40,6 +39,18 @@ export const Update = ( call, data ) => {
         previous = Fetch({ ...noFilterCall, ...{ target: type, type: null } });
       } else {
         previous = Fetch({...noFilterCall});
+      }
+
+      if (! previous) {
+        // Initializing missing ids.
+        console.error(`Something is not right. A cache entry should exist for ${key}. Check the id and ensure it exists in your data structure. For now, we will set it to empty.`);
+        previous = {
+          fieldsets: [],
+          children: [],
+          meta: {
+            data: {}
+          }
+        }
       }
 
       // Ensure our IDs are correct since may have grabbed defaults.
@@ -80,6 +91,7 @@ export const Update = ( call, data ) => {
           fragmentQuery = fetchRole;
           break;
         case 'diagram':
+        case 'sheet':
         case 'interface':
         case 'fieldset':
         default:

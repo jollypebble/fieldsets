@@ -17,7 +17,7 @@ const offenseSmallAttrs = {
   radius: 21
 };
 
-const MetaData =  [
+const CircleDiagram = [
   {
     id: 'econcircle-app',
     type: 'diagram',
@@ -484,4 +484,4 @@ const MetaData =  [
   }
 ];
 
-export default MetaData;
+export default CircleDiagram;
