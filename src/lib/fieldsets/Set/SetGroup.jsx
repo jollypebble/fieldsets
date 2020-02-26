@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useCallback, useState, useRef, forwardRef, useTransition } from 'react';
 import * as Groups from './Groups';
 import * as CustomGroups from 'components/Sets/Groups';
-import { useInputEvents, useClickEvents } from 'lib/fieldsets/Hooks';
+import { useInputEvents, useClickEvents, useController } from 'lib/fieldsets/Hooks';
 import { Fetch, Update } from 'lib/fieldsets/DataCache/calls';
 
 const SetGroup = (props, ref) => {
@@ -14,13 +14,13 @@ const SetGroup = (props, ref) => {
   };
 
   const [applyChange, pending] = useTransition({timeoutMs: 5000});
+  const [{fieldsets}, controller] = useController();
 
   const [attributes, updateAttributes] = useState( () => {
-    applyChange( () => {
-      return Fetch({...cacheKey});
-    });
+    return Fetch({...cacheKey});
   });
 
+  const [rendered, updateRendered] = useState(false);
 
   const [handleOnChange] = useInputEvents(props.onChange);
   const [handleClick, handleDoubleClick] = useClickEvents(props.onClick, props.onDoubleClick);
@@ -41,62 +41,64 @@ const SetGroup = (props, ref) => {
   useEffect(
     () => {
       if (setRef.current) {
+        if ('parent' === group) {
+          getGroupViewBox();
+        } else if ('children' === group) {
+          getGroupCenter();
+        }
+      }
+    },
+    [setRef.current, group]
+  );
+
+  useEffect(
+    () => {
+      if ( attributes.viewbox || attributes.center) {
         applyChange(() => {
-          if ('parent' === group) {
-            const vb = getGroupViewBox();
-            if (vb && vb.width > 0 && vb.height > 0) {
-              const newAttributes = Update({...cacheKey}, { width: vb.width, height: vb.height, viewbox: {...vb} });
-              updateAttributes({...newAttributes});
-            }
-          } else if ('children' === group) {
-            const groupCenter = getGroupCenter();
-            const newAttributes = Update({...cacheKey}, { group: { ...groupCenter } });
-            updateAttributes({...newAttributes});
-          }
+          updateRendered(true);
+          // Let the view know we have calculated the set viewbox and center for rendering fields.
+          controller.updateFieldSetStatus(id, 'ready');
         });
       }
     },
-    [setRef.current]
-  );
-
-  const getBoundingBox = useCallback(
-    () => {
-      applyChange(() => {
-        if ('group' !== group ) {
-          const bbox = setRef.current.getBBox();
-          return { x: bbox.x, y: bbox.y, width: bbox.width, height: bbox.height, __typename: 'JSONObject' };
-        }
-      });
-    },
-    [setRef.current]
+    [attributes]
   );
 
   const getGroupViewBox = useCallback(
     () => {
-      applyChange(() => {
-        if (attributes && attributes.viewbox) {
-          return attributes.viewbox;
-        }
-
-        const bbox = getBoundingBox();
-
-        if (bbox && bbox.width && bbox.height) {
-          const vb = { x: bbox.x, y: bbox.y, width: bbox.width, height: bbox.height, __typename: 'JSONObject' };
-          return {...vb};
-        }
-      });
-    }, [setRef.current]
+      let vb = null;
+      if (attributes && attributes.viewbox) {
+        vb = {...attributes.viewbox};
+      } else {
+        applyChange(() => {
+          if ('group' !== group ) {
+            // Currently works with SVG. Need to set this up to work with html getBoundingClientRect()
+            const bbox = setRef.current.getBBox();
+            vb = { x: bbox.x, y: bbox.y, width: bbox.width, height: bbox.height, __typename: 'JSONObject' };
+            if (vb && vb.width > 0 && vb.height > 0) {
+              const newAttributes = {
+                ...attributes,
+                width: vb.width,
+                height: vb.height,
+                viewbox: {...vb}
+              };
+              Update({...cacheKey}, {...newAttributes});
+              updateAttributes({...newAttributes});
+            }
+          }
+        });
+      }
+      return {...vb};
+    },
+    [setRef.current, group, attributes]
   );
 
   const getGroupCenter = useCallback(
     () => {
-      applyChange(() => {
-        if (attributes && attributes.group && attributes.group.center) {
-          return attributes.group.center;
-        }
-
-        const bbox = getBoundingBox();
-
+      if (attributes && attributes.group && attributes.group.center) {
+        return attributes.group.center;
+      } else {
+        const bbox = getGroupViewBox();
         if (bbox && bbox.width && bbox.height) {
           const rx = bbox.width / 2;
           const ry = bbox.height / 2;
@@ -107,11 +109,20 @@ const SetGroup = (props, ref) => {
             y: cy,
             __typename: 'Center'
           };
-          return { width: bbox.width, height: bbox.height, radiusX: rx, radiusY: ry, center: {...center}, __typename: 'JSONObject' };
+          const boxCenter = { width: bbox.width, height: bbox.height, radiusX: rx, radiusY: ry, center: {...center}, __typename: 'JSONObject' };
+          applyChange(() => {
+            const newAttributes = {
+              ...attributes,
+              group: { ...boxCenter }
+            };
+            Update({...cacheKey}, {...newAttributes});
+            updateAttributes({...newAttributes});
+          });
+          return {...boxCenter};
         }
-      });
+      }
     },
-    [setRef.current]
+    [setRef.current, group, attributes]
   );
 
   if (props.view) {
@@ -123,8 +134,7 @@ const SetGroup = (props, ref) => {
       return Groups[setgroupClassName]({...props, events}, setRef);
     }
   }
-
-  return Groups['Default']({...props, events},setRef);
+  return Groups['Default']({...props, events}, setRef);
 }
 
 export default forwardRef(SetGroup);

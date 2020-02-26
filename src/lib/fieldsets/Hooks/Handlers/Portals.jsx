@@ -9,7 +9,7 @@ import React, {
   useTransition
 } from 'react';
 import PropTypes from 'prop-types';
-import {useFocus, useStatus, useDefaults} from 'lib/fieldsets/Hooks';
+import { useStatus, useDefaults} from 'lib/fieldsets/Hooks';
 
 export const PortalContext = createContext({});
 
@@ -92,7 +92,7 @@ const Portals = (props) => {
    */
   useEffect(
     () => {
-      if ( stageName === stage && 'initializing' == status && ! pending && ! complete) {
+      if ( stageName === stage && 'initializing' === status && ! pending && ! complete) {
         applyChange( () => {
           // These are our core portals.
           // Portals should contain references to their container elements, which we set on rendering.
@@ -164,4 +164,7 @@ const Portals = (props) => {
     </React.Fragment>
   );
 }
+Portals.propTypes = {
+  children: PropTypes.node
+};
 export default Portals;

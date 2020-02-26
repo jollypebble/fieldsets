@@ -9,7 +9,7 @@ import { Fetch } from 'lib/fieldsets/DataCache/calls';
 /**
  * This is the container for our main diagram. It has direct access to the apollo cache so it can track foucs of it's child sets.
  */
-const CircleDiagram =  ({ id, name, type, meta: metaInit, data = [] } ) => {
+const CircleDiagram =  ({ id, name, view, visible = false, meta: metaInit, data = [] } ) => {
   const [{stage, status, message, complete}, updateStatus, lifecycle] = useStatus();
   const [loaded, updateLoaded] = useState(false);
   const [focus, updateFocus] = useFocus();
@@ -42,6 +42,7 @@ const CircleDiagram =  ({ id, name, type, meta: metaInit, data = [] } ) => {
       applyChange( () => {
         if ( ! loaded && 'render' === stage ) {
           switch (status) {
+            case 'rendering':
             case 'initializing':
               let diagramMeta = Fetch({id: id, target: 'meta'});
               // Alters the meta data based on current viewport width and sets diagram units based on that.
@@ -165,7 +166,7 @@ const CircleDiagram =  ({ id, name, type, meta: metaInit, data = [] } ) => {
 
   }
 
-  if ( loaded ) {
+  if ( loaded && visible) {
     return (
 
       <div className="diagramviewer">

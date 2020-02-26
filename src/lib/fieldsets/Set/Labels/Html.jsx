@@ -10,7 +10,7 @@ const Html = ({id, className, name, active, visible, variables, children}) => {
   }
 
   const center = variables.center;
-  let { ratio, textX, textY } = {...defaults, ...variables.attributes};
+  let { textX, textY } = {...defaults, ...variables.attributes};
 
   const centerX = center.x;
   const centerY = center.y;

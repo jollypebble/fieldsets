@@ -3,7 +3,6 @@
  * Root level data will be written to triggered by events in the application that cause the fragments to be written to and then, these queries will be refetched.
  */
  import gql from 'graphql-tag';
- import { fragments } from '../fragments'
 
  export const fetchFocus = gql`
   query FetchFocus {

@@ -1,4 +1,3 @@
-import React from 'react';
 import {usePromiseQueue} from './Promises';
 import {PromiseHandler} from '../Handlers/Promise';
 

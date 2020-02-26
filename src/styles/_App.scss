@@ -13,6 +13,14 @@ svg {
   }
 }
 
+.viewer-container{
+  z-index: -11;
+}
+
+.interface-container{
+  z-index: 1000;
+}
+
 #root {
 	width:100%;
 }

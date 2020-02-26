@@ -18,13 +18,20 @@ const CircleDiagram = [
     name: 'Monthly Total',
     value: 0,
     type: 'currency',
-    fieldsets: ['defense_allocation']
+    callback: 'monthly',
+    fieldsets: ['defense_allocation'],
+    children: ['liabilities_total']
   },
   {
     id: 'will_status',
     name: 'Status',
     value: 'None',
-    options:[ 'None', 'Complete', 'Incomplete', 'Needs Update' ],
+    options:[
+      {value: 'none', label: 'None'},
+      {value: 'complete', label: 'Complete'},
+      {value: 'incomplete', label: 'Incomplete'},
+      {value: 'update', label: 'Needs Update'}
+    ],
     type: 'select',
     fieldsets: ['will']
   },
@@ -79,7 +86,9 @@ const CircleDiagram = [
     name: 'Monthly Total',
     value: 0,
     type: 'currency',
-    fieldsets: ['offense_allocation']
+    callback: 'monthly',
+    fieldsets: ['offense_allocation'],
+    children: ['assets_total']
   }
 ];
 

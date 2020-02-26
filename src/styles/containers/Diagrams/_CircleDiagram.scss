@@ -6,6 +6,7 @@
 }
 
 .labelsheet-item {
+  list-style-type: none;
   .field {
     padding: 0 0 0.15vw 0;
     div {
@@ -13,24 +14,6 @@
       .md-text-field-message {
         margin-left: 0.3vw;
       }
-    }
-  }
-  .fieldtype-select {
-    padding-left: 0.2vw;
-    padding-right: 0.1vw;
-    width: 95%;
-    div {
-      margin-left: 0;
-      i {
-        margin: 0;
-      }
-      span.md-icon-text:first-child {
-        font-size: $font-size;
-        padding-right: $font-size;
-      }
-    }
-    ul {
-      padding: 0;
     }
   }
   div {
@@ -57,6 +40,19 @@
     hr {
       margin: 0 0.4vw 0 0;
       height: 0.05vw;
+    }
+  }
+  .fieldtype-select {
+    padding-left: 0;
+    padding-right: 0;
+    width: 98%;
+    height: 2em;
+    min-height: 2em;
+    div {
+      margin-left: 0;
+      i {
+        margin: 0;
+      }
     }
   }
 }
@@ -151,6 +147,10 @@
     stroke-width: 500;
     stroke-dasharray: '780 1500';
   }
+}
+
+.view-circle-text {
+  overflow: visible;
 }
 
 

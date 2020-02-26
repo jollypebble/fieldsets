@@ -7,12 +7,17 @@ export const resolvers = (defaults = {}) => {
     JSONObject: GraphQLJSONObject,
     Mutation: {
       updateFocus: ( object, { data }, { client } ) => {
+        let containerID = data.container.containerID;
+        if (!containerID) {
+          containerID = client.readQuery({query: fetchContainer});
+        }
         const newfocus = {
           ...defaults.rootQuery.focus,
           ...data,
           container: {
             ...defaults.rootQuery.focus.container,
-            ...data.container
+            ...data.container,
+            containerID
           },
           center: {
             ...defaults.rootQuery.focus.center,

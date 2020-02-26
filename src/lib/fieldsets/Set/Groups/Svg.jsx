@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Svg = ({id, view, type = 'fieldset', group = 'group', active = false, className, events = {}, children}, ref) => {
-  
+
   if ('parent' === group ) {
     return (
       <svg

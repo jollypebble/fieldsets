@@ -40,7 +40,7 @@ const Ellipse = ({id, view, active, variables}) => {
         strokeWidth={strokeWidth}
       />
       <SetLabel
-        id={`${id}-label`}
+        id={`${id}`}
         type='FieldsetLabel'
         className={`view-label view-${view_lower}-label`}
         name={variables.name}

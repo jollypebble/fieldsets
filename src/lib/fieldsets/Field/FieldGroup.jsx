@@ -4,8 +4,6 @@ import { getDataCacheService } from 'lib/fieldsets/DataCache/DataCacheService';
 import PropTypes from 'prop-types';
 import * as FieldGroups from './Groups';
 import * as CustomFieldGroups from 'components/Fields/Groups';
-
-
 import {
   fetchFields
 } from 'lib/fieldsets/graphql/queries';
@@ -14,7 +12,12 @@ export const FieldGroup = (props) => {
   const {id, type, active, visible, variables, children} = {...props};
 
   const propTypes = {
-    id: PropTypes.string.isRequired
+    id: PropTypes.string.isRequired,
+    type: PropTypes.string,
+    active: PropTypes.boolean,
+    visible: PropTypes.boolean,
+    variables: PropTypes.object,
+    children: PropTypes.node
   };
 
   const [loaded, updateLoaded] = useState(false);

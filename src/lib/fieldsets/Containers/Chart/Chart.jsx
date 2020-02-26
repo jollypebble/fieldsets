@@ -41,7 +41,7 @@ const Chart = ({id, name, type, meta, visible = false, children}) => {
       if (loaded) {
         return(
           ReactDOM.createPortal(
-            <div id={id}>
+            <div id={id} className="viewer-container">
               <ChartType
                 id={id}
                 name={name}

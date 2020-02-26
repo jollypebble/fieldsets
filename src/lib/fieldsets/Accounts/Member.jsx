@@ -8,9 +8,7 @@
   */
  import React, { useEffect, useState } from 'react';
  import PropTypes from 'prop-types';
- import { defaults } from 'lib/fieldsets/graphql/defaults';
- import { callCache } from 'lib/fieldsets/DataCache/reducers/datacache';
- import { fetchMember } from 'lib/fieldsets/graphql/queries';
+ import {Initialize} from 'lib/fieldsets/DataCache/calls';
 
  const Member = ({id, name, attributes, children}) => {
     const [status, updateStatus] = useState('initializing');
@@ -97,12 +95,12 @@
 
     useEffect( () => {
         if ( 'initializing' === status ) {
-          const initData = callCache({key: id, id: id, target: 'member', action: 'initialize'});
+          const initData = Initialize({key: id, id: id, target: 'member'});
           updateMemberData(initData);
         }
         updateStatus('ready');
       },
-      [status]
+      [status,id]
     );
 
     /**
@@ -111,10 +109,10 @@
     const updateMemberData = (newData) => {
       updateStatus('update');
       updateData( prevData => {
-        return {
-            ...prevData,
-            ...newData
-        }
+        return ({
+          ...prevData,
+          ...newData
+        });
       });
     }
 
@@ -128,7 +126,7 @@
 
     return (
       <React.Fragment key={id}>
-
+        <div data={data}/>
       </React.Fragment>
     );
   }

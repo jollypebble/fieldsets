@@ -5,18 +5,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Member } from 'lib/fieldsets';
-import { defaults } from 'lib/fieldsets/graphql/defaults';
-import { callCache } from 'lib/fieldsets/DataCache/reducers/datacache';
-import { fetchAllAccounts, fetchMembers } from 'lib/fieldsets/graphql/queries';
-
-const clientSheetItems = [
- 'accountName',
- 'clientName1',
- 'clientName2',
- 'cpaName',
- 'attyName',
- 'ipAddress'
-];
+import {Initialize} from 'lib/fieldsets/DataCache/calls';
 
 const Account = ({id, name, attributes, children}) => {
    const [status, updateStatus] = useState('initializing');
@@ -103,12 +92,12 @@ const Account = ({id, name, attributes, children}) => {
 
    useEffect( () => {
        if ( 'initializing' === status ) {
-         const initData = callCache({key: id, id: id, target: 'account', action: 'initialize'});
+         const initData = Initialize({key: id, id: id, target: 'account'});
          updateAccountData(initData);
        }
        updateStatus('ready');
      },
-     [status]
+     [status, id]
    );
 
    /**

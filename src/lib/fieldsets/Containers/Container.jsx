@@ -2,7 +2,6 @@ import React, { createContext, useEffect, useLayoutEffect, useReducer, useCallba
 import { useLazyQuery } from '@apollo/react-hooks';
 import PropTypes from 'prop-types';
 import { getDataCacheService } from 'lib/fieldsets/DataCache/DataCacheService';
-import { callCache } from 'lib/fieldsets/DataCache/reducers/datacache';
 import { Fetch, Initialize, Write } from 'lib/fieldsets/DataCache/calls';
 import {
   fetchContainerData
@@ -24,17 +23,7 @@ export const ContainerContext = createContext([
  * This component initializes the data cache with data, as well as setting up the underlying coordinate system for tracking interactions.
  */
 const Container = ({id, name, type = 'container', view, meta: metadata, visible: isVisible = false, children}) => {
-  const propTypes = {
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string,
-    type: PropTypes.string.isRequired,
-    view: PropTypes.string,
-    meta: PropTypes.object,
-    visible: PropTypes.bool,
-    children: PropTypes.node
-  };
-
-  const [containers, controller] = useController();
+  const [{containers}, controller] = useController();
 
   const stageName = 'container';
   // The lifecycle stages that must be complete before rendering.
@@ -121,11 +110,11 @@ const Container = ({id, name, type = 'container', view, meta: metadata, visible:
     () => {
       if (isReady && loaded) {
         applyChange( () => {
-          controller.updateVisibility(id, visible);
+          updateVisibility(containers[id].visible);
         });
       }
     },
-    [visible]
+    [containers[id]]
   );
 
   /**
@@ -286,31 +275,33 @@ const Container = ({id, name, type = 'container', view, meta: metadata, visible:
   // Wait For cache connection, and then for controller to prime data to fetch results.
   useEffect(
     () => {
-      applyChange( () => {
-        if ( stageName === stage && 'initialized' === status ) {
-          const containerMeta = Fetch({id: id, target: 'meta'});
-          // Make sure our current meta has all the defaults backfilled.
-          if (containerMeta) {
-            updateMeta({...containerMeta});
-          }
-
-          // If this container is flagged as load as default focus, add it to the root query and allow our view render to occur.
-          if (visible) {
-            if ('interface' !== type.toLowerCase()) {
-              fetchContainerFieldSets();
-
-              const center = (containerMeta.data.center) ? containerMeta.data.center : { x: width/2, y: height/2 };
-              const zoom = (containerMeta.data.zoom) ? containerMeta.data.zoom : { scale: 1.0 };
-              const container = { containerID: id, type: containerMeta.type };
-
-              updateFocus({ action: 'switch', data: { id: 'current', focusID: id, focusGroup: '', expanded: false, type: containerMeta.type, container: {...container}, center: center, zoom: zoom, depth: 0 }});
+      if ( stageName === stage && 'initialized' === status ) {
+        applyChange(
+          () => {
+            const containerMeta = Fetch({id: id, target: 'meta'});
+            // Make sure our current meta has all the defaults backfilled.
+            if (containerMeta) {
+              updateMeta({...containerMeta});
             }
+
+            // If this container is flagged as load as default focus, add it to the root query and allow our view render to occur.
+            if (visible) {
+              if ('interface' !== type.toLowerCase()) {
+                fetchContainerFieldSets();
+
+                const center = (containerMeta.data.center) ? containerMeta.data.center : { x: width/2, y: height/2 };
+                const zoom = (containerMeta.data.zoom) ? containerMeta.data.zoom : { scale: 1.0 };
+                const container = { containerID: id, type: containerMeta.type };
+
+                updateFocus({ action: 'switch', data: { id: 'current', focusID: id, focusGroup: '', expanded: false, type: containerMeta.type, container: {...container}, center: center, zoom: zoom, depth: 0 }});
+              }
+            }
+            controller.updateContainerStatus(id, 'ready', `Container ready`);
           }
-          controller.updateContainerStatus(id, 'ready', `Container ready`);
-        }
-      });
+        );
+      }
     },
-    [status, loaded]
+    [status]
   );
 
   return (
@@ -320,5 +311,14 @@ const Container = ({id, name, type = 'container', view, meta: metadata, visible:
   );
 
 }
+Container.propTypes = {
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string,
+  type: PropTypes.string.isRequired,
+  view: PropTypes.string,
+  meta: PropTypes.object,
+  visible: PropTypes.bool,
+  children: PropTypes.object
+};
 
 export default Container;

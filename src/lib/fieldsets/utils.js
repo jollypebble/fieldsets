@@ -1,5 +1,25 @@
 import { Fetch, Update } from 'lib/fieldsets/DataCache/calls';
 
+
+/**
+ * A recursive function for getting all children.
+ */
+export const getSubsets = (id, type = 'fieldset', subsets = []) => {
+  const parent = Fetch({id: id, target: type});
+  // Subsets will always be fieldsets.
+  if ( 'fieldset' === type ) {
+    subsets.push(id);
+  }
+  if (parent && parent.children && parent.children.length > 0) {
+    parent.children.map(
+      (setid) => {
+        return getSubsets(setid, 'fieldset', subsets);
+      }
+    );
+  }
+  return subsets;
+}
+
 /**
  * Check if a field value is a primitive value.
  */
@@ -40,35 +60,34 @@ export const getNumericValue = (field, calledby = '') => {
   if (calledby.length > 0) {
     calledby = `function ${calledby}(): `;
   }
+  let fieldvalue = field;
   switch ( typeof field ) {
     case 'numeric':
     case 'bigint':
     case 'string':
       try {
-        return castNumeric(field);
+        fieldvalue = castNumeric(field);
       } catch (e) {
         console.error(`${calledby}Primitive value passed cannot be cast. ${e.message}`);
-        return;
       }
-      break;
+      return fieldvalue;
     case 'function':
-      const fieldvalue = field();
+      fieldvalue = field();
       try {
-        return castNumeric(fieldvalue);
+        fieldvalue = castNumeric(fieldvalue);
       } catch (e) {
         console.error(`${calledby}Function called returns an invalid value. ${e.message}`);
-        return;
       }
-      break;
+      return fieldvalue;
     case 'object':
       if ( 'field' === field.__typename.toLowerCase() ) {
         if (field.hasOwnProperty('value')) {
           try {
-            return castNumeric(field.value);
+            fieldvalue = castNumeric(field.value);
           } catch (e) {
             console.error(`${calledby}Field Object passed cotains an invalid value. ${e.message}`);
-            return;
           }
+          return fieldvalue;
         } else {
           try {
             throw new Error(`${calledby}Field Object passed does not have the value property.`);
@@ -85,7 +104,6 @@ export const getNumericValue = (field, calledby = '') => {
           return;
         }
       }
-      break;
     default:
       try {
         throw new Error(`${calledby}Field of ${field} is not a valid data type and returns ${typeof field}`);
@@ -93,7 +111,6 @@ export const getNumericValue = (field, calledby = '') => {
         console.error( e.message );
         return;
       }
-      break;
   }
 };
 
@@ -122,7 +139,6 @@ export const fetchField = (id) => {
 export const updateField = (id, data) => {
   return Update({id: id, target: 'field'}, {...data} );
 }
-
 
 /**
  * END DATACACHE UTILS

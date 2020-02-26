@@ -12,23 +12,19 @@ const SetView = React.lazy(() => import('lib/fieldsets/Set/SetView'));
  * Each root set will check its own children set data and will iteratively call itself on it's children children.
  */
 const Set = ({ id, children }) => {
-  const propTypes = {
-    id: PropTypes.string.isRequired
-  };
-
   const stageName = 'render';
   // The lifecycle stages that must be complete before rendering.
   const stageDeps = ['defaults', 'datacache', 'controller', 'container'];
 
-  const [containers, controller] = useController();
   const [isActive, updateActive] = useState(false);
 
   const [current, updateStatus, lifecycle] = useStatus();
-  const [{stage, status, message, complete}, setStatus] = useState({stage: '', status: '', message: '', complete: false});
+  const [{stage, status, complete}, setStatus] = useState({stage: '', status: '', message: '', complete: false});
   const [initialized, updateInitialized] = useState(false);
 
   const [applyChange, pending] = useTransition({timeoutMs: 5000});
   const [focus, updateFocus] = useFocus();
+  const [{fieldsets}, controller] = useController();
 
   /**
    * Stateful latest data for this set from our cache
@@ -39,24 +35,39 @@ const Set = ({ id, children }) => {
   const setRef = useRef({});
 
   /**
+   * A separate callback for metadata.
+   */
+  const fetchSetMeta = useCallback(
+    () => {
+      if (isReady && stage === stageName) {
+        return Fetch({ id: id, target: 'meta'});
+      }
+    },
+    [isReady, stage]
+  );
+
+  /**
    * Fetch the latest values of this set from the cache fragments.
    */
   const fetchSetData = useCallback(
     () => {
       if (isReady && stage === stageName) {
           const fetchset = Fetch({ id: id, target: 'fieldset'});
-          const fetchmeta = Fetch({ id: id, target: 'meta'});
+          const fetchmeta = fetchSetMeta();
           const updatedFieldset = {
             ...fetchset,
             meta: {
               ...fetchmeta
             }
           };
-          updateFieldSet({...updatedFieldset});
+          applyChange( () => {
+            updateFieldSet({...updatedFieldset});
+            controller.addFieldSet(id, fetchmeta.data.view, fetchmeta.type, true);
+          });
           return {...updatedFieldset};
       }
     },
-    [isReady, stage]
+    [isReady, stage, fetchSetMeta]
   );
 
   /**
@@ -175,45 +186,52 @@ const Set = ({ id, children }) => {
         onEnter={setActive}
         onExit={setInactive}
       >
-        <SetGroup
-          id={`${id}`}
-          key={`${id}-parent`}
-          type={fieldset.type}
-          group={'parent'}
-          view={fieldset.meta.data.view}
-          active={isActive}
-          className={`view-${fieldset.meta.data.view} set-parent ${id}-group${(isActive)? ' active' : ''}`}
-          onClick={() => {
-            if ( id !== focus.focusID ) {
-              updateFocus({ action: 'focus', data: { id: 'current', focusID: id, focusGroup: fieldset.parent, type: fieldset.type, center: fieldset.meta.data.center, zoom: fieldset.meta.data.zoom, depth: fieldset.meta.data.depth, expanded: false }});
-            }
-          }}
-          onDoubleClick={() => {
-            updateFocus({ action: 'expand', data: { id: 'current', focusID: id, focusGroup: fieldset.parent, type: fieldset.type, center: fieldset.meta.data.center, zoom: fieldset.meta.data.zoom, depth: fieldset.meta.data.depth, expanded: true }});
-          }}
-          onEnter={() => {updateActive(true)}}
-          onExit={() => {updateActive(false)}}
-          ref={setRef}
-        >
-          <SetView
-            id={id}
+        <Suspense>
+          <SetGroup
+            id={`${id}`}
+            key={`${id}-parent`}
+            type={fieldset.type}
+            group={'parent'}
             view={fieldset.meta.data.view}
             active={isActive}
-            variables={{
-              ...fieldset.meta.data,
-              name: fieldset.name,
-              depth: depth,
-              parent: fieldset.parent,
-              visible: true, //TODO: Pull from controller.
-              view: fieldset.meta.data.view,
-              fields: fieldset.fields
+            className={`view-${fieldset.meta.data.view} set-parent ${id}-group${(isActive)? ' active' : ''}`}
+            onClick={() => {
+              if ( id !== focus.focusID ) {
+                updateFocus({ action: 'focus', data: { id: 'current', focusID: id, focusGroup: fieldset.parent, type: fieldset.type, center: fieldset.meta.data.center, zoom: fieldset.meta.data.zoom, depth: fieldset.meta.data.depth, expanded: false }});
+              }
             }}
-          />
-        </SetGroup>
+            onDoubleClick={() => {
+              updateFocus({ action: 'expand', data: { id: 'current', focusID: id, focusGroup: fieldset.parent, type: fieldset.type, center: fieldset.meta.data.center, zoom: fieldset.meta.data.zoom, depth: fieldset.meta.data.depth, expanded: true }});
+            }}
+            onEnter={() => {updateActive(true)}}
+            onExit={() => {updateActive(false)}}
+            ref={setRef}
+          >
+            <Suspense>
+              <SetView
+                id={id}
+                view={fieldset.meta.data.view}
+                active={isActive}
+                variables={{
+                  ...fieldset.meta.data,
+                  name: fieldset.name,
+                  depth: depth,
+                  parent: fieldset.parent,
+                  visible: true, //TODO: Pull from controller.
+                  view: fieldset.meta.data.view,
+                  fields: fieldset.fields
+                }}
+              />
+            </Suspense>
+          </SetGroup>
+        </Suspense>
         {subset}
       </SetGroup>
     </Suspense>
   );
 }
+Set.propTypes = {
+  id: PropTypes.string.isRequired
+};
 
 export default Set;

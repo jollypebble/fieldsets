@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 
 /**
  * Handle Cancelation of promises. Usefull for handling double clicks or other user interactions.

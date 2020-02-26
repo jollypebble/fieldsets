@@ -1,4 +1,3 @@
-import React from 'react';
 import * as FieldViews from './Views';
 import * as CustomFieldViews from 'components/Fields';
 import { useInputEvents, useClickEvents } from 'lib/fieldsets/Hooks';
@@ -17,7 +16,7 @@ const FieldView = (props) => {
   }
 
   if ( props.onClick ) {
-    events.onClick = props.onClick;
+    events.onClick = handleClick;
   }
 
   if (props.view) {

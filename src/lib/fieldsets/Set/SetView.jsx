@@ -1,4 +1,3 @@
-import React from 'react';
 import * as Views from 'components/Sets';
 
 const SetView = (props,ref) => {

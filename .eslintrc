@@ -73,6 +73,10 @@
     "react/no-access-state-in-setstate": 0,
     "jsx-a11y/label-has-associated-control": 0,
 
+    //react-hooks
+    "react-hooks/exhaustive-deps": "warn",
+    "react-hooks/rules-of-hooks": "error",
+
     //import
     "import/no-unresolved": 0,
     "import/no-extraneous-dependencies": 1,

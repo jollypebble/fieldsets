@@ -1,69 +1,86 @@
-import React, { Suspense, useState, useCallback, useEffect, useRef } from 'react';
+import React, { Suspense, useState, useCallback, useLayoutEffect, useEffect, useTransition } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import Container from 'lib/fieldsets/Containers/Container';
-import SheetType from './SheetType';
-import SheetView from './SheetView';
-import { useStatus, usePortals, useController } from 'lib/fieldsets/Hooks';
+import { useStatus, useController } from 'lib/fieldsets/Hooks';
+
+const Container = React.lazy(() => import('lib/fieldsets/Containers/Container'));
+const SheetView = React.lazy(() => import('./SheetView'));
 
 /**
  * This is the generic Diagram component which is used to build diagram containers.
  * This component initializes the data cache with diagram data, as well as setting up the underlying coordinate system for tracking diagram interactions.
  */
-const Spreadsheet = ({id, name, type, view, meta, visible = false, children}) => {
+const Sheet = ({id, name, view, meta, visible: isVisible = false, children}) => {
   const propTypes = {
     id: PropTypes.string.isRequired,
     name: PropTypes.string,
-    type: PropTypes.string,
     view: PropTypes.string,
     meta: PropTypes.object,
     visible: PropTypes.bool,
     children: PropTypes.node
   };
 
-  const [{stage, status, message}, updateStatus] = useStatus();
+  const stageName = 'render';
+  const [{stage, status, message, complete}, updateStatus, lifecycle] = useStatus();
   const [loaded, updateLoaded] = useState(false);
-  const portals = usePortals();
-  const [containers, controller] = useController();
+  const [{containers}, controller] = useController();
+  const [visible, updateVisibility] = useState(isVisible);
 
+  const [applyChange, pending] = useTransition({timeoutMs: 5000});
+
+  // We use our controller context to trigger our rendering.
   useEffect(
     () => {
-      if ( ! loaded ) {
-        if ( 'loaded' === status && 'container' === stage && 'loaded' === containers[id].status) {
+      if ('container' === stage && complete) {
+        applyChange(() => {
+          updateStatus('initializing', `Initializing diagram ${id}`, stageName);
           updateLoaded(true);
-          updateStatus('rendering', `Rendering ${id}`, 'sheet');
-        }
+        });
       }
     },
-    [status]
+    [stage, status, complete]
+  );
+
+  /**
+   * Sync controller visibility with current visibility.
+   */
+  useLayoutEffect(
+    () => {
+      if (loaded) {
+        applyChange( () => {
+          updateVisibility(containers[id].visible);
+        });
+      }
+    },
+    [containers]
   );
 
   const renderSheet = useCallback(
     () => {
-      if (loaded && portals && portals.viewer && portals.viewer.portalRef ) {
+      if (stageName === stage && visible && loaded && ! pending) {
         return(
-          ReactDOM.createPortal(
-            <div id={id}>
+          <Suspense fallback={<h1>Rendering sheet sets...</h1>}>
+            <div id={id} className="viewer-container">
               <SheetView
                 id={id}
                 name={name}
                 view={view}
+                visible={visible}
               >
                 {children}
               </SheetView>
-            </div>,
-            portals.viewer.portalRef
-          )
+            </div>
+          </Suspense>
         );
       }
       return null;
     },
-    [loaded, portals]
+    [stage, visible, loaded, pending]
   );
 
   return (
     <React.Fragment>
-      <Suspense fallback={<h1>Loading sheet data...</h1>}>
+      <Suspense fallback={<h1>Loading diagram data...</h1>}>
         <Container
           id={id}
           name={name}
@@ -75,8 +92,8 @@ const Spreadsheet = ({id, name, type, view, meta, visible = false, children}) =>
           {renderSheet()}
         </Container>
       </Suspense>
+
     </React.Fragment>
   );
 }
-
-export default Spreadsheet;
+export default Sheet;

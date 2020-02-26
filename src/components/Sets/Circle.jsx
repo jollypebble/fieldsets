@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import { SetLabel, FieldGroup } from 'lib/fieldsets';
 
 const Circle = ({id, view, active, variables}) => {
@@ -29,7 +29,7 @@ const Circle = ({id, view, active, variables}) => {
   return (
     <React.Fragment>
       <circle
-        id={`${id}-view`}
+        id={`${id}`}
         className={`view view-${view_lower}`}
         cx={centerX}
         cy={centerY}
@@ -37,7 +37,7 @@ const Circle = ({id, view, active, variables}) => {
         strokeWidth={strokeWidth}
       />
       <SetLabel
-        id={`${id}-label`}
+        id={`${id}`}
         type='FieldsetLabel'
         className={`view-label view-${view_lower}-label`}
         name={variables.name}

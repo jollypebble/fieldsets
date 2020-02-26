@@ -1,7 +1,7 @@
-import React, { useState, useMemo, useCallback, useLayoutEffect, useEffect } from 'react';
+import React, { useState, useMemo, useLayoutEffect, useEffect, useTransition, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import FieldView from './FieldView';
-import { isPrimitive, updateField } from 'lib/fieldsets/utils';
+import { updateField } from 'lib/fieldsets/utils';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { getDataCacheService } from 'lib/fieldsets/DataCache/DataCacheService';
 import {
@@ -9,20 +9,13 @@ import {
 } from 'lib/fieldsets/graphql/queries';
 import { useFunctions } from 'lib/fieldsets/Hooks';
 
-
 /**
  * A field is a single data value in a set.
  */
 const Field = ({ id, view = null, data, children }) => {
-  const propTypes = {
-    id: PropTypes.string.isRequired,
-    view: PropTypes.string,
-    data: PropTypes.array.isRequired,
-    children: PropTypes.node
-  };
-
   const [loaded, updateLoaded] = useState(false);
-  const [functions, updateFunctionList] = useFunctions();
+  const [functions] = useFunctions();
+  const [applyChange] = useTransition({timeoutMs: 5000});
 
   // Get our dependencies for the corresponding field.
   const [fetchDependencies, dependencies] = useLazyQuery(fetchFields, {
@@ -31,7 +24,9 @@ const Field = ({ id, view = null, data, children }) => {
     variables: {data: {fields: data.children}},
     onCompleted: (result) => {
       if (!loaded && result.fetchFields && result.fetchFields.length > 0) {
-        updateLoaded(true);
+        applyChange(() => {
+          updateLoaded(true);
+        });
       }
     }
   });
@@ -49,7 +44,26 @@ const Field = ({ id, view = null, data, children }) => {
         fetchDependencies();
       }
     },
-    [hasDependencies,loaded,dependencies]
+    [hasDependencies,loaded,dependencies, fetchDependencies]
+  );
+
+  /**
+   * Check all field values and dependencies and return final primitive result.
+   */
+  const calculateValue = useCallback(
+    () => {
+      let value = data.value;
+      const deps = [...dependencies.data.fetchFields];
+      // Callback correspond to keys in our functions hook
+      if (data.callback && functions.hasOwnProperty(data.callback)) {
+        const callback = functions[data.callback];
+        value = callback(deps);
+        value = Number.isNaN(value) ? 0 : value;
+      };
+
+      return value;
+    },
+    [data, dependencies, functions]
   );
 
   /**
@@ -60,32 +74,17 @@ const Field = ({ id, view = null, data, children }) => {
        if (hasDependencies && dependencies.data && dependencies.data.fetchFields) {
          const value = calculateValue();
          const updatedField = {...data, value: value};
-         updateField(id, updatedField);
+         updateField(id, {...updatedField});
        }
      },
-     [dependencies.data]
+     [dependencies.data, calculateValue, data, hasDependencies, id, applyChange, updateField]
    );
-
-
-  /**
-   * Check all field values and dependencies and return final primitive result.
-   */
-  const calculateValue = () => {
-    let value = data.value;
-    const deps = [...dependencies.data.fetchFields];
-    // Callback correspond to keys in our functions hook
-    if (data.callback && functions.hasOwnProperty(data.callback)) {
-      const callback = functions[data.callback];
-      value = callback(deps);
-      value = Number.isNaN(value) ? 0 : value;
-    };
-
-    return value;
-  };
 
   const updateCache = (newvalue, event) => {
     const updatedField = {...data, value: newvalue};
-    updateField(id, updatedField);
+    applyChange(() => {
+      updateField(id, updatedField);
+    });
     return updatedField;
   };
 
@@ -138,5 +137,12 @@ const Field = ({ id, view = null, data, children }) => {
     </FieldView>
   );
 }
+
+Field.propTypes = {
+  id: PropTypes.string.isRequired,
+  view: PropTypes.string,
+  data: PropTypes.object.isRequired,
+  children: PropTypes.node
+};
 
 export default Field;

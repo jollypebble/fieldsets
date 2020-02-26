@@ -5,7 +5,6 @@ import React, {createContext, useReducer, useEffect, useLayoutEffect} from 'reac
 import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import {useDefaults} from 'lib/fieldsets/Hooks';
 import { getDataCacheService } from 'lib/fieldsets/DataCache/DataCacheService';
-import { callCache } from 'lib/fieldsets/DataCache/reducers/datacache';
 import {
   fetchFocus,
   fetchContainer,
@@ -23,8 +22,8 @@ export const FocusContext = createContext({});
 export const Focus = ( {children} ) => {
   const client = getDataCacheService();
 
-  const [{stage, status, message}, updateStatus] = useStatus();
-  const [defaults, updateDefaults] = useDefaults();
+  const [{status}, updateStatus] = useStatus();
+  const [defaults] = useDefaults();
 
   /**
    * Read the current active focus from the data store

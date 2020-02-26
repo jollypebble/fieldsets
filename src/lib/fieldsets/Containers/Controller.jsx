@@ -88,8 +88,7 @@ const Controller = ({children}) => {
                 type: type,
                 status: 'default',
                 message: '',
-                visible: visible,
-                fieldsets: {}
+                visible: visible
               }
             };
             applyChange( () => {
@@ -107,7 +106,7 @@ const Controller = ({children}) => {
             updateContainers({...containers});
           });
         },
-        updateVisibility: (id, visible) => {
+        updateContainerVisibility: (id, visible) => {
           containers[id] = {
             ...containers[id],
             visible: visible
@@ -116,12 +115,49 @@ const Controller = ({children}) => {
             updateContainers({...containers});
           });
         },
+        addFieldSet: (id, view, type, visible) => {
+          if ( ! fieldsets.hasOwnProperty(id) ) {
+            fieldsets = {
+              ...fieldsets,
+              [id]: {
+                id: id,
+                view: view,
+                type: type,
+                status: 'default',
+                message: '',
+                visible: visible
+              }
+            };
+            applyChange( () => {
+              updateFieldSets({...fieldsets});
+            });
+          }
+        },
+        updateFieldSetStatus: (id, status, message = '') => {
+          fieldsets[id] = {
+            ...fieldsets[id],
+            status: status,
+            message: message
+          };
+          applyChange( () => {
+            updateFieldSets({...fieldsets});
+          });
+        },
+        updateFieldSetVisibility: (id, visible) => {
+          fieldsets[id] = {
+            ...fieldsets[id],
+            visible: visible
+          };
+          applyChange( () => {
+            updateFieldSets({...fieldsets});
+          });
+        },
         isPrimed: () => {
           return primed;
         }
       });
     },
-    [containers, pending, primed]
+    [fieldsets, containers, pending, primed]
   );
 
   /**
@@ -246,7 +282,7 @@ const Controller = ({children}) => {
   }
 
   return (
-    <ControllerContext.Provider value={[containers, controller]}>
+    <ControllerContext.Provider value={[{containers, fieldsets}, controller]}>
       {children}
     </ControllerContext.Provider>
   );

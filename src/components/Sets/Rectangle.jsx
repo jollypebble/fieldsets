@@ -36,7 +36,7 @@ const Rectangle = ({id, view, active, variables}) => {
         strokeWidth={strokeWidth ? strokeWidth : 1}
       />
       <SetLabel
-        id={`${id}-label`}
+        id={`${id}`}
         type={'FieldsetLabel'}
         className={`view-label view-${view_lower}-label`}
         name={variables.name}

@@ -488,7 +488,7 @@ const BalanceSheet = [
     value: 0,
     type: 'function',
     callback: 'sum',
-    fieldsets: ['balance_sheet'],
+    fieldsets: ['balance_sheet', 'offense_allocation'],
     children: ['non_qualified_total', 'qualified_total', 'utmas_total', 'annuities_total', 'cashvaluelife_total', 'properties_total']
   },
   {
@@ -497,7 +497,7 @@ const BalanceSheet = [
     value: 0,
     type: 'function',
     callback: 'sum',
-    fieldsets: ['balance_sheet'],
+    fieldsets: ['balance_sheet', 'defense_allocation'],
     children: ['mortgage_total', 'liabilitiy_indivial_values']
   }
 ];

@@ -162,18 +162,6 @@ export const fragmentDefaults = {
       className: 'fieldset diagram',
       __typename: 'JSONObject'
     },
-    interface: {
-      view: '',
-      focus: null,
-      notes: [],
-      attributes: {
-        __typename: 'JSONObject'
-      },
-      options: [],
-      filters: [],
-      className: 'fieldset interface',
-      __typename: 'JSONObject'
-    },
     sheet: {
       view: '',
       focus: null,

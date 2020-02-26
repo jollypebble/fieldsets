@@ -11,11 +11,6 @@ const Set = React.lazy(() => import('lib/fieldsets/Set/Set'));
  */
 
 const SubSet = ({ id, data }) => {
-  const propTypes = {
-    id: PropTypes.string.isRequired,
-    data: PropTypes.object
-  };
-
   return (
       <Suspense>
         <SetGroup
@@ -28,12 +23,13 @@ const SubSet = ({ id, data }) => {
         >
           {
             data.children.map((fieldsetID) => {
-              console.log(fieldsetID)
               return(
-                <Set
-                  id={ fieldsetID }
-                  key={ `${fieldsetID}` }
-                />
+                <Suspense key={ `${fieldsetID}-suspense` }>
+                  <Set
+                    id={ fieldsetID }
+                    key={ `${fieldsetID}` }
+                  />
+                </Suspense>
               )
             })
           }
@@ -41,5 +37,9 @@ const SubSet = ({ id, data }) => {
       </Suspense>
   );
 }
+SubSet.propTypes = {
+  id: PropTypes.string.isRequired,
+  data: PropTypes.object
+};
 
 export default SubSet;

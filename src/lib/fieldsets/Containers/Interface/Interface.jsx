@@ -1,7 +1,8 @@
-import React, { Suspense, useEffect, useState, useCallback, useRef } from 'react';
+import React, { Suspense, useState, useCallback, useEffect, useTransition } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import { useStatus, useController, usePortals } from 'lib/fieldsets/Hooks';
+import { useStatus, usePortals } from 'lib/fieldsets/Hooks';
+
 const Container = React.lazy(() => import('lib/fieldsets/Containers/Container'));
 const InterfaceType = React.lazy(() => import('./InterfaceType'));
 
@@ -10,36 +11,29 @@ const InterfaceType = React.lazy(() => import('./InterfaceType'));
  * This component initializes the data cache with diagram data, as well as setting up the underlying coordinate system for tracking diagram interactions.
  */
 const Interface = ({id, name, type, meta, portal = 'interface', visible = false, children}) => {
-  const propTypes = {
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string,
-    type: PropTypes.string.isRequired,
-    meta: PropTypes.object,
-    visible: PropTypes.boolean,
-    children: PropTypes.node
-  };
-
-  const [{stage, status, message}, updateStatus] = useStatus();
+  const stageName = 'render';
+  const [{stage, status, complete}, updateStatus] = useStatus();
   const [loaded, updateLoaded] = useState(false);
   const portals = usePortals();
-  const [containers, controller] = useController();
 
+  const [applyChange, pending] = useTransition({timeoutMs: 5000});
+
+  // We use our controller context to trigger our rendering into our portal.
   useEffect(
     () => {
-      if ( ! loaded ) {
-        if ( 'loaded' === status && 'container' === stage && 'ready' === containers[id].status) {
+      if ('container' === stage && complete) {
+        applyChange(() => {
+          updateStatus('initializing', `Initializing diagram ${id}`, stageName);
           updateLoaded(true);
-          updateStatus('rendering', `Rendering ${id}`, 'interface');
-        }
+        });
       }
     },
-    [status]
+    [stage, status, complete, id, applyChange, updateStatus]
   );
 
   const renderInterface = useCallback(
     () => {
-      if (visible && loaded && portals && portals[portal] && portals[portal].portalRef ) {
-        console.log(portals);
+      if (stageName === stage && visible && loaded && ! pending && portals && portals[portal] && portals[portal].portalRef ) {
         return(
           ReactDOM.createPortal(
             <InterfaceType
@@ -55,13 +49,11 @@ const Interface = ({id, name, type, meta, portal = 'interface', visible = false,
       }
       return null;
     },
-    [loaded, portals]
+    [stage, visible, loaded, pending, portals,children, id, name, portal, type]
   );
-
 
   return(
     <React.Fragment>
-      {children}
       <Suspense fallback={<h1>{`loading ${portal} data ...`}</h1>}>
         <Container
           id={id}
@@ -74,9 +66,18 @@ const Interface = ({id, name, type, meta, portal = 'interface', visible = false,
           {renderInterface()}
         </Container>
       </Suspense>
-
+      {children}
     </React.Fragment>
   );
 }
+
+Interface.propTypes = {
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string,
+  type: PropTypes.string.isRequired,
+  meta: PropTypes.object,
+  visible: PropTypes.bool,
+  children: PropTypes.node
+};
 
 export default Interface;

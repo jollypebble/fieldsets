@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useLayoutEffect, useMemo, useTransition } from 'react';
 import { ApolloProvider } from 'react-apollo';
-import { getDataCacheService, getDataCacheStore } from './DataCacheService';
+import { getDataCacheService } from './DataCacheService';
 import { useStatus, useDefaults } from 'lib/fieldsets/Hooks';
 import { resolvers, typeDefs } from 'lib/fieldsets/graphql';
 
@@ -13,13 +13,13 @@ const DataCache = ({children}) => {
   // The lifecycle stages that must be complete before rendering.
   const stageDeps = ['defaults'];
   const [current, updateStatus, lifecycle] = useStatus();
-  const [{stage, status, message, complete}, setStatus] = useState({stage: '', status: '', message: '', complete: false});
+  const [{stage, complete}, setStatus] = useState({stage: '', status: '', message: '', complete: false});
 
   const [connected, updateConnected] = useState(false);
   const [initialized, updateInitialized] = useState(false);
 
-  const [defaults, updateDefaults] = useDefaults();
-  const [applyChange, pending] = useTransition({timeoutMs: 5000});
+  const [defaults] = useDefaults();
+  const [applyChange] = useTransition({timeoutMs: 5000});
 
   // Allow us to use our defaults Hook and have an globally scoped datacacheservice as well.
   const config = useMemo(
@@ -58,7 +58,7 @@ const DataCache = ({children}) => {
       }
       return depsMet;
     },
-    [lifecycle]
+    [lifecycle, complete, stageDeps]
   );
 
   const initCache = async () => {

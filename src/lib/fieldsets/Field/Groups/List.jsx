@@ -2,10 +2,10 @@
  * A label Sheet only displays fields that are always visible.
  */
  import React from 'react';
+ import PropTypes from 'prop-types';
  import { Field } from 'lib/fieldsets';
 
-const List = ({id, active, visible, view, type = 'list', fields}) => {
-  const listtype = (view) ? view : 'list';
+const List = ({id, view, type = 'list', fields}) => {
   return(
     <ul
       id={`${id}-${type}`}
@@ -29,6 +29,12 @@ const List = ({id, active, visible, view, type = 'list', fields}) => {
       }
     </ul>
   );
+}
+List.propTypes = {
+  id: PropTypes.string.isRequired,
+  view: PropTypes.string,
+  type: PropTypes.string,
+  fields: PropTypes.array.isRequired
 }
 
 export default List

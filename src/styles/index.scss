@@ -1,8 +1,17 @@
-@import 'react-md/src/scss/react-md';
+@import 'ReactMD';
 
 @import './vars/index';
-@import './components/index';
 @import './containers/index';
+@import './components/index';
 @import 'App';
 
-@include react-md-everything;
+// import all the installed @react-md/* packages in your app:
+@import "@react-md/icon/dist/mixins";
+@import "@react-md/states/dist/mixins";
+@import "@react-md/theme/dist/mixins";
+@import "@react-md/typography/dist/mixins";
+@import "@react-md/utils/dist/mixins";
+
+// this is kind of the new `react-md-everything`. it conditionally does `@include react-md-PACKAGE`
+// for all the mixins that have been imported
+@include react-md-utils;

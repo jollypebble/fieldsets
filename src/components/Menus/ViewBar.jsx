@@ -1,6 +1,7 @@
-import React, { useLayoutEffect, useEffect, useState, useCallback, useMemo, useRef } from 'react';
+import React, { useEffect, useState, useCallback, useTransition } from 'react';
 import PropTypes from 'prop-types';
-import { Avatar, Button, FontIcon, List, ListItem, SVGIcon } from 'react-md';
+import {useFocus, useController} from 'lib/fieldsets/Hooks';
+import {Button} from 'react-md';
 
 /**
  * The view bar is used to switch between different views of the application and acts as the view for the FieldSets controller, which means it will be present on all views.
@@ -12,25 +13,39 @@ const ViewBar = ({ id, title }) => {
   };
 
   const [visible, updateVisible] = useState(false) ;
-  const [classname, updateClassname] = useState('ViewBarInner')
+  const [classname, updateClassname] = useState('ViewBarInner');
+  const [{containers}, controller] = useController();
 
+  const [applyChange, pending] = useTransition({timeoutMs: 5000});
 
-  const toggleVisible = () => {
-    if ( visible ) {
-      updateVisible(false);
-    } else {
-      updateVisible(true);
-    }
-  };
+  const showBar = useCallback(
+    () => {
+      applyChange(() => {
+        updateVisible(true);
+      });
+    },
+    [visible]
+  );
+
+  const hideBar = useCallback(
+    () => {
+      applyChange(() => {
+        updateVisible(false);
+      });
+    },
+    [visible]
+  );
 
 
   useEffect(
     () => {
-      if (visible) {
-        updateClassname('ViewBarInner visible');
-      } else {
-        updateClassname('ViewBarInner hidden');
-      }
+      applyChange(() => {
+        if (visible) {
+          updateClassname('ViewBarInner visible');
+        } else {
+          updateClassname('ViewBarInner hidden');
+        }
+      });
     },
     [visible]
   );
@@ -38,15 +53,22 @@ const ViewBar = ({ id, title }) => {
   return (
     <div
       id={`${id}-wrapper`}
-      onMouseOver={toggleVisible}
-      onMouseOut={toggleVisible}
+      onMouseOver={showBar}
+      onMouseOut={hideBar}
+      className={'interface-container'}
     >
       <div
         className={classname}
       >
-        <Button
-          flat
-          onClick={() => {}}
+        <Button flat
+          onClick={() => {
+            applyChange( () => {
+              controller.updateContainerVisibility('econcircle-dashboard', true);
+              controller.updateContainerVisibility('econcircle-app', true);
+              controller.updateContainerVisibility('econcircle-balancesheet', false);
+            });
+            console.log(containers);
+          }}
         >
           Econ System
         </Button>
@@ -71,7 +93,13 @@ const ViewBar = ({ id, title }) => {
           Investment Grid
         </Button>
         <Button flat
-          onClick={() => {}}
+          onClick={() => {
+            applyChange( () => {
+              controller.updateContainerVisibility('econcircle-dashboard', false);
+              controller.updateContainerVisibility('econcircle-app', false);
+              controller.updateContainerVisibility('econcircle-balancesheet', true);
+            });
+          }}
         >
           Spreadsheet
         </Button>

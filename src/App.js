@@ -31,7 +31,6 @@ const App = (props) => {
         >
           <Diagram
             id="econcircle-app"
-            type="Svg"
             view="CircleDiagram"
             name="Econ Circles"
             meta={{
@@ -49,7 +48,6 @@ const App = (props) => {
         </Interface>
         <Sheet
           id="econcircle-balancesheet"
-          type="HandsOnTable"
           view="BalanceSheet"
           name="Balance Sheet"
           meta={{

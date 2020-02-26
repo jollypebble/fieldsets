@@ -52,6 +52,7 @@ const Status = (props) => {
    * For debugging, uncomment this hook which fires on every status change.
    * This is a good way to tell what the status and stage is of the current application and can help with debugging.
    */
+  /**
   useEffect(
     () => {
       if ( lifecycle[stage] ) {
@@ -60,6 +61,7 @@ const Status = (props) => {
     },
     [lifecycle]
   );
+  */
 
   return (
     <StatusContext.Provider value={[{...lifecycle[stage]}, setStatus, lifecycle]}>

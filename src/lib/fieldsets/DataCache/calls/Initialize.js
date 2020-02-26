@@ -1,10 +1,4 @@
 import { Fetch, Update, Defaults } from 'lib/fieldsets/DataCache/calls';
-import {
-  fetchFieldSet,
-  fetchMeta,
-  fetchField
-} from 'lib/fieldsets/graphql/queries';
-//import * as DefaultData from 'data/Containers';
 import {FieldData, SetData, MetaData} from 'data';
 
 /**
@@ -64,7 +58,7 @@ export const Initialize = ( call ) => {
 }
 
 const initializeSetData = ({ data = [], defaults = {} }) => {
-  data.map((set) => {
+  return data.map((set) => {
     if ( set.id ) {
       // Check if the fragment exists already
       const setID = set.id;
@@ -93,41 +87,24 @@ const initializeSetData = ({ data = [], defaults = {} }) => {
 
       // Write our child fragments.
       if (set.children && set.children.length > 0) {
-        const children = [...set.children];
         initializeSetData({ data: [...set.children], defaults: {...defaults} });
       }
+      return true;
     }
+    return false;
   });
-}
-
-/**
- * Not used currently but a recursive function for getting all children.
- */
-const getSubsets = (id, type = 'fieldset', subsets = []) => {
-  const parent = Fetch({id: id, target: type});
-  // Subsets will always be fieldsets.
-  if ( 'fieldset' === type ) {
-    subsets.push(id);
-  }
-  if (parent && parent.children && parent.children.length > 0) {
-    parent.children.map(
-      (setid) => {
-        return getSubsets(setid, 'fieldset', subsets);
-      }
-    );
-  }
-  return subsets;
-}
-
+};
 
 const initializeFieldData = ({ data = [], defaults = {} }) => {
-  if (!data.length) return;
+  if (!data.length) {
+    return;
+  }
   // Get your fields here. This is defined as a static json, but could be modified here to get remote field type definitions.
-  data.map((field) => {
+  return (data.map((field) => {
     if (field.id) {
       const fieldID = field.id;
       const fieldFragment = Defaults( {id: fieldID, target: 'field', defaults: {...defaults}}, {...field} );
-      Update({id: fieldID, target: 'field'}, { ...fieldFragment });
+      const fieldData = Update({id: fieldID, target: 'field'}, { ...fieldFragment });
 
       // Field parents are arrays as a fields can belong to multiple sets.
       // Make sure we push to the top level id that was initialized as well, but don't classify it as a parent fieldset to the field.
@@ -138,12 +115,14 @@ const initializeFieldData = ({ data = [], defaults = {} }) => {
           Update({id: fieldSetID, target: 'fieldset', filter: 'fields'}, fieldID);
         }
       }
+      return fieldData;
     }
-  });
+    return field;
+  }));
 }
 
 const initializeMetaData = ({ data = [], defaults }) => {
-  data.map((meta) => {
+  return(data.map((meta) => {
     if (meta.id) {
       const metaID = meta.id;
 
@@ -154,7 +133,9 @@ const initializeMetaData = ({ data = [], defaults }) => {
       const metatype = meta.type;
 
       const metaFragment = Defaults( {id: metaID, target: 'meta', defaults: defaults}, {...meta} );
-      Update({id: metaID, target: 'meta', type: metatype}, {...metaFragment});
+      const metaData = Update({id: metaID, target: 'meta', type: metatype}, {...metaFragment});
+      return metaData;
     }
-  });
+    return meta;
+  }));
 }
