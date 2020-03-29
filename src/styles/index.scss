@@ -1,9 +1,13 @@
-@import 'ReactMD';
+$md-typography-extended: false;
+
+@import 'react-md/src/scss/react-md';
 
 @import './vars/index';
 @import './containers/index';
 @import './components/index';
 @import 'App';
+
+@import 'ReactMD';
 
 // import all the installed @react-md/* packages in your app:
 @import "@react-md/icon/dist/mixins";

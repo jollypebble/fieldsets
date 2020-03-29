@@ -107,13 +107,16 @@ const Controller = ({children}) => {
           });
         },
         updateContainerVisibility: (id, visible) => {
-          containers[id] = {
-            ...containers[id],
-            visible: visible
-          };
-          applyChange( () => {
+          applyChange( () => { 
+              containers[id] = {
+              ...containers[id],
+              visible: visible
+            };
+          
             updateContainers({...containers});
+            updateFocus({ action: 'switch', data: { id: 'current', focusID: id, focusGroup: '', expanded: false, type: containers[id].type, container: { containerID: id, type: containers[id].type }, depth: 0 }});
           });
+          console.log(containers);
         },
         addFieldSet: (id, view, type, visible) => {
           if ( ! fieldsets.hasOwnProperty(id) ) {
