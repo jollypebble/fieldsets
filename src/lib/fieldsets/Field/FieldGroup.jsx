@@ -11,15 +11,6 @@ import {
 export const FieldGroup = (props) => {
   const {id, type, active, visible, variables, children} = {...props};
 
-  const propTypes = {
-    id: PropTypes.string.isRequired,
-    type: PropTypes.string,
-    active: PropTypes.boolean,
-    visible: PropTypes.boolean,
-    variables: PropTypes.object,
-    children: PropTypes.node
-  };
-
   const [loaded, updateLoaded] = useState(false);
 
   // Get our fields for the corresponding fieldset.
@@ -67,6 +58,16 @@ export const FieldGroup = (props) => {
 
   return( renderFieldGroup() );
 }
+
+
+FieldGroup.propTypes = {
+  id: PropTypes.string.isRequired,
+  type: PropTypes.string,
+  active: PropTypes.boolean,
+  visible: PropTypes.boolean,
+  variables: PropTypes.object,
+  children: PropTypes.node
+};
 
 
 export default FieldGroup;

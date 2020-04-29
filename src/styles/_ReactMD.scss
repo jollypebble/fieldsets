@@ -1,6 +1,5 @@
-$md-typography-extended: false;
-
-@import 'react-md/src/scss/react-md';
+// This scss file was created to upgrade from react-md v1 to v2-alpha without breaking our app.
+// When v2 is officially released, this will probably change.
 
 // instead of calling `@include react-md-everything`, make sure
 // to include everything you need except for the

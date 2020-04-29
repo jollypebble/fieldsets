@@ -1,6 +1,5 @@
 import React, { useLayoutEffect, useEffect, useState, useCallback, useTransition } from 'react';
 import Spreadsheet from 'react-spreadsheet';
-import { Set } from 'lib/fieldsets';
 import {useFocus, useStatus, useViewerDimensions, useClickEvents} from 'lib/fieldsets/Hooks';
 import { Fetch } from 'lib/fieldsets/DataCache/calls';
 
@@ -25,6 +24,13 @@ const BalanceSheet =  ({ id, name, view, visible = false, meta: metaInit, data =
     newfocus.zoom = focusmeta.zoom;
     updateFocus({action: 'focus', data: newfocus});
   }
+
+  useEffect(
+    () => {
+      console.log(data);
+    },
+    []
+  );
 
   /**
    * Use our status to determine our render state.
@@ -85,6 +91,7 @@ const BalanceSheet =  ({ id, name, view, visible = false, meta: metaInit, data =
   const [handleClick, handleDoubleClick] = useClickEvents(onClick, onDoubleClick);
 
   if ( loaded && visible ) {
+    console.log(data);
     const data = [
       [ { value: 'First' }, { value: 'Second' } ],
       [ ( { value: 'Third' }, { value: 'Fourth' } ) ],

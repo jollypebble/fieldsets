@@ -2,7 +2,6 @@
  * A label Sheet only displays fields that are always visible.
  */
  import React from 'react';
- import { Field } from 'lib/fieldsets';
  import { List } from 'lib/fieldsets/Field/Groups';
 
 const LabelSheet = ({id, active, visible, fields}) => {

@@ -67,7 +67,6 @@ const ViewBar = ({ id, title }) => {
               controller.updateContainerVisibility('econcircle-app', true);
               controller.updateContainerVisibility('econcircle-balancesheet', false);
             });
-            console.log(containers);
           }}
         >
           Econ System

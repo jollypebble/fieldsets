@@ -161,10 +161,24 @@ const Container = ({id, name, type = 'container', view, meta: metadata, visible:
    */
   useEffect(
     () => {
-      if ( loaded && !called && !loading && focus.container.containerID === id) {
-        applyChange( () => {
-          refetch();
-        });
+      if ( focus.container.containerID === id && 'interface' !== type.toLowerCase() ) {
+        console.log({loaded, focus, called, loading, visible: containers[id].visible, id, container: focus.container});
+
+        if ( containers[id].visible ) {
+          updateVisibility(containers[id].visible);
+          // loaded initially, then refetch
+          if ( ! called && ! loading ) {
+            applyChange( () => {
+              
+              if ( loaded ) {
+                refetch();
+              } else {
+                fetchContainerFieldSets();
+              }
+            });
+            controller.updateContainerStatus(id, 'ready', `Container ready`);
+          }
+        }
       }
     },
     [focus.container.containerID]
@@ -287,13 +301,9 @@ const Container = ({id, name, type = 'container', view, meta: metadata, visible:
             // If this container is flagged as load as default focus, add it to the root query and allow our view render to occur.
             if (visible) {
               if ('interface' !== type.toLowerCase()) {
-                fetchContainerFieldSets();
-
-                const center = (containerMeta.data.center) ? containerMeta.data.center : { x: width/2, y: height/2 };
-                const zoom = (containerMeta.data.zoom) ? containerMeta.data.zoom : { scale: 1.0 };
                 const container = { containerID: id, type: containerMeta.type };
 
-                updateFocus({ action: 'switch', data: { id: 'current', focusID: id, focusGroup: '', expanded: false, type: containerMeta.type, container: {...container}, center: center, zoom: zoom, depth: 0 }});
+                updateFocus({ action: 'switch', data: { id: 'current', focusID: id, focusGroup: '', expanded: false, type: containerMeta.type, container: {...container}, depth: 0 }});
               }
             }
             controller.updateContainerStatus(id, 'ready', `Container ready`);

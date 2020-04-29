@@ -1,5 +1,5 @@
 import { GraphQLJSON, GraphQLJSONObject } from 'graphql-type-json';
-import { fetchMeta, fetchFocus, fetchField, fetchFieldSet, fetchContainer } from './queries';
+import { fetchFocus, fetchField, fetchFieldSet, fetchContainer } from './queries';
 
 export const resolvers = (defaults = {}) => {
   return ({
@@ -7,6 +7,7 @@ export const resolvers = (defaults = {}) => {
     JSONObject: GraphQLJSONObject,
     Mutation: {
       updateFocus: ( object, { data }, { client } ) => {
+        console.log(data);
         let containerID = data.container.containerID;
         if (!containerID) {
           containerID = client.readQuery({query: fetchContainer});
@@ -31,10 +32,11 @@ export const resolvers = (defaults = {}) => {
         client.writeQuery({query: fetchFocus, data: {focus: newfocus}});
         return newfocus;
       },
-      updateContainer: ( object, { data }, { client, getCacheKey } ) => {
+      updateContainer: ( object, { data }, { client } ) => {
         // Don't use defaults for updates.
         const containerID = data.containerID;
-        const cacheKey = getCacheKey({ __typename: 'FieldSet', id: containerID });
+        console.log(data);
+        const cacheKey = client.cache.config.dataIdFromObject({ __typename: 'FieldSet', id: containerID });
         const container = client.readFragment({
           id: cacheKey,
           fragment: fetchFieldSet,
@@ -46,12 +48,12 @@ export const resolvers = (defaults = {}) => {
       }
     },
     Query: {
-      fetchContainerData: ( object, data, { client, getCacheKey } ) => {
+      fetchContainerData: ( object, data, { client } ) => {
         const container = client.readQuery({query: fetchContainer});
         let fieldsets = [];
         container.container.children.map(
           (fieldsetID) => {
-            const cacheKey = getCacheKey({ __typename: 'FieldSet', id: fieldsetID });
+            const cacheKey = client.cache.config.dataIdFromObject({ __typename: 'FieldSet', id: fieldsetID });
             const fieldset = client.readFragment({
               id: cacheKey,
               fragment: fetchFieldSet,
@@ -62,11 +64,11 @@ export const resolvers = (defaults = {}) => {
         );
         return fieldsets;
       },
-      fetchFields: ( object, { data }, { client, getCacheKey } ) => {
+      fetchFields: ( object, { data }, { client } ) => {
         let fields = [];
         data.fields.map(
           (fieldID) => {
-            const cacheKey = getCacheKey({ __typename: 'Field', id: fieldID });
+            const cacheKey = client.cache.config.dataIdFromObject({ __typename: 'Field', id: fieldID });
             const field = client.readFragment({
               id: cacheKey,
               fragment: fetchField,
